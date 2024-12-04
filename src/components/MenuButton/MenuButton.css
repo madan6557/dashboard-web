@@ -1,0 +1,69 @@
+@import '../../variable.css';
+
+.wrapper{
+    width: 264px;
+}
+
+.button-wrapper {
+    background-color: none;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    /* Gunakan Flexbox untuk tata letak horizontal */
+    align-items: center;
+    /* Pusatkan secara vertikal */
+    gap: 18px;
+    /* Tambahkan jarak antara ikon dan judul */
+    color: white;
+    /* Warna teks putih agar kontras dengan background */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 4px 0px;
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--gray-900);
+    width: 32px;
+    height: 32px;
+    margin: 12px;
+    /* transition: transform 0.3s ease; */
+}
+
+.title {
+    color: var(--gray-900);
+    font-size: 18px;
+    /* Ukuran teks */
+    font-weight: 500;
+    /* Tambahkan ketebalan teks */
+    white-space: nowrap;
+    /* Pastikan teks tetap satu baris */
+}
+
+#chevron {
+    margin-right: 20px;
+}
+
+.button-wrapper:hover {
+    background-color: var(--blue-200);
+}
+
+.button-wrapper:hover * {
+    color: var(--gray-900);
+}
+
+.selected {
+    background-color: var(--blue-900);
+}
+
+.selected * {
+    color: var(--gray-50);
+}
+
+.selected #chevron {
+    transform: rotate(180deg);
+    /* transition: transform 0.3s ease; */
+}
