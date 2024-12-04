@@ -1,3 +1,23 @@
-.page-container{
-height: 100%;
+.page-container {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 100%;
+}
+
+.content-container {
+    display: flex;
+    align-items: end;
+    background-color: var(--gray-50);
+    border-radius: 8px;
+    margin-left: 5px;
+    height: 100%;
+    width: 85%;
+}
+
+.content-wrapper{
+    background-color: var(--gray-200);
+    border-radius: 6px;
+    height: 90%;
+    width: 100%;
+    margin: 5px;
 }

@@ -6,8 +6,8 @@
 
 .sidebar-container {
     background-color: var(--gray-50);
-    border-radius: 16px;
-    width: 270px;
+    border-radius: 8px;
+    width: 321px;
     height: 100%;
     /* Atur tinggi sidebar 100% dari body */
     padding: 20px;
@@ -17,13 +17,8 @@
     flex-direction: column;
     /* Susun elemen secara vertikal */
     overflow: hidden;
+    box-sizing: border-box;
 }
-
-.sidebar-wrapper {
-    display: flex;
-    flex-direction: column; /* Pastikan menu-wrapper tetap vertikal */
-}
-
 .brand-wrapper {
     display: flex;
     align-items: center;
@@ -39,7 +34,6 @@
     margin: 0px 0px 0px 20px;
     font-size: 26px;
     font-weight: 500;
-    height: 45px;
 }
 
 .menu-wrapper {

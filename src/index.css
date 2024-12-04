@@ -1,22 +1,20 @@
 @import './variable.css';
 
-html,
+/* Body */
 body {
   background-color: var(--gray-200);
-  height: 96.3%;
-  /* Make the body and html elements take up the full height of the viewport */
-  width: 99%;
-  /* Make the body and html elements take up the full width of the viewport */
+  height: calc(100vh - 10px); /* Menggunakan 100vh untuk memastikan bahwa tinggi sesuai dengan viewport */
+  width: calc(100vw - 10px);  /* Menggunakan 100vw untuk memastikan lebar sesuai dengan viewport */
   margin: 0;
-  /* Remove any default margin */
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
+/* Root */
 #root {
-  height: 100%;
-  width: 100%;
-  margin: 5px;
+  height: 100%; /* Menyesuaikan root dengan body */
+  width: 100%;  /* Menyesuaikan root dengan body */
+  margin: 5px;    /* Hapus margin jika ada */
 }

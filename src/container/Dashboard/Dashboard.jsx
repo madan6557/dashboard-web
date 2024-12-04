@@ -10,6 +10,11 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="page-container">
+                <div className="content-container">
+                    <div className="content-wrapper">
+
+                    </div>
+                </div>
                 <Sidebar/>
             </div>
         )
