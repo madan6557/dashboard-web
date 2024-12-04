@@ -1,7 +1,7 @@
 @import '../../variable.css';
 
-.wrapper{
-    width: 264px;
+.button-container{
+    width: auto;
 }
 
 .button-wrapper {
@@ -19,7 +19,7 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
     overflow: hidden;
-    margin: 4px 0px;
+    margin: 4px;
 }
 
 .icon {
@@ -35,7 +35,7 @@
 
 .title {
     color: var(--gray-900);
-    font-size: 18px;
+    font-size: 16px;
     /* Ukuran teks */
     font-weight: 500;
     /* Tambahkan ketebalan teks */
@@ -44,7 +44,10 @@
 }
 
 #chevron {
-    margin-right: 20px;
+    margin-left: auto; /* Mendorong chevron ke kanan */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .button-wrapper:hover {

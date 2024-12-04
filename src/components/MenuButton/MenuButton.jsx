@@ -11,12 +11,11 @@ const MenuButton = ({
     isOpen,
     onClick,
     onSubmenuClick,
-    selectedSubmenu
+    selectedSubmenu,
+    color
 }) => {
-    console.log("Is Selected: "+selectedSubmenu);
-    console.log("Is Open: "+isOpen);
     return (
-        <div className="wrapper">
+        <div className="button-container">
             {/* Menu utama */}
             <div
                 className={`button-wrapper ${isSelected ? 'selected' : ''}`} // Menambahkan kelas 'selected' jika menu utama dipilih

@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import "./Sidebar.css"
+import brand from "../../assets/images/logia.svg"
+
 import MenuButton from "../../components/MenuButton/MenuButton";
 
 class Sidebar extends Component {
@@ -12,11 +15,6 @@ class Sidebar extends Component {
     handleMenuClick = (title, hasDropdown) => {
         this.setState((prevState) => {
             const { selectedMenu, openDropdowns } = prevState;
-
-            console.log("Before handleMenuClick:");
-            console.log("selectedMenu:", selectedMenu);
-            console.log("openDropdowns:", openDropdowns);
-            console.log("title:", title);
 
             if (hasDropdown) {
                 const isOpen = openDropdowns.includes(title);
@@ -58,14 +56,14 @@ class Sidebar extends Component {
     handleSubmenuClick = (submenuTitle) => {
         this.setState((prevState) => {
             const { selectedMenu, openDropdowns } = prevState;
-    
+
             // If the selected parent menu has a dropdown
             const isParentWithDropdown = openDropdowns.length > 0;
-    
+
             // Handle the selection of submenu
             return {
                 selectedSubmenu: submenuTitle, // Update the selected submenu
-                selectedMenu: isParentWithDropdown 
+                selectedMenu: isParentWithDropdown
                     ? [...openDropdowns]  // Keep the selected menu as open dropdowns only if there are dropdowns
                     : selectedMenu, // Otherwise keep the selected menu unchanged
             };
@@ -76,52 +74,80 @@ class Sidebar extends Component {
         const { selectedMenu, selectedSubmenu, openDropdowns } = this.state;
 
         return (
-            <div>
-                {/* Menu with dropdown (Parent Menu 1) */}
-                <MenuButton
-                    title="Parent Menu 1"
-                    isSelected={selectedMenu.includes("Parent Menu 1")} // Check if it's selected
-                    isOpen={openDropdowns.includes("Parent Menu 1")} // Check if the dropdown is open
-                    onClick={() => this.handleMenuClick("Parent Menu 1", true)} // Toggle dropdown and selection
-                    onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
-                    submenu={[
-                        { title: "Submenu 1", route: "Route 1" },
-                        { title: "Submenu 2", route: "Route 2" },
-                        { title: "Submenu 3", route: "Route 3" }
-                    ]}
-                    selectedSubmenu={selectedSubmenu} // Pass the selected submenu
-                />
+            <div className="sidebar-container">
+                <div className="brand-wrapper">
+                    <img src={brand} alt="brand" />
+                    <p>Logia</p>
+                </div>
+                <div className="divider">
+                    <div className="divider-line"></div>
+                </div>
+                <div className="menu-wrapper">
+                    <div className="divider">
+                        <p className="divider-name">Menu</p>
+                    </div>
+                    {/* Menu with dropdown (Parent Menu 1) */}
+                    <MenuButton
+                        title="Parent Menu 1"
+                        isSelected={selectedMenu.includes("Parent Menu 1")} // Check if it's selected
+                        isOpen={openDropdowns.includes("Parent Menu 1")} // Check if the dropdown is open
+                        onClick={() => this.handleMenuClick("Parent Menu 1", true)} // Toggle dropdown and selection
+                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
+                        submenu={[
+                            { title: "Submenu 1", route: "Route 1" },
+                            { title: "Submenu 2", route: "Route 2" },
+                            { title: "Submenu 3", route: "Route 3" }
+                        ]}
+                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
+                    />
 
-                {/* Menu without dropdown (Parent Menu 2) */}
-                <MenuButton
-                    title="Parent Menu 2"
-                    isSelected={selectedMenu.includes("Parent Menu 2")} // Check if it's selected
-                    isOpen={false} // No dropdown
-                    onClick={() => this.handleMenuClick("Parent Menu 2", false)} // Select menu without dropdown
-                />
+                    {/* Menu without dropdown (Parent Menu 2) */}
+                    <MenuButton
+                        title="Parent Menu 2"
+                        isSelected={selectedMenu.includes("Parent Menu 2")} // Check if it's selected
+                        isOpen={false} // No dropdown
+                        onClick={() => this.handleMenuClick("Parent Menu 2", false)} // Select menu without dropdown
+                    />
 
-                {/* Menu with dropdown (Parent Menu 3) */}
-                <MenuButton
-                    title="Parent Menu 3"
-                    isSelected={selectedMenu.includes("Parent Menu 3")} // Check if it's selected
-                    isOpen={openDropdowns.includes("Parent Menu 3")} // Check if the dropdown is open
-                    onClick={() => this.handleMenuClick("Parent Menu 3", true)} // Toggle dropdown and selection
-                    onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
-                    submenu={[
-                        { title: "Submenu 4", route: "Route 1" },
-                        { title: "Submenu 5", route: "Route 2" },
-                        { title: "Submenu 6", route: "Route 3" }
-                    ]}
-                    selectedSubmenu={selectedSubmenu} // Pass the selected submenu
-                />
+                    {/* Menu with dropdown (Parent Menu 3) */}
+                    <MenuButton
+                        title="Parent Menu 3"
+                        isSelected={selectedMenu.includes("Parent Menu 3")} // Check if it's selected
+                        isOpen={openDropdowns.includes("Parent Menu 3")} // Check if the dropdown is open
+                        onClick={() => this.handleMenuClick("Parent Menu 3", true)} // Toggle dropdown and selection
+                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
+                        submenu={[
+                            { title: "Submenu 4", route: "Route 1" },
+                            { title: "Submenu 5", route: "Route 2" },
+                            { title: "Submenu 6", route: "Route 3" }
+                        ]}
+                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
+                    />
 
-                {/* Menu without dropdown (Parent Menu 4) */}
-                <MenuButton
-                    title="Parent Menu 4"
-                    isSelected={selectedMenu.includes("Parent Menu 4")} // Check if it's selected
-                    isOpen={false} // No dropdown
-                    onClick={() => this.handleMenuClick("Parent Menu 4", false)} // Select menu without dropdown
-                />
+
+
+                    <div className="divider">
+                        <div className="divider-line"></div>
+                        <p className="divider-name">Other</p>
+                    </div>
+
+                    {/* Menu without dropdown (Parent Menu 4) */}
+                    <MenuButton
+                        title="Parent Menu 4"
+                        isSelected={selectedMenu.includes("Parent Menu 4")} // Check if it's selected
+                        isOpen={false} // No dropdown
+                        onClick={() => this.handleMenuClick("Parent Menu 4", false)} // Select menu without dropdown
+                    />
+                </div>
+
+                <div className="logout-wrapper">
+                    <div className="divider">
+                        <div className="divider-line"></div>
+                    </div>
+                    <MenuButton
+                        title="Log Out"
+                    />
+                </div>
             </div>
         );
     }

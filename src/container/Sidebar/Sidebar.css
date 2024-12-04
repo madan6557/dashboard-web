@@ -1,0 +1,92 @@
+.menu-wrapper {
+    flex: 1; /* Biarkan menu-wrapper mengisi ruang sisa */
+    overflow-y: auto; /* Tambahkan scroll bila konten terlalu panjang */
+    padding-right: 10px; /* Opsional: Beri jarak agar scrollbar tidak terlalu menempel */
+}
+
+.sidebar-container {
+    background-color: var(--gray-50);
+    border-radius: 16px;
+    width: 270px;
+    height: 100%;
+    /* Atur tinggi sidebar 100% dari body */
+    padding: 20px;
+    padding-bottom: 15px;
+    display: flex;
+    /* Atur container menjadi flexbox */
+    flex-direction: column;
+    /* Susun elemen secara vertikal */
+    overflow: hidden;
+}
+
+.sidebar-wrapper {
+    display: flex;
+    flex-direction: column; /* Pastikan menu-wrapper tetap vertikal */
+}
+
+.brand-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.brand-wrapper img{
+    height: 45px;
+}
+
+.brand-wrapper p {
+    margin: 0px 0px 0px 20px;
+    font-size: 26px;
+    font-weight: 500;
+    height: 45px;
+}
+
+.menu-wrapper {
+    flex: 1; /* Biarkan menu-wrapper mengisi ruang sisa */
+    overflow-y: auto; /* Tambahkan scroll bila konten terlalu panjang */
+    width: 99%;
+    padding-right: -10px;
+}
+
+/* Untuk scrollbar di dalam elemen yang mendukung -webkit */
+.menu-wrapper::-webkit-scrollbar {
+    width: 8px; /* Lebar scrollbar */
+}
+
+.menu-wrapper::-webkit-scrollbar-track {
+    background: var(--gray-200); /* Warna latar belakang track scrollbar */
+    border-radius: 10px; /* Membuat track lebih membulat */
+}
+
+.menu-wrapper::-webkit-scrollbar-thumb {
+    background: var(--gray-300); /* Warna thumb scrollbar */
+    border-radius: 10px; /* Membuat thumb lebih membulat */
+}
+
+/* Hover effect untuk thumb scrollbar */
+.menu-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-200); /* Ubah warna ketika hover */
+}
+
+.divider-line {
+    background-color: var(--gray-200);
+    border-radius: 10px;
+    height: 3px;
+    width: auto;
+}
+
+.divider-name {
+    color: var(--gray-500);
+    margin: 0px;
+    font-weight: 500;
+}
+
+.logout-wrapper {
+    margin-top: auto;
+    /* Pindahkan ke bagian paling bawah */
+}
+
+.logout-wrapper .divider{
+    margin-bottom: 20px;
+}

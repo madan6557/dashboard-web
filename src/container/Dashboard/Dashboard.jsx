@@ -1,21 +1,19 @@
 import React, { Component } from "react";
 import Sidebar from "../Sidebar/Sidebar";
+import "./Dashboard.css"
 
-class Home extends Component {
+class Dashboard extends Component {
     state = {
         minimize: false
     }
 
     render() {
         return (
-            <div>
-                <p>Sidebar</p>
-                <hr />
-                <Sidebar
-                />
+            <div className="page-container">
+                <Sidebar/>
             </div>
         )
     }
 }
 
-export default Home;
+export default Dashboard;
