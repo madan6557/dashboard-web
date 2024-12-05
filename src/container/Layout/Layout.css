@@ -1,0 +1,96 @@
+@import '../../variable.css';
+
+.page-container {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 100%;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    background-color: var(--gray-50);
+    border-radius: 8px;
+    margin-left: 5px;
+    height: 100%;
+    width: 100%;
+    padding: 7px;
+    box-sizing: border-box;
+}
+
+.content-wrapper {
+    background-color: var(--gray-700);
+    border-radius: 6px;
+    height: 95%;
+    width: 100%;
+    margin-top: 7px;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+}
+
+.menu-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0px 0px 0px 17px;
+}
+
+.sidebar-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    height: 40px;
+    width: 40px;
+    color: var(--gray-900);
+}
+
+.sidebar-toggle:hover{
+    background-color: var(--blue-200);
+    color: var(--gray-900);
+}
+
+.open{
+    background-color: var(--blue-900);
+    color: var(--gray-50);
+}
+
+.config-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    margin-left: auto;
+}
+
+.config-button {
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 13px;
+}
+
+.config-button:hover {
+    background-color: var(--blue-200);
+}
+
+.user-icon {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    font-weight: 500;
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--blue-200);
+}

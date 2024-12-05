@@ -7,19 +7,19 @@
 .button-wrapper {
     background-color: none;
     height: 56px;
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex;
     /* Gunakan Flexbox untuk tata letak horizontal */
     align-items: center;
     /* Pusatkan secara vertikal */
-    gap: 18px;
+    gap: 10px;
     /* Tambahkan jarak antara ikon dan judul */
     color: white;
     /* Warna teks putih agar kontras dengan background */
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
     overflow: hidden;
-    margin: 4px;
+    margin: 4px 0px;
 }
 
 .icon {
@@ -44,11 +44,11 @@
 }
 
 #chevron {
-    
     margin-left: auto; /* Mendorong chevron ke kanan */
     display: flex;
     align-items: center;
     justify-content: center;
+    transform: rotate(180deg);
 }
 
 .button-wrapper:hover {
@@ -68,6 +68,6 @@
 }
 
 .selected #chevron {
-    transform: rotate(180deg);
+    transform: rotate(0deg);
     /* transition: transform 0.3s ease; */
 }

@@ -1,17 +1,12 @@
-.menu-wrapper {
-    flex: 1; /* Biarkan menu-wrapper mengisi ruang sisa */
-    overflow-y: auto; /* Tambahkan scroll bila konten terlalu panjang */
-    padding-right: 10px; /* Opsional: Beri jarak agar scrollbar tidak terlalu menempel */
-}
+@import '../../variable.css';
 
 .sidebar-container {
     background-color: var(--gray-50);
     border-radius: 8px;
-    width: 321px;
+    width: 300px;
     height: 100%;
     /* Atur tinggi sidebar 100% dari body */
-    padding: 20px;
-    padding-bottom: 15px;
+    padding: 14px;
     display: flex;
     /* Atur container menjadi flexbox */
     flex-direction: column;
@@ -19,52 +14,93 @@
     overflow: hidden;
     box-sizing: border-box;
 }
+
+.sidebar-container p {
+    /* display: none; */
+}
+
+.minimize {
+    width: 85px;
+}
+
 .brand-wrapper {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    margin-left: 10px;
+    margin-bottom: 15px;
+    margin-left: 5px;
+    width: calc(100% + 90px);
 }
 
-.brand-wrapper img{
-    height: 45px;
+.brand-wrapper img {
+    height: 48px;
+    width: 48px;
 }
 
 .brand-wrapper p {
-    margin: 0px 0px 0px 20px;
+    margin: 0px 0px 0px 15px;
     font-size: 26px;
     font-weight: 500;
 }
 
+.minimize-toggle {
+    position: relative;
+    display: flex;
+    right: 80px;
+    margin-left: auto;
+    width: 15px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gray-900);
+    color: var(--gray-50);
+    border-top-left-radius: 6px;
+    /* Radius untuk sudut kiri atas */
+    border-bottom-left-radius: 6px;
+    /* Radius untuk sudut kiri bawah */
+}
+
+.minimize-toggle:hover {
+    background-color: var(--blue-200);
+    color: var(--gray-900);
+}
+
+.chevron-icon {
+    height: 24px;
+}
+
 .menu-wrapper {
-    flex: 1; /* Biarkan menu-wrapper mengisi ruang sisa */
-    overflow-y: auto; /* Tambahkan scroll bila konten terlalu panjang */
-    width: 99%;
-    padding-right: -10px;
+    position: relative;
+    /* Biarkan menu-wrapper mengisi ruang sisa */
+    overflow-y: scroll;
+    /* Tambahkan scroll bila konten terlalu panjang */
+    width: calc(100% + 7px);
+    padding-right: 5px;
+    box-sizing: content-box;
 }
 
 /* Untuk scrollbar di dalam elemen yang mendukung -webkit */
 .menu-wrapper::-webkit-scrollbar {
-    width: 8px; /* Lebar scrollbar */
+    width: 8px;
+    /* Lebar scrollbar */
 }
 
-.menu-wrapper::-webkit-scrollbar-track {
-    background: var(--gray-200); /* Warna latar belakang track scrollbar */
-    border-radius: 10px; /* Membuat track lebih membulat */
-}
+
 
 .menu-wrapper::-webkit-scrollbar-thumb {
-    background: var(--gray-300); /* Warna thumb scrollbar */
-    border-radius: 10px; /* Membuat thumb lebih membulat */
+    background: var(--gray-300);
+    /* Warna thumb scrollbar */
+    border-radius: 10px;
+    /* Membuat thumb lebih membulat */
 }
 
 /* Hover effect untuk thumb scrollbar */
 .menu-wrapper::-webkit-scrollbar-thumb:hover {
-    background: var(--blue-200); /* Ubah warna ketika hover */
+    background: var(--blue-200);
+    /* Ubah warna ketika hover */
 }
 
 .divider-line {
-    background-color: var(--gray-200);
+    background-color: var(--gray-400);
     border-radius: 10px;
     height: 3px;
     width: auto;
@@ -81,6 +117,6 @@
     /* Pindahkan ke bagian paling bawah */
 }
 
-.logout-wrapper .divider{
-    margin-bottom: 20px;
+.logout-wrapper .divider {
+    margin-bottom: 15px;
 }

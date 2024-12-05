@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./Sidebar.css"
 import brand from "../../assets/images/logia.svg"
+import { Chevron } from '../../components/Icons/Icon';
 
 import MenuButton from "../../components/MenuButton/MenuButton";
 
@@ -8,7 +9,16 @@ class Sidebar extends Component {
     state = {
         selectedMenu: [], // Allowing selected menus to be an array
         selectedSubmenu: null, // Stores the selected submenu
-        openDropdowns: [] // Stores the menus with open dropdowns
+        openDropdowns: [], // Stores the menus with open dropdowns
+        isMinimize: false,
+        rotation: 90,
+    };
+
+    // Method untuk mengatur rotasi
+    handleRotate = () => {
+        this.setState((prevState) => ({
+            rotation: prevState.rotation + 180, // Tambahkan 45 derajat
+        }));
     };
 
     // Handle menu selection and dropdown toggle
@@ -71,13 +81,18 @@ class Sidebar extends Component {
     };
 
     render() {
-        const { selectedMenu, selectedSubmenu, openDropdowns } = this.state;
+        const { selectedMenu, selectedSubmenu, openDropdowns, rotation } = this.state;
 
         return (
             <div className="sidebar-container">
                 <div className="brand-wrapper">
                     <img src={brand} alt="brand" />
                     <p>Logia</p>
+                    <div className="minimize-toggle" onClick={this.handleRotate}>
+                        <div className="chevron-icon">
+                            <Chevron currentRotation={rotation} />
+                        </div>
+                    </div>
                 </div>
                 <div className="divider">
                     <div className="divider-line"></div>

@@ -2,11 +2,11 @@
 
 /* Body */
 body {
-  background-color: var(--gray-200);
+  background-color: var(--gray-700);
   height: calc(100vh - 10px); /* Menggunakan 100vh untuk memastikan bahwa tinggi sesuai dengan viewport */
   width: calc(100vw - 10px);  /* Menggunakan 100vw untuk memastikan lebar sesuai dengan viewport */
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', 'Poppins';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
