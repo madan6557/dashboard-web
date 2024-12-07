@@ -1,19 +1,31 @@
 import React, { Component } from "react";
 import Sidebar from "../Sidebar/Sidebar";
+import Dashboard from "../Dashboard/Dashboard";
 import "./Layout.css"
 import { NoIcon } from '../../components/Icons/Icon';
 
-class Dashboard extends Component {
+class Layout extends Component {
     state = {
         sidebarToggle: true
     }
 
+    // Method untuk toggle sidebar
+    handleSidebarToggle = () => {
+        this.setState((prevState) => ({
+            sidebarToggle: !prevState.sidebarToggle // Toggle nilai sidebarToggle
+        }));
+    };
+
     render() {
+        const { sidebarToggle } = this.state;
         return (
-            <div className="page-container">
+            <div className={`page-container ${sidebarToggle ? 'sidebar-visible' : 'sidebar-hidden'}`}>
                 <div className="content-container">
                     <div className="header-container">
-                        <div className="sidebar-toggle open">
+                        <div
+                            className={`sidebar-toggle ${sidebarToggle ? 'open' : 'closed'}`} // Class dinamis
+                            onClick={this.handleSidebarToggle} // Tambahkan event handler
+                        >
                             <NoIcon />
                         </div>
                         <p className="menu-title">Menu Title</p>
@@ -30,15 +42,15 @@ class Dashboard extends Component {
                         </div>
                     </div>
                     <div className="content-wrapper">
-
+                        <Dashboard />
                     </div>
                 </div>
-                <div>
-                    <Sidebar />
+                <div className={`sidebar ${sidebarToggle ? 'visible' : 'hidden'}`}>
+                    <Sidebar/> {/* Class dinamis */}
                 </div>
             </div>
         )
     }
 }
 
-export default Dashboard;
+export default Layout;

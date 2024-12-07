@@ -14,10 +14,11 @@ class Sidebar extends Component {
         rotation: 90,
     };
 
-    // Method untuk mengatur rotasi
-    handleRotate = () => {
+    // Method untuk mengatur minimisasi dan rotasi
+    handleMinimize = () => {
         this.setState((prevState) => ({
-            rotation: prevState.rotation + 180, // Tambahkan 45 derajat
+            isMinimize: !prevState.isMinimize, // Toggle minimize state
+            rotation: prevState.rotation + 180, // Tambahkan rotasi 180 derajat
         }));
     };
 
@@ -81,16 +82,16 @@ class Sidebar extends Component {
     };
 
     render() {
-        const { selectedMenu, selectedSubmenu, openDropdowns, rotation } = this.state;
+        const { selectedMenu, selectedSubmenu, openDropdowns} = this.state;
 
         return (
-            <div className="sidebar-container">
+            <div className={`sidebar-container ${this.state.isMinimize ? 'minimize' : ''}`}>
                 <div className="brand-wrapper">
                     <img src={brand} alt="brand" />
                     <p>Logia</p>
-                    <div className="minimize-toggle" onClick={this.handleRotate}>
+                    <div className="minimize-toggle" onClick={this.handleMinimize}>
                         <div className="chevron-icon">
-                            <Chevron currentRotation={rotation} />
+                            <Chevron currentRotation={this.state.rotation} />
                         </div>
                     </div>
                 </div>
@@ -101,57 +102,104 @@ class Sidebar extends Component {
                     <div className="divider">
                         <p className="divider-name">Menu</p>
                     </div>
-                    {/* Menu with dropdown (Parent Menu 1) */}
+                    {/* Menu without dropdown (Dashboard) */}
                     <MenuButton
-                        title="Parent Menu 1"
-                        isSelected={selectedMenu.includes("Parent Menu 1")} // Check if it's selected
-                        isOpen={openDropdowns.includes("Parent Menu 1")} // Check if the dropdown is open
-                        onClick={() => this.handleMenuClick("Parent Menu 1", true)} // Toggle dropdown and selection
+                        title="Dashboard"
+                        isSelected={selectedMenu.includes("Dashboard")} // Check if it's selected
+                        isOpen={false} // Check if the dropdown is open
+                        onClick={() => this.handleMenuClick("Dashboard", false)} // Toggle dropdown and selection
+                    />
+
+                    {/* Menu without dropdown (Map) */}
+                    <MenuButton
+                        title="Map"
+                        isSelected={selectedMenu.includes("Map")} // Check if it's selected
+                        isOpen={false} // Check if the dropdown is open
+                        onClick={() => this.handleMenuClick("Map", false)} // Toggle dropdown and selection
+                    />
+
+                    {/* Menu with dropdown (Activity) */}
+                    <MenuButton
+                        title="Activity"
+                        isSelected={selectedMenu.includes("Activity")} // Check if it's selected
+                        isOpen={openDropdowns.includes("Activity")} // No dropdown
+                        onClick={() => this.handleMenuClick("Activity", true)} // Select menu without dropdown
                         onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
                         submenu={[
-                            { title: "Submenu 1", route: "Route 1" },
-                            { title: "Submenu 2", route: "Route 2" },
-                            { title: "Submenu 3", route: "Route 3" }
+                            { title: "Overview", route: "Route 1" },
+                            { title: "Analytics", route: "Route 2" },
+                            { title: "Evaluation", route: "Route 3" }
                         ]}
                         selectedSubmenu={selectedSubmenu} // Pass the selected submenu
                     />
 
-                    {/* Menu without dropdown (Parent Menu 2) */}
-                    <MenuButton
-                        title="Parent Menu 2"
-                        isSelected={selectedMenu.includes("Parent Menu 2")} // Check if it's selected
-                        isOpen={false} // No dropdown
-                        onClick={() => this.handleMenuClick("Parent Menu 2", false)} // Select menu without dropdown
-                    />
+                    <div className="divider">
+                        <div className="divider-line"></div>
+                        <p className="divider-name">Management</p>
+                    </div>
 
-                    {/* Menu with dropdown (Parent Menu 3) */}
+                    {/* Menu with dropdown (Data) */}
                     <MenuButton
-                        title="Parent Menu 3"
-                        isSelected={selectedMenu.includes("Parent Menu 3")} // Check if it's selected
-                        isOpen={openDropdowns.includes("Parent Menu 3")} // Check if the dropdown is open
-                        onClick={() => this.handleMenuClick("Parent Menu 3", true)} // Toggle dropdown and selection
+                        title="Data"
+                        isSelected={selectedMenu.includes("Data")} // Check if it's selected
+                        isOpen={openDropdowns.includes("Data")} // Check if the dropdown is open
+                        onClick={() => this.handleMenuClick("Data", true)} // Toggle dropdown and selection
                         onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
                         submenu={[
-                            { title: "Submenu 4", route: "Route 1" },
-                            { title: "Submenu 5", route: "Route 2" },
-                            { title: "Submenu 6", route: "Route 3" }
+                            { title: "Table", route: "Route 1" },
+                            { title: "Verification", route: "Route 2" },
+                            { title: "Export", route: "Route 3" }
                         ]}
                         selectedSubmenu={selectedSubmenu} // Pass the selected submenu
                     />
 
+                    {/* Menu with dropdown (Users) */}
+                    <MenuButton
+                        title="Users"
+                        isSelected={selectedMenu.includes("Users")} // Check if it's selected
+                        isOpen={openDropdowns.includes("Users")} // Check if the dropdown is open
+                        onClick={() => this.handleMenuClick("Users", true)} // Toggle dropdown and selection
+                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
+                        submenu={[
+                            { title: "Account", route: "Route 1" },
+                            { title: "Activity", route: "Route 2" },
+                        ]}
+                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
+                    />
 
+                    {/* Menu with dropdown (Data) */}
+                    <MenuButton
+                        title="Settings"
+                        isSelected={selectedMenu.includes("Settings")} // Check if it's selected
+                        isOpen={openDropdowns.includes("Settings")} // Check if the dropdown is open
+                        onClick={() => this.handleMenuClick("Settings", true)} // Toggle dropdown and selection
+                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
+                        submenu={[
+                            { title: "QR Code", route: "Route 1" },
+                            { title: "Watermark", route: "Route 2" },
+                        ]}
+                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
+                    />
 
                     <div className="divider">
                         <div className="divider-line"></div>
                         <p className="divider-name">Other</p>
                     </div>
 
-                    {/* Menu without dropdown (Parent Menu 4) */}
+                    {/* Menu without dropdown (History) */}
                     <MenuButton
-                        title="Parent Menu 4"
-                        isSelected={selectedMenu.includes("Parent Menu 4")} // Check if it's selected
+                        title="History"
+                        isSelected={selectedMenu.includes("History")} // Check if it's selected
                         isOpen={false} // No dropdown
-                        onClick={() => this.handleMenuClick("Parent Menu 4", false)} // Select menu without dropdown
+                        onClick={() => this.handleMenuClick("History", false)} // Select menu without dropdown
+                    />
+
+                     {/* Menu without dropdown (Help) */}
+                     <MenuButton
+                        title="Help"
+                        isSelected={selectedMenu.includes("Help")} // Check if it's selected
+                        isOpen={false} // No dropdown
+                        onClick={() => this.handleMenuClick("Help", false)} // Select menu without dropdown
                     />
                 </div>
 

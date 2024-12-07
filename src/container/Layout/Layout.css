@@ -1,43 +1,65 @@
 @import '../../variable.css';
 
+/* Kontainer utama */
 .page-container {
     display: flex;
     flex-direction: row-reverse;
+    /* Tetap sesuai kebutuhan */
     height: 100%;
 }
 
+/* Kontainer konten */
 .content-container {
     display: flex;
     flex-direction: column;
     justify-content: end;
     background-color: var(--gray-50);
     border-radius: 8px;
-    margin-left: 5px;
     height: 100%;
     width: 100%;
-    padding: 7px;
+    padding: 5px;
     box-sizing: border-box;
 }
 
+/* Wrapper untuk konten utama */
 .content-wrapper {
-    background-color: var(--gray-700);
+    background-color: var(--gray-300);
     border-radius: 6px;
-    height: 95%;
+    height: calc(100% - 45px);
     width: 100%;
-    margin-top: 7px;
+    margin-top: 5px;
+    overflow-y: auto;
+    padding: 5px;
+    box-sizing: border-box;
 }
 
+/* Scrollbar */
+.content-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content-wrapper::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 10px;
+}
+
+.content-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-200);
+}
+
+/* Header konten */
 .header-container {
     display: flex;
     align-items: center;
 }
 
 .menu-title {
-    font-size: 20px;
+    font-size: 1.1rem;
     font-weight: 500;
     margin: 0px 0px 0px 17px;
 }
 
+/* Sidebar Toggle */
 .sidebar-toggle {
     cursor: pointer;
     display: flex;
@@ -49,16 +71,17 @@
     color: var(--gray-900);
 }
 
-.sidebar-toggle:hover{
+.sidebar-toggle:hover {
     background-color: var(--blue-200);
     color: var(--gray-900);
 }
 
-.open{
+.open {
     background-color: var(--blue-900);
     color: var(--gray-50);
 }
 
+/* Konfigurasi di header */
 .config-wrapper {
     display: flex;
     align-items: center;
@@ -94,3 +117,30 @@
     justify-content: center;
     background-color: var(--blue-200);
 }
+
+/* Sidebar */
+.sidebar {
+    width: auto; /* Lebar berdasarkan konten */
+    max-width: 250px;
+    transition: max-width 0.3s ease, opacity 0.8s ease; /* Transisi untuk lebar dan opacity */
+    margin-right: 5px;
+}
+
+/* Sidebar disembunyikan */
+.sidebar.hidden {
+    max-width: 0px;
+    opacity: 0; /* Sidebar menjadi transparan */
+    margin-right: 0px; /* Menghilangkan margin */
+    overflow: hidden;
+    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.2s ease; /* Delay margin-right */
+}
+
+/* Sidebar yang terlihat */
+.sidebar.visible {
+    width: auto; /* Menyesuaikan lebar dengan konten */
+    max-width: 250px;
+    opacity: 1; /* Opacity penuh */
+    margin-right: 5px; /* Menambahkan margin kanan agar konsisten */
+    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.2s ease; /* Delay margin-right */
+}
+
