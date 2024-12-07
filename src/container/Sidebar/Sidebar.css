@@ -24,6 +24,12 @@
     width: 69px;
 }
 
+/* Pastikan tidak ada garis bawah di link */
+.sidebar-container a {
+    text-decoration: none;
+}
+
+
 .brand-wrapper {
     display: flex;
     align-items: center;
@@ -116,5 +122,50 @@
 }
 
 .logout-wrapper .divider {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+.logout-button {
+    background-color: none;
+    height: 48px;
+    border-radius: 6px;
+    display: flex;
+    /* Gunakan Flexbox untuk tata letak horizontal */
+    align-items: center;
+    /* Pusatkan secara vertikal */
+    gap: 10px;
+    /* Tambahkan jarak antara ikon dan judul */
+    color: white;
+    /* Warna teks putih agar kontras dengan background */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 4px 0px;
+}
+
+.logout-button .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary-red);
+    padding: 10px;
+    /* transition: transform 0.3s ease; */
+}
+
+.logout-button .title {
+    color: var(--primary-red);
+    font-size: 1rem;
+    /* Ukuran teks */
+    font-weight: 500;
+    /* Tambahkan ketebalan teks */
+    white-space: nowrap;
+    /* Pastikan teks tetap satu baris */
+}
+
+.logout-button:hover {
+    background-color: var(--blue-200);
+}
+
+.logout-button:hover * {
+    color: var(--gray-900);
 }

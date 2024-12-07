@@ -2,13 +2,12 @@
 
 /* Kontainer utama */
 .page-container {
+    position: relative;
     display: flex;
     flex-direction: row-reverse;
-    /* Tetap sesuai kebutuhan */
     height: 100%;
 }
 
-/* Kontainer konten */
 .content-container {
     display: flex;
     flex-direction: column;
@@ -21,7 +20,6 @@
     box-sizing: border-box;
 }
 
-/* Wrapper untuk konten utama */
 .content-wrapper {
     background-color: var(--gray-300);
     border-radius: 6px;
@@ -56,10 +54,9 @@
 .menu-title {
     font-size: 1.1rem;
     font-weight: 500;
-    margin: 0px 0px 0px 17px;
+    margin: 0px 0px 0px 5px;
 }
 
-/* Sidebar Toggle */
 .sidebar-toggle {
     cursor: pointer;
     display: flex;
@@ -81,7 +78,6 @@
     color: var(--gray-50);
 }
 
-/* Konfigurasi di header */
 .config-wrapper {
     display: flex;
     align-items: center;
@@ -98,7 +94,7 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    margin-right: 13px;
+    margin-right: 10px;
 }
 
 .config-button:hover {
@@ -118,29 +114,48 @@
     background-color: var(--blue-200);
 }
 
-/* Sidebar */
 .sidebar {
-    width: auto; /* Lebar berdasarkan konten */
+    width: auto;
     max-width: 250px;
-    transition: max-width 0.3s ease, opacity 0.8s ease; /* Transisi untuk lebar dan opacity */
+    transition: max-width 0.3s ease, opacity 0.8s ease;
     margin-right: 5px;
 }
 
-/* Sidebar disembunyikan */
 .sidebar.hidden {
     max-width: 0px;
-    opacity: 0; /* Sidebar menjadi transparan */
-    margin-right: 0px; /* Menghilangkan margin */
+    opacity: 0;
+    margin-right: 0px;
     overflow: hidden;
-    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.2s ease; /* Delay margin-right */
+    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.2s ease;
 }
 
-/* Sidebar yang terlihat */
 .sidebar.visible {
-    width: auto; /* Menyesuaikan lebar dengan konten */
+    width: auto;
     max-width: 250px;
-    opacity: 1; /* Opacity penuh */
-    margin-right: 5px; /* Menambahkan margin kanan agar konsisten */
-    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.2s ease; /* Delay margin-right */
+    opacity: 1;
+    margin-right: 5px;
+    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.2s ease;
 }
 
+/* Styling untuk Tooltip */
+.tooltip {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    height: 24px;
+    z-index: 1;
+    background-color: var(--blue-900);
+    color: var(--gray-50);
+    padding: 5px 10px;
+    border-top-left-radius: 8px;  /* Apply radius to top-left corner */
+    border-top-right-radius: 8px; /* Apply radius to top-right corner */
+    border-bottom-right-radius: 8px; /* Apply radius to bottom-right corner */
+    border-bottom-left-radius: 0px; /* No radius for the bottom-left corner */
+    font-size: 0.9rem;
+    white-space: nowrap;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip p {
+    margin: 0px 0px 0px 5px;
+}

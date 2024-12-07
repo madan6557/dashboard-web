@@ -1,7 +1,6 @@
 import React from "react";
 import './MenuButton.css';
 import { NoIcon, Chevron, Dot } from '../Icons/Icon';
-
 const colors = ["--primary-red", "--primary-orange", "--primary-green", "--primary-blue"]; // Warna untuk ikon
 
 const MenuButton = ({
@@ -12,21 +11,30 @@ const MenuButton = ({
     onClick,
     onSubmenuClick,
     selectedSubmenu,
-    color
+    icon = <NoIcon />, // Ikon default
+    selectedIcon, // Ikon saat selected (opsional)
+    onMouseEnter, 
+    onMouseLeave
 }) => {
+    const displayIcon = isSelected && selectedIcon ? selectedIcon : icon; // Gunakan selectedIcon jika isSelected = true
+
     return (
         <div className="button-container">
             {/* Menu utama */}
             <div
-                className={`button-wrapper ${isSelected ? 'selected' : ''}`} // Menambahkan kelas 'selected' jika menu utama dipilih
-                onClick={onClick} // Trigger onClick di button-wrapper utama
+                className={`button-wrapper ${isSelected ? 'selected' : ''}`}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                onClick={onClick}
             >
                 <div className="icon">
-                    <NoIcon /> {/* Render ikon untuk menu utama */}
+                    {displayIcon}
                 </div>
-                <p className="title">{title}</p>
+                <p className="title">
+                    {title}
+                </p>
                 <div className="icon" id="chevron">
-                    {submenu.length > 0 ? <Chevron /> : null} {/* Render Chevron hanya jika ada submenu */}
+                    {submenu.length > 0 ? <Chevron /> : null}
                 </div>
             </div>
 

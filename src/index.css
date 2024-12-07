@@ -5,6 +5,10 @@ html {
   color: var(--gray-900);
 }
 
+html p{
+  text-align: justify;
+}
+
 /* Body */
 body {
   background-color: var(--gray-300);
