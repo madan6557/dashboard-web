@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import "./Dashboard.css"
+import "./Analytics.css"
 
-class Dashboard extends Component {
+class Analytics extends Component {
     state = {
         sidebarToggle: true
     }
 
     render() {
         return (
-            <div className="dashboard-container">
-                <h1>Ini adalah Dashboard</h1>
+            <div className="evaluation-container">
+                <h1>Ini adalah Analytics</h1>
                 <p>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae aut nobis ex voluptas, ut consectetur voluptatum soluta nesciunt veritatis porro facilis adipisci molestias consequatur, facere vel totam eveniet fuga ullam?
                     Officia corrupti tempore ullam necessitatibus perspiciatis? Perferendis quibusdam inventore eligendi vitae, illo, magni rerum sed, reiciendis fugit neque repudiandae? Soluta facilis dolorum hic velit labore ipsa libero consectetur iure deleniti.
@@ -28,4 +28,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default Analytics;

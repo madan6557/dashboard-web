@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import Notification from "../../components/Notification/Notification";
 import Sidebar from "../Sidebar/Sidebar";
 import Dashboard from "../Dashboard/Dashboard";
 import Map from "../Map/Map";
+import Overview from "../Activity/Overview/Overview";
+import Analytics from "../Activity/Analytics/Analytics";
+import Evaluation from "../Activity/Evaluation/Evaluation";
+import { NoIcon } from '../../components/Icons/Icon';
 import "./Layout.css";
 import {
     List,
@@ -25,9 +30,10 @@ class Layout extends Component {
         }));
     };
 
-    // Method untuk memilih komponen yang akan dirender
-    handleMenuSelect = (component) => {
-        this.setState({ selectedComponent: component });
+    // Method to update selected component in the state
+    handleMenuSelect = (selectedTitle) => {
+        console.log("Menu selected:", selectedTitle);
+        this.setState({ selectedComponent: selectedTitle });
     };
 
     handleMenuHover = (isMinimized, title, element) => {
@@ -73,6 +79,31 @@ class Layout extends Component {
                         </div>
                     )}
 
+                    {/* PopUp Positioning */}
+                    <div className="popup-notification">
+                        <Notification />
+                        <Notification />
+                        <Notification />
+                    </div>
+
+                    {/* Dropdown Positioning */}
+                    <div className="notification-dropdown">
+                        <div className="notification-container">
+                            <Notification />
+                            <Notification />
+                            <Notification />
+                            <Notification />
+                            <Notification />
+                            <Notification />
+                            <Notification />
+                            <Notification />
+                            <Notification />
+                        </div>
+                        <div className="clear-button">
+                            <NoIcon />
+                            <p >Clear All</p>
+                        </div>
+                    </div>
 
                     <div className="content-container">
                         <div className="header-container">
@@ -100,6 +131,9 @@ class Layout extends Component {
                                 <Route path="/" element={<Navigate to="/dashboard" />} />
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/map" element={<Map />} />
+                                <Route path="/overview" element={<Overview />} />
+                                <Route path="/analytics" element={<Analytics />} />
+                                <Route path="/evaluation" element={<Evaluation />} />
                             </Routes>
                         </div>
                     </div>
@@ -112,7 +146,7 @@ class Layout extends Component {
                         />
                     </div>
                 </div>
-            </Router>
+            </Router >
         );
     }
 }

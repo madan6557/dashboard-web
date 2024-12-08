@@ -81,6 +81,9 @@ class Sidebar extends Component {
                 selectedSubmenu: null, // Reset submenu when a new menu is selected
             };
         });
+        if (!hasDropdown) {
+            this.props.onMenuSelect(title);  // Memanggil onMenuSelect jika menu tidak memiliki dropdown
+        }
     };
 
     // Handle submenu selection
@@ -99,13 +102,112 @@ class Sidebar extends Component {
                     : selectedMenu, // Otherwise keep the selected menu unchanged
             };
         });
+        this.props.onMenuSelect(submenuTitle);  // Memanggil onMenuSelect jika menu tidak memiliki dropdown
     };
 
     render() {
-        const { selectedMenu, selectedSubmenu, openDropdowns } = this.state;
+        const { selectedMenu, selectedSubmenu, openDropdowns, isMinimize } = this.state;
+
+        // Define menu configuration with divider information and titles
+        const menuConfig = [
+            {
+                title: "Dashboard",
+                icon: <TemplateOutline />,
+                selectedIcon: <TemplateSolid />,
+                route: "/dashboard",
+                hasDropdown: false,
+                showDividerLine: false,
+                showDividerTitle: true,
+                dividerTitle: "Menu",
+            },
+            {
+                title: "Map",
+                icon: <MapOutline />,
+                selectedIcon: <MapSolid />,
+                route: "/map",
+                hasDropdown: false,
+                showDividerLine: false,
+                showDividerTitle: false,
+                dividerTitle: "",
+            },
+            {
+                title: "Activity",
+                icon: <ChartOutline />,
+                selectedIcon: <ChartSolid />,
+                submenu: [
+                    { title: "Overview", route: "/overview" },
+                    { title: "Analytics", route: "/analytics" },
+                    { title: "Evaluation", route: "/evaluation" },
+                ],
+                hasDropdown: true,
+                showDividerLine: false,
+                showDividerTitle: false,
+                dividerTitle: "",
+            },
+            {
+                title: "Data",
+                icon: <DBOutline />,
+                selectedIcon: <DBSolid />,
+                submenu: [
+                    { title: "Table", route: "/table" },
+                    { title: "Verification", route: "/verification" },
+                    { title: "Generate QR Code", route: "/generate-qr" },
+                ],
+                hasDropdown: true,
+                showDividerLine: true,
+                showDividerTitle: true,
+                dividerTitle: "Management",
+            },
+            {
+                title: "Users",
+                icon: <UserOutline />,
+                selectedIcon: <UserSolid />,
+                submenu: [
+                    { title: "Account", route: "/account" },
+                    { title: "Logs", route: "/user-logs" },
+                ],
+                hasDropdown: true,
+                showDividerLine: false,
+                showDividerTitle: false,
+                dividerTitle: "",
+            },
+            {
+                title: "Settings",
+                icon: <CogOutline />,
+                selectedIcon: <CogSolid />,
+                submenu: [
+                    { title: "QR Code", route: "/qr-code" },
+                    { title: "Watermark", route: "/watermark" },
+                ],
+                hasDropdown: true,
+                showDividerLine: false,
+                showDividerTitle: false,
+                dividerTitle: "",
+            },
+            {
+                title: "History",
+                icon: <ClockOutline />,
+                selectedIcon: <ClockSolid />,
+                route: "/history",
+                hasDropdown: false,
+                showDividerLine: true,
+                showDividerTitle: true,
+                dividerTitle: "Other",
+            },
+            {
+                title: "Help",
+                icon: <MarkOutline />,
+                selectedIcon: <MarkSolid />,
+                route: "/help",
+                hasDropdown: false,
+                showDividerLine: false,
+                showDividerTitle: false,
+                dividerTitle: "",
+            },
+        ];
 
         return (
-            <div className={`sidebar-container ${this.state.isMinimize ? 'minimize' : ''}`}>
+            <div className={`sidebar-container ${isMinimize ? "minimize" : ""}`}>
                 <div className="brand-wrapper">
                     <img src={brand} alt="brand" />
                     <p>Logia</p>
@@ -115,215 +217,99 @@ class Sidebar extends Component {
                         </div>
                     </div>
                 </div>
+
                 <div className="divider">
                     <div className="divider-line"></div>
                 </div>
+
                 <div className="menu-wrapper">
-                    <div className="divider">
-                        <p className="divider-name">Menu</p>
-                    </div>
+                    {menuConfig.map((menu, index) => (
+                        <React.Fragment key={menu.title}>
+                            {/* Divider line and title checks */}
+                            {menu.showDividerLine && (
+                                <div className="divider">
+                                    <div className="divider-line"></div>
+                                </div>
+                            )}
+                            {menu.showDividerTitle && menu.dividerTitle && (
+                                <div className="divider">
+                                    <p className="divider-name">{menu.dividerTitle}</p>
+                                </div>
+                            )}
 
-                    {/*  Menu without dropdown (Map) */}
-                    <Link to="/dashboard">
-                        <MenuButton
-                            title="Dashboard"
-                            icon={<TemplateOutline />}
-                            selectedIcon={<TemplateSolid />}
-                            isSelected={selectedMenu.includes("Dashboard")}
-                            isOpen={false}
-                            onClick={() => {
-                                this.handleMenuClick("Dashboard", false);
-                                this.props.onMenuSelect("Dashboard");
-                            }}
-
-                            //Tooltip
-                            onMouseEnter={(event) => {
-                                this.props.onMenuHover(this.state.isMinimize, "Dashboard", event.currentTarget);  // Pass the element to the handler
-                            }}
-                            onMouseLeave={this.props.onMenuLeave}
-                        />
-                    </Link>
-
-                    {/* Menu without dropdown (Map) */}
-                    <Link to="/map">
-                        <MenuButton
-                            title="Map"
-                            icon={<MapOutline />} // Ikon default 
-                            selectedIcon={<MapSolid />} // Ikon saat dipilih
-                            isSelected={selectedMenu.includes("Map")}
-                            isOpen={false}
-                            onClick={() => {
-                                this.handleMenuClick("Map", false);
-                                this.props.onMenuSelect("Map"); // Notify Layout to render the Map component
-                            }}
-
-                            //Tooltip
-                            onMouseEnter={(event) => {
-                                this.props.onMenuHover(this.state.isMinimize, "Map", event.currentTarget);  // Pass the element to the handler
-                            }}
-                            onMouseLeave={this.props.onMenuLeave}
-                        />
-                    </Link>
-
-                    {/* Menu with dropdown (Activity) */}
-                    <MenuButton
-                        title="Activity"
-                        icon={<ChartOutline />} // Ikon default 
-                        selectedIcon={<ChartSolid />} // Ikon saat dipilih
-                        isSelected={selectedMenu.includes("Activity")} // Check if it's selected
-                        isOpen={openDropdowns.includes("Activity")} // No dropdown
-                        onClick={() => this.handleMenuClick("Activity", true)} // Select menu without dropdown
-                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
-                        submenu={[
-                            { title: "Overview", route: "Route 1" },
-                            { title: "Analytics", route: "Route 2" },
-                            { title: "Evaluation", route: "Route 3" }
-                        ]}
-                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
-
-                        //Tooltip
-                        onMouseEnter={(event) => {
-                            this.props.onMenuHover(this.state.isMinimize, "Activity", event.currentTarget);  // Pass the element to the handler
-                        }}
-                        onMouseLeave={this.props.onMenuLeave}
-                    />
-
-                    <div className="divider">
-                        <div className="divider-line"></div>
-                        <p className="divider-name">Management</p>
-                    </div>
-
-                    {/* Menu with dropdown (Data) */}
-                    <MenuButton
-                        title="Data"
-                        icon={<DBOutline />} // Ikon default 
-                        selectedIcon={<DBSolid />} // Ikon saat dipilih
-                        isSelected={selectedMenu.includes("Data")} // Check if it's selected
-                        isOpen={openDropdowns.includes("Data")} // Check if the dropdown is open
-                        onClick={() => this.handleMenuClick("Data", true)} // Toggle dropdown and selection
-                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
-                        submenu={[
-                            { title: "Table", route: "Route 1" },
-                            { title: "Verification", route: "Route 2" },
-                            { title: "Generate QR Code", route: "Route 3" }
-                        ]}
-                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
-
-                        //Tooltip
-                        onMouseEnter={(event) => {
-                            this.props.onMenuHover(this.state.isMinimize, "Data", event.currentTarget);  // Pass the element to the handler
-                        }}
-                        onMouseLeave={this.props.onMenuLeave}
-                    />
-
-                    {/* Menu with dropdown (Users) */}
-                    <MenuButton
-                        title="Users"
-                        icon={<UserOutline />} // Ikon default 
-                        selectedIcon={<UserSolid />} // Ikon saat dipilih
-                        isSelected={selectedMenu.includes("Users")} // Check if it's selected
-                        isOpen={openDropdowns.includes("Users")} // Check if the dropdown is open
-                        onClick={() => this.handleMenuClick("Users", true)} // Toggle dropdown and selection
-                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
-                        submenu={[
-                            { title: "Account", route: "Route 1" },
-                            { title: "Activity", route: "Route 2" },
-                        ]}
-                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
-
-                        //Tooltip
-                        onMouseEnter={(event) => {
-                            this.props.onMenuHover(this.state.isMinimize, "Users", event.currentTarget);  // Pass the element to the handler
-                        }}
-                        onMouseLeave={this.props.onMenuLeave}
-                    />
-
-                    {/* Menu with dropdown (Data) */}
-                    <MenuButton
-                        title="Settings"
-                        icon={<CogOutline />} // Ikon default 
-                        selectedIcon={<CogSolid />} // Ikon saat dipilih
-                        isSelected={selectedMenu.includes("Settings")} // Check if it's selected
-                        isOpen={openDropdowns.includes("Settings")} // Check if the dropdown is open
-                        onClick={() => this.handleMenuClick("Settings", true)} // Toggle dropdown and selection
-                        onSubmenuClick={this.handleSubmenuClick} // Handle submenu click
-                        submenu={[
-                            { title: "QR Code", route: "Route 1" },
-                            { title: "Watermark", route: "Route 2" },
-                        ]}
-                        selectedSubmenu={selectedSubmenu} // Pass the selected submenu
-
-                        //Tooltip
-                        onMouseEnter={(event) => {
-                            this.props.onMenuHover(this.state.isMinimize, "Settings", event.currentTarget);  // Pass the element to the handler
-                        }}
-                        onMouseLeave={this.props.onMenuLeave}
-                    />
-
-                    <div className="divider">
-                        <div className="divider-line"></div>
-                        <p className="divider-name">Other</p>
-                    </div>
-
-                    {/* Menu without dropdown (History) */}
-                    <MenuButton
-                        title="History"
-                        icon={<ClockOutline />} // Ikon default 
-                        selectedIcon={<ClockSolid />} // Ikon saat dipilih
-                        isSelected={selectedMenu.includes("History")} // Check if it's selected
-                        isOpen={false} // No dropdown
-                        onClick={() => {
-                            this.handleMenuClick("History", false);
-                            this.props.onMenuSelect("History"); // Notify Layout to render
-                        }}
-
-                        //Tooltip
-                        onMouseEnter={(event) => {
-                            this.props.onMenuHover(this.state.isMinimize, "History", event.currentTarget);  // Pass the element to the handler
-                        }}
-                        onMouseLeave={this.props.onMenuLeave}
-                    />
-
-                    {/* Menu without dropdown (Help) */}
-                    <MenuButton
-                        title="Help"
-                        icon={<MarkOutline />} // Ikon default 
-                        selectedIcon={<MarkSolid />} // Ikon saat dipilih
-                        isSelected={selectedMenu.includes("Help")} // Check if it's selected
-                        isOpen={false} // No dropdown
-                        onClick={() => {
-                            this.handleMenuClick("Help", false);
-                            this.props.onMenuSelect("Help"); // Notify Layout to render
-                        }}
-
-                        //Tooltip
-                        onMouseEnter={(event) => {
-                            this.props.onMenuHover(this.state.isMinimize, "Help", event.currentTarget);  // Pass the element to the handler
-                        }}
-                        onMouseLeave={this.props.onMenuLeave}
-                    />
+                            {/* Menu button */}
+                            {menu.route ? (
+                                <Link to={menu.route}>
+                                    <MenuButton
+                                        title={menu.title}
+                                        icon={menu.icon}
+                                        selectedIcon={menu.selectedIcon}
+                                        isSelected={selectedMenu.includes(menu.title)}
+                                        isOpen={openDropdowns.includes(menu.title)}
+                                        onClick={() => this.handleMenuClick(menu.title, menu.hasDropdown, menu.route)}
+                                        onSubmenuClick={this.handleSubmenuClick}
+                                        submenu={menu.submenu}
+                                        selectedSubmenu={selectedSubmenu}
+                                        onSubmenuMouseEnter={(submenuTitle, element) => {
+                                            if (isMinimize) {
+                                                this.props.onMenuHover(isMinimize, submenuTitle, element);
+                                            }
+                                        }}
+                                        onSubmenuMouseLeave={this.props.onMenuLeave}
+                                        onMouseEnter={(event) => {
+                                            this.props.onMenuHover(this.state.isMinimize, menu.title, event.currentTarget);
+                                        }}
+                                        onMouseLeave={this.props.onMenuLeave}
+                                    />
+                                </Link>
+                            ) : (
+                                <div>
+                                    <MenuButton
+                                        title={menu.title}
+                                        icon={menu.icon}
+                                        selectedIcon={menu.selectedIcon}
+                                        isSelected={selectedMenu.includes(menu.title)}
+                                        isOpen={openDropdowns.includes(menu.title)}
+                                        onClick={() => this.handleMenuClick(menu.title, menu.hasDropdown, menu.route)}
+                                        onSubmenuClick={this.handleSubmenuClick}
+                                        submenu={menu.submenu}
+                                        selectedSubmenu={selectedSubmenu}
+                                        onSubmenuMouseEnter={(submenuTitle, element) => {
+                                            if (isMinimize) {
+                                                this.props.onMenuHover(isMinimize, submenuTitle, element);
+                                            }
+                                        }}
+                                        onSubmenuMouseLeave={this.props.onMenuLeave}
+                                        onMouseEnter={(event) => {
+                                            this.props.onMenuHover(this.state.isMinimize, menu.title, event.currentTarget);
+                                        }}
+                                        onMouseLeave={this.props.onMenuLeave}
+                                    />
+                                </div>
+                            )}
+                        </React.Fragment>
+                    ))}
                 </div>
 
-                <div className="logout-wrapper">
-                    <div className="divider">
+                <div className="divider end">
                         <div className="divider-line"></div>
                     </div>
-                    <div
-                        className={"logout-button"}
+                <div
+                    className={"logout-button"}
 
-                        //Tooltip
-                        onMouseEnter={(event) => {
-                            this.props.onMenuHover(this.state.isMinimize, "Log Out", event.currentTarget);  // Pass the element to the handler
-                        }}
-                        onMouseLeave={this.props.onMenuLeave}
-                    >
-                        <div className="icon">
-                            <LogOut />
-                        </div>
-                        <p className="title">
-                            Log Out
-                        </p>
+                    //Tooltip
+                    onMouseEnter={(event) => {
+                        this.props.onMenuHover(this.state.isMinimize, "Log Out", event.currentTarget);  // Pass the element to the handler
+                    }}
+                    onMouseLeave={this.props.onMenuLeave}
+                    onClick={() => alert("Logging out")}
+                >
+                    <div className="icon">
+                        <LogOut />
                     </div>
+                    <p className="title">
+                        Log Out
+                    </p>
                 </div>
             </div>
         );

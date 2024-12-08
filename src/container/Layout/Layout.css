@@ -126,7 +126,7 @@
     opacity: 0;
     margin-right: 0px;
     overflow: hidden;
-    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.2s ease;
+    transition: max-width 0.3s ease, opacity 0.8s ease, margin-right 0.1s ease 0.15s;
 }
 
 .sidebar.visible {
@@ -147,10 +147,14 @@
     background-color: var(--blue-900);
     color: var(--gray-50);
     padding: 5px 10px 5px 15px;
-    border-top-left-radius: 8px;  /* Apply radius to top-left corner */
-    border-top-right-radius: 8px; /* Apply radius to top-right corner */
-    border-bottom-right-radius: 8px; /* Apply radius to bottom-right corner */
-    border-bottom-left-radius: 0px; /* No radius for the bottom-left corner */
+    border-top-left-radius: 8px;
+    /* Apply radius to top-left corner */
+    border-top-right-radius: 8px;
+    /* Apply radius to top-right corner */
+    border-bottom-right-radius: 8px;
+    /* Apply radius to bottom-right corner */
+    border-bottom-left-radius: 0px;
+    /* No radius for the bottom-left corner */
     font-size: 0.9rem;
     white-space: nowrap;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -158,4 +162,74 @@
 
 .tooltip p {
     margin: 0px;
+}
+
+.popup-notification {
+    display: flex;
+    flex-direction: column-reverse;
+    z-index: 1;
+    right: 10px;
+    bottom: 10px;
+    position: absolute;
+    max-width: 400px;
+    row-gap: 5px;
+}
+
+.notification-dropdown {
+    background-color: var(--gray-100);
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    max-width: 400px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 10px;
+    right: 120px;
+    top: 55px;
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Ubah dari scroll ke auto agar lebih dinamis */
+    width: 100%;
+    row-gap: 5px;
+    max-height: 600px; /* Tetapkan tinggi maksimum agar scroll terlihat */
+    padding-right: 8px; /* Tambahkan padding agar scrollbar tidak menimpa konten */
+    padding-bottom: 5px;
+}
+
+/* Scrollbar */
+.notification-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.notification-container::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 10px;
+}
+
+.notification-container::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-200);
+}
+
+.clear-button{
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.clear-button p{
+    margin: 0px;
+}
+
+.clear-button:hover{
+    background-color: var(--blue-200);
+    cursor: pointer;
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import './MenuButton.css';
 import { NoIcon, Chevron, Dot } from '../Icons/Icon';
 const colors = ["--primary-red", "--primary-orange", "--primary-green", "--primary-blue"]; // Warna untuk ikon
@@ -13,8 +14,10 @@ const MenuButton = ({
     selectedSubmenu,
     icon = <NoIcon />, // Ikon default
     selectedIcon, // Ikon saat selected (opsional)
-    onMouseEnter, 
-    onMouseLeave
+    onMouseEnter,
+    onMouseLeave,
+    onSubmenuMouseEnter, // New: Untuk tooltip submenu
+    onSubmenuMouseLeave, // New: Untuk tooltip submenu
 }) => {
     const displayIcon = isSelected && selectedIcon ? selectedIcon : icon; // Gunakan selectedIcon jika isSelected = true
 
@@ -41,10 +44,13 @@ const MenuButton = ({
             {isOpen && submenu.length > 0 && (
                 <div className="submenu">
                     {submenu.map((item, index) => (
-                        <div
+                        <Link
                             key={index}
-                            className={`button-wrapper ${selectedSubmenu === item.title ? 'selected' : ''}`} // Pilih submenu yang aktif
-                            onClick={() => onSubmenuClick(item.title)} // Menangani klik submenu
+                            to={item.route} // Navigasi ke route submenu
+                            className={`button-wrapper ${selectedSubmenu === item.title ? 'selected' : ''}`} // Tambahkan kelas untuk submenu yang aktif
+                            onClick={() => onSubmenuClick(item.title)} // Tetap menangani klik submenu untuk state
+                            onMouseEnter={(event) => onSubmenuMouseEnter(item.title, event.currentTarget)} // Tooltip submenu
+                            onMouseLeave={onSubmenuMouseLeave} // Tooltip submenu
                         >
                             <div
                                 className="icon"
@@ -53,10 +59,11 @@ const MenuButton = ({
                                 <Dot /> {/* Ikon submenu */}
                             </div>
                             <p className="title">{item.title}</p>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}
+
         </div>
     );
 };

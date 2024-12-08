@@ -169,3 +169,7 @@
 .logout-button:hover * {
     color: var(--gray-900);
 }
+
+.divider.end{
+    margin-top: auto;
+}

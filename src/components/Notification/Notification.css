@@ -1,0 +1,66 @@
+@import '../../variable.css';
+
+.notification-wrapper {
+    display: flex;
+    background-color: var(--gray-50);
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notification-wrapper p {
+    margin: 0px;
+}
+
+.notification-wrapper .message {
+    color: var(--gray-900);
+    font-size: 0.8rem;
+}
+
+.notification-wrapper .show-button {
+    display: flex;
+    align-items: center;
+    color: var(--blue-900);
+    width: max-content;
+    height: 20px;
+    margin-left: auto;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.notification-wrapper .show-button:hover {
+    background-color: var(--blue-200);
+    cursor: pointer;
+}
+
+
+.notification-wrapper .icon {
+    color: var(--gray-900);
+}
+
+.icon.caution {
+    color: var(--primary-orange);
+}
+
+.icon.danger {
+    color: var(--primary-red);
+}
+
+.icon.info {
+    color: var(--primary-blue);
+}
+
+.icon.succes {
+    color: var(--primary-green);
+}
+
+.close-button {
+    color: var(--gray-500);
+    height: 28px;
+    margin-left: 5px;
+}
+
+.close-button:hover{
+    color: var(--gray-900);
+    cursor: pointer;
+}
