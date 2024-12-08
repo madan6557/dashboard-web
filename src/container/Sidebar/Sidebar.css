@@ -140,7 +140,7 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
     overflow: hidden;
-    margin: 4px 0px;
+    margin-top: 10px;
 }
 
 .logout-button .icon {

@@ -73,11 +73,6 @@
     color: var(--gray-900);
 }
 
-.open {
-    background-color: var(--blue-900);
-    color: var(--gray-50);
-}
-
 .config-wrapper {
     display: flex;
     align-items: center;
@@ -99,6 +94,34 @@
 
 .config-button:hover {
     background-color: var(--blue-200);
+    color: var(--gray-900);
+}
+
+.notification-number {
+    position: absolute;
+    right: 95px;
+    top: 10px;
+    height: 18px;
+    min-width: 18px;
+    width: fit-content;
+    background-color: var(--primary-red);
+    color: var(--gray-50);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-number p {
+    position: relative;
+    margin: 0px 3px;
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.open {
+    background-color: var(--blue-900);
+    color: var(--gray-50);
 }
 
 .user-icon {
@@ -164,15 +187,87 @@
     margin: 0px;
 }
 
+/* Popup Notification Style */
 .popup-notification {
-    display: flex;
-    flex-direction: column-reverse;
-    z-index: 1;
-    right: 10px;
-    bottom: 10px;
     position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
     max-width: 400px;
-    row-gap: 5px;
+    gap: 5px;
+    z-index: 1;
+}
+
+/* Animasi Fade In + Slide Up */
+@keyframes fadeInSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(60px);
+        /* Mulai dari bawah */
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        /* Akhiri di posisi */
+    }
+}
+
+/* Animasi Slide Up untuk Elemen Tengah */
+.notification-slide-up {
+    animation: slideUp 0.3s ease-in-out;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(60px);
+    }
+
+    100% {
+        transform: translateY(0px);
+        /* Bergeser ke atas */
+    }
+}
+
+/* Animasi Fade Out + Slide Up */
+@keyframes fadeOutSlideUp {
+    0% {
+        opacity: 1;
+        transform: translateY(60px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(0px);
+        /* Menghilang sambil bergeser */
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Elemen Baru Masuk */
+.notification-enter {
+    animation: fadeInSlideUp 0.3s ease-out forwards;
+}
+
+/* Elemen Lama Keluar */
+.notification-exit {
+    animation: fadeOutSlideUp 0.3s ease-in forwards;
+}
+
+.popup-notification .notification-wrapper {
+    animation: fadeOut 0.3s ease-in forwards;
+    animation-delay: 3s;
+    /* Delay 2 detik untuk memberikan waktu animasi */
 }
 
 .notification-dropdown {
@@ -180,7 +275,7 @@
     border-radius: 6px;
     position: absolute;
     z-index: 1;
-    max-width: 400px;
+    width: 400px;
     box-sizing: border-box;
     overflow: hidden;
     padding: 10px;
@@ -188,16 +283,19 @@
     top: 55px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: calc(70% - 65px);
 }
 
 .notification-container {
     display: flex;
-    flex-direction: column;
-    overflow-y: auto; /* Ubah dari scroll ke auto agar lebih dinamis */
+    flex-direction: column-reverse;
+    overflow-y: auto;
+    /* Ubah dari scroll ke auto agar lebih dinamis */
     width: 100%;
     row-gap: 5px;
-    max-height: 600px; /* Tetapkan tinggi maksimum agar scroll terlihat */
-    padding-right: 8px; /* Tambahkan padding agar scrollbar tidak menimpa konten */
+    padding-right: 8px;
+    /* Tambahkan padding agar scrollbar tidak menimpa konten */
     padding-bottom: 5px;
 }
 
@@ -215,7 +313,7 @@
     background: var(--blue-200);
 }
 
-.clear-button{
+.clear-button {
     display: flex;
     align-items: center;
     width: fit-content;
@@ -223,13 +321,15 @@
     margin-top: 5px;
     padding: 5px;
     border-radius: 6px;
+    color: var(--gray-600);
 }
 
-.clear-button p{
+.clear-button p {
+    font-size: 0.9rem;
     margin: 0px;
 }
 
-.clear-button:hover{
-    background-color: var(--blue-200);
+.clear-button:hover {
+    color: var(--gray-900);
     cursor: pointer;
 }

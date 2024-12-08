@@ -1,26 +1,40 @@
 import React from "react";
-import { NoIcon } from '../Icons/Icon';
-import "./Notification.css"
+import { NoIcon } from "../Icons/Icon";
+import "./Notification.css";
+import PropTypes from "prop-types";
 
-const Notification = ({
-    message,
-    type,
-    isShow = false,
-}) => {
+const Notification = ({ id, message, type, time, isPopup = false, onClose = null }) => {
     return (
         <div className="notification-wrapper">
-            <div className="icon info">
+            <div className={`icon ${type}`}>
                 <NoIcon />
             </div>
             <div>
-                <p className="message">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                <p className="show-button">Show</p>
+                <p className="message">{message}</p>
+                <p className="time">{time}</p>
             </div>
-            <div className="close-button">
-                <NoIcon />
-            </div>
+            {/* Hanya tampilkan tombol close jika isPopup adalah false */}
+            {!isPopup && (
+                <div
+                    className="close-button"
+                    aria-label="Close notification"
+                    onClick={() => onClose?.(id)}
+                >
+                    <NoIcon />
+                </div>
+            )}
         </div>
     );
+};
+
+// Move propTypes and defaultProps here after the component
+Notification.propTypes = {
+    id: PropTypes.number.isRequired,
+    message: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(["info", "success", "error", "caution"]).isRequired,
+    time: PropTypes.string.isRequired,
+    isPopup: PropTypes.bool.isRequired,
+    onClose: PropTypes.func,
 };
 
 export default Notification;

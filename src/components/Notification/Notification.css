@@ -10,6 +10,7 @@
 
 .notification-wrapper p {
     margin: 0px;
+    margin-right: 10px;
 }
 
 .notification-wrapper .message {
@@ -17,32 +18,28 @@
     font-size: 0.8rem;
 }
 
-.notification-wrapper .show-button {
+.notification-wrapper .time {
     display: flex;
     align-items: center;
-    color: var(--blue-900);
+    color: var(--gray-500);
     width: max-content;
     height: 20px;
     margin-left: auto;
     padding: 5px;
-    border-radius: 4px;
+    font-size: 0.8rem;
 }
-
-.notification-wrapper .show-button:hover {
-    background-color: var(--blue-200);
-    cursor: pointer;
-}
-
 
 .notification-wrapper .icon {
     color: var(--gray-900);
+    margin-bottom: auto;
+    padding: 0px 10px 0px 0px;
 }
 
 .icon.caution {
     color: var(--primary-orange);
 }
 
-.icon.danger {
+.icon.error {
     color: var(--primary-red);
 }
 
@@ -57,7 +54,7 @@
 .close-button {
     color: var(--gray-500);
     height: 28px;
-    margin-left: 5px;
+    margin-left: auto;
 }
 
 .close-button:hover{
