@@ -49,6 +49,7 @@ const Layout = () => {
         // Menutup dropdown jika tidak ada notifikasi
         if (notifications.length === 0) {
             setisNotificationDropdownOpen(false);
+            setOpenDropdown(null)
         }
     }, [notifications.length]);  // Akan dijalankan setiap kali jumlah notifikasi berubah
 

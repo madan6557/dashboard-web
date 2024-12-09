@@ -312,7 +312,7 @@ class Sidebar extends Component {
                             this.props.onMenuHover(this.state.isMinimize, "Log Out", event.currentTarget);  // Pass the element to the handler
                         }}
                         onMouseLeave={this.props.onMenuLeave}
-                        onClick={() => this.props.onSendNotification("You have logged out!", "succes")}
+                        onClick={() => this.props.onSendNotification("You have logged out!", "success")}
                     >
                         <div className="icon">
                             <LogOut />

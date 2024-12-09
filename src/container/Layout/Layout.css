@@ -194,7 +194,7 @@
     right: 10px;
     display: flex;
     flex-direction: column;
-    max-width: 400px;
+    width: 400px;
     gap: 5px;
     z-index: 1;
 }

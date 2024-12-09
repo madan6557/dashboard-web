@@ -1,11 +1,15 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const NotificationContext = createContext();
 
 export const useNotification = () => useContext(NotificationContext);
 
 export const NotificationProvider = ({ children }) => {
-    const [notifications, setNotifications] = useState([]);
+    const [notifications, setNotifications] = useState(() => {
+        // Load notifications from sessionStorage on initialization
+        const storedNotifications = sessionStorage.getItem("notifications");
+        return storedNotifications ? JSON.parse(storedNotifications) : [];
+    });
 
     const addNotification = (message, type = "info") => {
         const date = new Date();
@@ -13,21 +17,34 @@ export const NotificationProvider = ({ children }) => {
         const minutes = String(date.getMinutes()).padStart(2, '0'); // Format menit
         const period = date.getHours() >= 12 ? "PM" : "AM"; // AM/PM
         const time = `${hours}:${minutes} ${period}`;
-        
-        setNotifications((prev) => [
-            ...prev,
-            { id: Date.now(), message, type, time },
-        ]);
+
+        const newNotification = { id: Date.now(), message, type, time };
+
+        setNotifications((prev) => {
+            const updatedNotifications = [...prev, newNotification];
+            sessionStorage.setItem("notifications", JSON.stringify(updatedNotifications)); // Save to sessionStorage
+            return updatedNotifications;
+        });
     };
 
     const removeNotification = (id) => {
-        if (id) {
-            setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-        } else {
-            setNotifications([]); // This will clear all notifications
-        }
+        setNotifications((prev) => {
+            const updatedNotifications = id
+                ? prev.filter((notif) => notif.id !== id)
+                : []; // Clear all notifications if id is not provided
+
+            sessionStorage.setItem("notifications", JSON.stringify(updatedNotifications)); // Update sessionStorage
+            return updatedNotifications;
+        });
     };
-    
+
+    useEffect(() => {
+        // Sync sessionStorage changes on component mount (optional)
+        const storedNotifications = sessionStorage.getItem("notifications");
+        if (storedNotifications) {
+            setNotifications(JSON.parse(storedNotifications));
+        }
+    }, []);
 
     return (
         <NotificationContext.Provider

@@ -5,6 +5,7 @@ import {
     exclamationCircle,
     informationCircle,
     xCircle,
+    Cross,
 } from "../Icons/Icon";
 import "./Notification.css";
 import PropTypes from "prop-types";
@@ -38,7 +39,7 @@ const Notification = ({ id, message, type, time, isPopup = false, onClose = null
                     aria-label="Close notification"
                     onClick={() => onClose?.(id)}
                 >
-                    <NoIcon />
+                    <Cross />
                 </div>
             )}
         </div>
