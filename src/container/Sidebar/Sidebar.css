@@ -99,7 +99,7 @@
 
 /* Hover effect untuk thumb scrollbar */
 .menu-wrapper::-webkit-scrollbar-thumb:hover {
-    background: var(--blue-200);
+    background: var(--blue-500);
     /* Ubah warna ketika hover */
 }
 
@@ -132,7 +132,6 @@
     /* Gunakan Flexbox untuk tata letak horizontal */
     align-items: center;
     /* Pusatkan secara vertikal */
-    gap: 10px;
     /* Tambahkan jarak antara ikon dan judul */
     color: white;
     /* Warna teks putih agar kontras dengan background */

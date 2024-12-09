@@ -48,7 +48,7 @@ const MenuButton = ({
                             key={index}
                             to={item.route} // Navigasi ke route submenu
                             className={`button-wrapper ${selectedSubmenu === item.title ? 'selected' : ''}`} // Tambahkan kelas untuk submenu yang aktif
-                            onClick={() => onSubmenuClick(item.title)} // Tetap menangani klik submenu untuk state
+                            onClick={() => onSubmenuClick(item.title, item.route)} // Tetap menangani klik submenu untuk state
                             onMouseEnter={(event) => onSubmenuMouseEnter(item.title, event.currentTarget)} // Tooltip submenu
                             onMouseLeave={onSubmenuMouseLeave} // Tooltip submenu
                         >

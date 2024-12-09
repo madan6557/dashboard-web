@@ -9,7 +9,11 @@ export const NotificationProvider = ({ children }) => {
 
     const addNotification = (message, type = "info") => {
         const date = new Date();
-        const time = `${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"}`;
+        const hours = String(date.getHours() % 12 || 12).padStart(2, '0'); // Format jam (12-hour clock)
+        const minutes = String(date.getMinutes()).padStart(2, '0'); // Format menit
+        const period = date.getHours() >= 12 ? "PM" : "AM"; // AM/PM
+        const time = `${hours}:${minutes} ${period}`;
+        
         setNotifications((prev) => [
             ...prev,
             { id: Date.now(), message, type, time },

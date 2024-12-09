@@ -27,7 +27,7 @@ const Notification = ({ id, message, type, time, isPopup = false, onClose = null
             <div className={`icon ${type}`}>
                 <IconComponent />
             </div>
-            <div>
+            <div className="message-container">
                 <p className="message">{message}</p>
                 <p className="time">{time}</p>
             </div>

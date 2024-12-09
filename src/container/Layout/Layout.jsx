@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useNotification } from "../../context/NotificationContext";
+import ActionButton from "../../components/ActionButton/ActionButton";
 import Notification from "../../components/Notification/Notification";
 import Sidebar from "../Sidebar/Sidebar";
 import Dashboard from "../Dashboard/Dashboard";
@@ -15,6 +16,7 @@ import {
     VerticalDots,
     BellOutline,
     Trash,
+    Anotation,
 } from '../../components/Icons/Icon';
 
 const Layout = () => {
@@ -106,18 +108,14 @@ const Layout = () => {
     };
 
 
-    const handleSendNotification = () => {
+    const handleSendNotification = (message, type) => {
         // Generate a unique number for each notification
         const notificationCount = notifications.length + 1;  // Incremental numbering
 
-        // Define the types (you can change this logic as needed)
-        const types = ["info", "error", "failed", "caution", "success"];
-        const randomType = types[notificationCount % types.length];  // Cycle through types
-
         // Add a notification with a unique number and a dynamic type
-        addNotification(`Notification #${notificationCount}: This is a test notification!`, randomType);
+        addNotification(`Notification #${notificationCount}: ${message}`, type);
 
-        if (openDropdown != 'notifications') {
+        if (openDropdown !== 'notifications') {
             setNotificationUpdateCount((prevCount) => prevCount + 1);
         }
     };
@@ -220,7 +218,7 @@ const Layout = () => {
                 )}
 
                 {openDropdown === 'profile' && (
-                    <div ref={profileDropdownRef} className="profile-dropdown">
+                    <div ref={profileDropdownRef} className="profile-dropdown" >
                         <p>Profile Dropdown</p>
                     </div>
                 )}
@@ -235,14 +233,19 @@ const Layout = () => {
                         </div>
                         <p className="menu-title">{selectedComponent}</p>
                         <div className="config-wrapper">
-                            <button
-                                className="config-button"
-                                onClick={handleSendNotification}>
-                                <BellOutline />
-                            </button>
+                            <div style={{marginRight: 10 + 'px'}}>
+                                <ActionButton
+                                    title="Send"
+                                    icon={<Anotation />}
+                                    type="confirm"
+                                    disabled={false}
+                                    onClick={() => handleSendNotification("This is a test notification!")} // Pasang fungsi ini sebagai handler
+                                />
+                            </div>
+
                             <div
                                 className={`config-button ${openDropdown === 'notifications' ? 'open' : ''}`}
-                                onClick={() => handleDropdownClick('notifications')}
+                                onClick={() => handleDropdownClick('notifications') }
                             >
                                 <BellOutline />
                                 {notificationUpdateCount > 0 && (
@@ -255,13 +258,13 @@ const Layout = () => {
                             </div>
                             <div
                                 className={`config-button ${openDropdown === 'settings' ? 'open' : ''}`}
-                                onClick={() => handleDropdownClick('settings')}
+                                onClick={() => [handleDropdownClick('settings'), handleSendNotification("This is a test notification!")]}
                             >
                                 <VerticalDots />
                             </div>
                             <div
                                 className={`user-icon ${openDropdown === 'profile' ? 'open' : ''}`}
-                                onClick={() => handleDropdownClick('profile')}
+                                onClick={() => [handleDropdownClick('profile'), handleSendNotification("This is a test notification!")]}
                             >
                                 <p>A</p>
                             </div>
@@ -284,6 +287,7 @@ const Layout = () => {
                         onMenuSelect={handleMenuSelect}
                         onMenuHover={handleMenuHover}
                         onMenuLeave={handleMenuLeave}
+                        onSendNotification={handleSendNotification}
                         sidebarToggle={sidebarToggle}
                     />
                 </div>

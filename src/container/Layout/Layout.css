@@ -42,7 +42,7 @@
 }
 
 .content-wrapper::-webkit-scrollbar-thumb:hover {
-    background: var(--blue-200);
+    background: var(--blue-500);
 }
 
 /* Header konten */

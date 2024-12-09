@@ -18,5 +18,19 @@
     --gray-50: #FAFAFA;
 
     --blue-900: #17226B;
+    --blue-600: #263ABD;
+    --blue-500: #6473DB;
     --blue-200: #B9BFEB;
+    --blue-50: #DFE2F9;
+
+    --green-600: #27920F;
+    --green-500: #52B93C;
+    --green-50: #E1FFDA;
+
+    --red-600: #D53B3B;
+    --red-500: #DB6464;
+    --red-50: #F9DFDF;
+
+    --orange-50: #FFF6E3;
+
   }

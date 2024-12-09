@@ -87,7 +87,7 @@ class Sidebar extends Component {
     };
 
     // Handle submenu selection
-    handleSubmenuClick = (submenuTitle) => {
+    handleSubmenuClick = (submenuTitle, submenuRoute) => {
         this.setState((prevState) => {
             const { selectedMenu, openDropdowns } = prevState;
 
@@ -102,7 +102,17 @@ class Sidebar extends Component {
                     : selectedMenu, // Otherwise keep the selected menu unchanged
             };
         });
-        this.props.onMenuSelect(submenuTitle);  // Memanggil onMenuSelect jika menu tidak memiliki dropdown
+
+        // Periksa apakah submenu memiliki rute valid
+        const isRouted = submenuTitle && submenuRoute;
+
+        if (isRouted) {
+            // Jika submenu memiliki rute, panggil onMenuSelect
+            this.props.onMenuSelect(submenuTitle);
+        } else {
+            // Jika tidak memiliki rute, kirim notifikasi
+            this.props.onSendNotification("This page is still under development!", "info");
+        }
     };
 
     render() {
@@ -149,9 +159,9 @@ class Sidebar extends Component {
                 icon: <DBOutline />,
                 selectedIcon: <DBSolid />,
                 submenu: [
-                    { title: "Table", route: "/table" },
-                    { title: "Verification", route: "/verification" },
-                    { title: "Generate QR Code", route: "/generate-qr" },
+                    { title: "Table", route: null },
+                    { title: "Verification", route: null },
+                    { title: "Generate QR Code", route: null },
                 ],
                 hasDropdown: true,
                 showDividerLine: true,
@@ -163,8 +173,8 @@ class Sidebar extends Component {
                 icon: <UserOutline />,
                 selectedIcon: <UserSolid />,
                 submenu: [
-                    { title: "Account", route: "/account" },
-                    { title: "Logs", route: "/user-logs" },
+                    { title: "Account", route: null },
+                    { title: "Logs", route: null },
                 ],
                 hasDropdown: true,
                 showDividerLine: false,
@@ -176,8 +186,8 @@ class Sidebar extends Component {
                 icon: <CogOutline />,
                 selectedIcon: <CogSolid />,
                 submenu: [
-                    { title: "QR Code", route: "/qr-code" },
-                    { title: "Watermark", route: "/watermark" },
+                    { title: "Option", route: null },
+                    { title: "Watermark", route: null },
                 ],
                 hasDropdown: true,
                 showDividerLine: false,
@@ -290,27 +300,29 @@ class Sidebar extends Component {
                         </React.Fragment>
                     ))}
                 </div>
-
-                <div className="divider end">
+                <div className="logout-wrapper">
+                    <div className="divider end">
                         <div className="divider-line"></div>
                     </div>
-                <div
-                    className={"logout-button"}
+                    <div
+                        className={"logout-button"}
 
-                    //Tooltip
-                    onMouseEnter={(event) => {
-                        this.props.onMenuHover(this.state.isMinimize, "Log Out", event.currentTarget);  // Pass the element to the handler
-                    }}
-                    onMouseLeave={this.props.onMenuLeave}
-                    onClick={() => alert("Logging out")}
-                >
-                    <div className="icon">
-                        <LogOut />
+                        //Tooltip
+                        onMouseEnter={(event) => {
+                            this.props.onMenuHover(this.state.isMinimize, "Log Out", event.currentTarget);  // Pass the element to the handler
+                        }}
+                        onMouseLeave={this.props.onMenuLeave}
+                        onClick={() => this.props.onSendNotification("You have logged out!", "succes")}
+                    >
+                        <div className="icon">
+                            <LogOut />
+                        </div>
+                        <p className="title">
+                            Log Out
+                        </p>
                     </div>
-                    <p className="title">
-                        Log Out
-                    </p>
                 </div>
+
             </div>
         );
     }
