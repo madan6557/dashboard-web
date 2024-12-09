@@ -1,19 +1,37 @@
 import React from "react";
-import { NoIcon } from "../Icons/Icon";
+import {
+    NoIcon,
+    checkCircle,
+    exclamationCircle,
+    informationCircle,
+    xCircle,
+} from "../Icons/Icon";
 import "./Notification.css";
 import PropTypes from "prop-types";
 
+// Map icon based on type
+const iconMap = {
+    success: checkCircle,
+    caution: exclamationCircle,
+    error: exclamationCircle,
+    failed: xCircle,
+    info: informationCircle,
+};
+
 const Notification = ({ id, message, type, time, isPopup = false, onClose = null }) => {
+    // Get the appropriate icon based on the type
+    const IconComponent = iconMap[type] || NoIcon;
+
     return (
         <div className="notification-wrapper">
             <div className={`icon ${type}`}>
-                <NoIcon />
+                <IconComponent />
             </div>
             <div>
                 <p className="message">{message}</p>
                 <p className="time">{time}</p>
             </div>
-            {/* Hanya tampilkan tombol close jika isPopup adalah false */}
+            {/* Show close button only if isPopup is false */}
             {!isPopup && (
                 <div
                     className="close-button"
@@ -27,11 +45,11 @@ const Notification = ({ id, message, type, time, isPopup = false, onClose = null
     );
 };
 
-// Move propTypes and defaultProps here after the component
+// PropTypes validation
 Notification.propTypes = {
     id: PropTypes.number.isRequired,
     message: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(["info", "success", "error", "caution"]).isRequired,
+    type: PropTypes.oneOf(["info", "success", "error", "failed", "caution"]).isRequired,
     time: PropTypes.string.isRequired,
     isPopup: PropTypes.bool.isRequired,
     onClose: PropTypes.func,

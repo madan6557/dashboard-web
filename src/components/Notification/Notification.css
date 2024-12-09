@@ -43,11 +43,15 @@
     color: var(--primary-red);
 }
 
+.icon.failed {
+    color: var(--primary-red);
+}
+
 .icon.info {
     color: var(--primary-blue);
 }
 
-.icon.succes {
+.icon.success {
     color: var(--primary-green);
 }
 

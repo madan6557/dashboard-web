@@ -11,11 +11,10 @@ import Analytics from "../Activity/Analytics/Analytics";
 import Evaluation from "../Activity/Evaluation/Evaluation";
 import "./Layout.css";
 import {
-    NoIcon,
     List,
     VerticalDots,
     BellOutline,
-    BellSolid,
+    Trash,
 } from '../../components/Icons/Icon';
 
 const Layout = () => {
@@ -24,11 +23,17 @@ const Layout = () => {
     const [selectedComponent, setSelectedComponent] = useState("Dashboard");
     const [tooltipText, setTooltipText] = useState("");
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isNotificationDropdownOpen, setisNotificationDropdownOpen] = useState(false);
     const [notificationUpdateCount, setNotificationUpdateCount] = useState(0);
+    const [openDropdown, setOpenDropdown] = useState(null); // 'notifications', 'settings', 'profile', or null
 
     // Buat ref untuk setiap notifikasi
     const notificationRefs = useRef({});
+
+    // Refs untuk dropdown
+    const notificationDropdownRef = useRef(null);
+    const settingsDropdownRef = useRef(null);
+    const profileDropdownRef = useRef(null);
 
     // Inisialisasi ref untuk setiap notifikasi
     notifications.forEach((notif) => {
@@ -41,9 +46,29 @@ const Layout = () => {
     useEffect(() => {
         // Menutup dropdown jika tidak ada notifikasi
         if (notifications.length === 0) {
-            setIsDropdownOpen(false);
+            setisNotificationDropdownOpen(false);
         }
     }, [notifications.length]);  // Akan dijalankan setiap kali jumlah notifikasi berubah
+
+    // Tambahkan event listener untuk mendeteksi klik di luar dropdown
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (
+                openDropdown &&
+                !notificationDropdownRef.current?.contains(event.target) &&
+                !settingsDropdownRef.current?.contains(event.target) &&
+                !profileDropdownRef.current?.contains(event.target)
+            ) {
+                setOpenDropdown(null); // Tutup dropdown jika klik di luar
+            }
+        };
+
+        document.addEventListener("mousedown", handleOutsideClick);
+
+        return () => {
+            document.removeEventListener("mousedown", handleOutsideClick);
+        };
+    }, [openDropdown]);
 
     // Method untuk toggle sidebar
     const handleSidebarToggle = () => {
@@ -71,25 +96,30 @@ const Layout = () => {
         setTooltipText(""); // Clear tooltip when mouse leaves
     };
 
-    // Fungsi untuk menghandle tombol bell
-    const handleBellClick = () => {
-        if (notifications.length > 0) {
-            setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown
-            setNotificationUpdateCount(0); // Reset update count ketika dropdown dibuka
+    // Dropdown toggle handlers
+    const handleDropdownClick = (dropdownName) => {
+        if (dropdownName === 'notifications' && notifications.length === 0) {
+            return; // Jika tidak ada notifikasi, jangan buka dropdown
         }
+        setOpenDropdown((prev) => (prev === dropdownName ? null : dropdownName));
+        if (dropdownName === 'notifications') setNotificationUpdateCount(0); // Reset notification count
     };
+
 
     const handleSendNotification = () => {
         // Generate a unique number for each notification
         const notificationCount = notifications.length + 1;  // Incremental numbering
 
         // Define the types (you can change this logic as needed)
-        const types = ["info", "error", "caution", "success"];
+        const types = ["info", "error", "failed", "caution", "success"];
         const randomType = types[notificationCount % types.length];  // Cycle through types
 
         // Add a notification with a unique number and a dynamic type
         addNotification(`Notification #${notificationCount}: This is a test notification!`, randomType);
-        setNotificationUpdateCount((prevCount) => prevCount + 1);
+
+        if (openDropdown != 'notifications') {
+            setNotificationUpdateCount((prevCount) => prevCount + 1);
+        }
     };
 
     const handleCloseNotification = (id) => {
@@ -115,7 +145,7 @@ const Layout = () => {
 
                 <div className="popup-notification">
                     <TransitionGroup component={null}>
-                        {!isDropdownOpen && notificationUpdateCount > 0 && notifications.slice(
+                        {!isNotificationDropdownOpen && notificationUpdateCount > 0 && notifications.slice(
                             notificationUpdateCount === 1 ? -1 : -2
                         ).map((notif, index, array) => {
                             const isLast = index === array.length - 1;
@@ -151,25 +181,47 @@ const Layout = () => {
                 </div>
 
                 {/* Dropdown Notification */}
-                {isDropdownOpen && notifications.length > 0 && (
-                    <div className="notification-dropdown">
+                {openDropdown === 'notifications' && (
+                    <div ref={notificationDropdownRef} className="notification-dropdown">
                         <div className="notification-container">
-                            {notifications.map((notif) => (
-                                <Notification
-                                    key={notif.id}
-                                    id={notif.id}
-                                    message={notif.message}
-                                    type={notif.type}
-                                    time={notif.time}
-                                    isPopup={false}
-                                    onClose={handleCloseNotification}
-                                />
-                            ))}
+                            {notifications
+                                .slice()
+                                .reverse()
+                                .map((notif) => (
+                                    <Notification
+                                        key={notif.id}
+                                        id={notif.id}
+                                        message={notif.message}
+                                        type={notif.type}
+                                        time={notif.time}
+                                        isPopup={false}
+                                        onClose={handleCloseNotification}
+                                    />
+                                ))}
                         </div>
-                        <div className="clear-button" onClick={() => removeNotification()}>
-                            <NoIcon />
+                        <div
+                            className="clear-button"
+                            onClick={() => {
+                                removeNotification(); // Menghapus semua notifikasi
+                                setNotificationUpdateCount(0); // Reset jumlah notifikasi baru
+                                setOpenDropdown(null); // Tutup dropdown
+                            }}
+                        >
+                            <Trash />
                             <p>Clear All</p>
                         </div>
+                    </div>
+                )}
+
+                {openDropdown === 'settings' && (
+                    <div ref={settingsDropdownRef} className="settings-dropdown">
+                        <p>Settings Dropdown</p>
+                    </div>
+                )}
+
+                {openDropdown === 'profile' && (
+                    <div ref={profileDropdownRef} className="profile-dropdown">
+                        <p>Profile Dropdown</p>
                     </div>
                 )}
 
@@ -189,8 +241,8 @@ const Layout = () => {
                                 <BellOutline />
                             </button>
                             <div
-                                className={`config-button ${isDropdownOpen ? 'open' : ''}`}
-                                onClick={handleBellClick}
+                                className={`config-button ${openDropdown === 'notifications' ? 'open' : ''}`}
+                                onClick={() => handleDropdownClick('notifications')}
                             >
                                 <BellOutline />
                                 {notificationUpdateCount > 0 && (
@@ -201,10 +253,16 @@ const Layout = () => {
                                     </div>
                                 )}
                             </div>
-                            <div className="config-button">
+                            <div
+                                className={`config-button ${openDropdown === 'settings' ? 'open' : ''}`}
+                                onClick={() => handleDropdownClick('settings')}
+                            >
                                 <VerticalDots />
                             </div>
-                            <div className="user-icon">
+                            <div
+                                className={`user-icon ${openDropdown === 'profile' ? 'open' : ''}`}
+                                onClick={() => handleDropdownClick('profile')}
+                            >
                                 <p>A</p>
                             </div>
                         </div>

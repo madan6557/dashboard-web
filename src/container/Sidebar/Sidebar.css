@@ -104,21 +104,20 @@
 }
 
 .divider-line {
-    background-color: var(--gray-300);
+    background-color: var(--gray-400);
     border-radius: 10px;
     height: 3px;
     width: auto;
 }
 
 .divider-name {
-    color: var(--gray-400);
+    color: var(--gray-500);
     margin: 0px;
     font-weight: 500;
 }
 
 .logout-wrapper {
     margin-top: auto;
-    /* Pindahkan ke bagian paling bawah */
 }
 
 .logout-wrapper .divider {
