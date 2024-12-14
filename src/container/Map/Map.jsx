@@ -1,31 +1,137 @@
-import React, { Component } from "react";
-import "./Map.css"
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import L from "leaflet";
+import "leaflet.markercluster";
+import proj4 from "proj4";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import "./Map.css";
 
-class Map extends Component {
-    state = {
-        sidebarToggle: true
+// Fix marker icon issue
+let DefaultIcon = L.icon({
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+});
+L.Marker.prototype.options.icon = DefaultIcon;
+
+// Define CRS for UTM Zone 50N
+proj4.defs("EPSG:32650", "+proj=utm +zone=50 +datum=WGS84 +units=m +no_defs");
+
+// Convert UTM to Lat/Lon
+const convertUTMToLatLon = (x, y) => {
+    try {
+        return proj4("EPSG:32650", "EPSG:4326", [x, y]);
+    } catch (error) {
+        console.error("Error converting UTM to Lat/Lon:", error);
+        return [0, 0]; // Default to a safe value if conversion fails
     }
+};
 
-    render() {
-        return (
-            <div className="map-container">
-                <h1>Ini adalah Map</h1>
-                <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae aut nobis ex voluptas, ut consectetur voluptatum soluta nesciunt veritatis porro facilis adipisci molestias consequatur, facere vel totam eveniet fuga ullam?
-                    Officia corrupti tempore ullam necessitatibus perspiciatis? Perferendis quibusdam inventore eligendi vitae, illo, magni rerum sed, reiciendis fugit neque repudiandae? Soluta facilis dolorum hic velit labore ipsa libero consectetur iure deleniti.
-                    Voluptatum quae ducimus modi numquam quia eveniet repudiandae aperiam beatae quam est dolore ipsam soluta ipsa vero, fuga tenetur asperiores illum perspiciatis, voluptate veniam saepe! Illum cumque blanditiis nemo error.
-                    Eos, esse voluptatibus magnam debitis, consectetur voluptatum dicta deleniti omnis ut tempore quidem facilis consequuntur molestias voluptate. Exercitationem deserunt mollitia ipsam sunt nobis ab quisquam eum quia fugit? Non, nemo?
-                    Numquam tenetur repudiandae tempore ducimus vitae cum in harum. Suscipit rem veritatis blanditiis consectetur deserunt nulla! Ratione maiores recusandae magni vel dolores quas, velit sapiente, et similique repellat quae error.
-                    Dolorem mollitia commodi delectus ab illum ratione ipsum aliquam dolorum voluptatum, rem corporis at eligendi? Neque, ipsam! Sapiente sint rem provident, officiis dolores aliquid nisi necessitatibus dignissimos laudantium id nostrum?
-                    Nesciunt tempora laboriosam earum laudantium. Nulla distinctio quod illum vitae libero omnis quidem! Reiciendis quas eum exercitationem quasi ea deserunt deleniti, suscipit iste ex cupiditate officia similique magni, impedit placeat!
-                    Provident corrupti doloremque suscipit, odio tempora labore. Ea possimus, reprehenderit esse aliquam rem ipsam saepe adipisci cumque asperiores? Excepturi pariatur delectus veritatis possimus nisi aspernatur a asperiores eum, ab deleniti?
-                    Nobis cupiditate harum earum unde modi laborum incidunt pariatur cum excepturi, porro eum aperiam magnam vitae quasi perspiciatis et amet totam tenetur debitis? Temporibus, voluptatem ea laboriosam facilis consequuntur repellendus.
-                    Vitae placeat atque assumenda eius reiciendis distinctio dolorum, molestias voluptates maxime laborum culpa eveniet hic deleniti provident. Magnam doloremque tenetur at rerum, inventore quisquam exercitationem earum possimus, provident, expedita eos.
-                </p>
-            </div>
+// Dummy data: array of UTM coordinates (easting, northing)
+const dummyUTMCoordinates = [
+    [462200, 4311800], // Close to center
+    [462250, 4311850],
+    [462300, 4311900],
+    [462400, 4312000],
+    [462500, 4312100],
+];
 
-        )
-    }
-}
+// Convert all UTM coordinates to Lat/Lon
+const convertedCoordinates = dummyUTMCoordinates.map(([easting, northing]) => {
+    const [lon, lat] = convertUTMToLatLon(easting, northing);
+    return { lon, lat, easting, northing };
+});
+
+console.log("Converted Coordinates:", convertedCoordinates);
+
+// Custom component to add WMS layer
+const AddWMSLayer = () => {
+    const map = useMap();
+
+    useEffect(() => {
+        const geoServerLayer = L.tileLayer.wms(
+            "https://geoserver.logiasphere.com:8443/geoserver/ne/wms",
+            {
+                layers: "Peta_2023_2024_all_Maps",
+                format: "image/png",
+                transparent: true,
+                attribution: "GeoServer © JBG",
+            }
+        );
+        geoServerLayer.addTo(map);
+
+        // Cleanup when component unmounts
+        return () => {
+            map.removeLayer(geoServerLayer);
+        };
+    }, [map]);
+
+    return null;
+};
+
+const Map = () => {
+    useEffect(() => {
+        console.log("Map initialized.");
+    }, []);
+
+    return (
+        <div className="map-container">
+            <MapContainer
+                center={[38.955244, 116.564899]} // Default coordinates
+                zoom={13} // Adjust zoom level for closer view
+                scrollWheelZoom={true}
+                className="leaflet-map"
+            >
+                <TileLayer
+                    url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    attribution="&copy; ArcGIS"
+                />
+                <AddWMSLayer />
+                <ClusteredMarkers markers={convertedCoordinates} />
+            </MapContainer>
+        </div>
+    );
+};
+
+const ClusteredMarkers = ({ markers }) => {
+    const map = useMap();
+
+    useEffect(() => {
+        const clusterGroup = L.markerClusterGroup();
+
+        markers.forEach(({ lon, lat, easting, northing }) => {
+            const customIcon = L.icon({
+                iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+            });
+
+            const marker = L.marker([lat, lon], { icon: customIcon });
+
+            marker.bindPopup(
+                `<strong>UTM Input:</strong><br>
+                Easting: ${easting}<br>
+                Northing: ${northing}<br>
+                <strong>Converted to:</strong><br>
+                Longitude: ${lon.toFixed(6)}<br>
+                Latitude: ${lat.toFixed(6)}`
+            );
+
+            clusterGroup.addLayer(marker);
+        });
+
+        map.addLayer(clusterGroup);
+
+        // Cleanup when component unmounts
+        return () => {
+            map.removeLayer(clusterGroup);
+        };
+    }, [map, markers]);
+
+    return null;
+};
 
 export default Map;

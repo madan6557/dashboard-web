@@ -1,0 +1,33 @@
+@import '../../variable.css';
+
+.image-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    min-height: 400px;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+}
+
+img {
+    position: relative;
+}
+
+.map-toggle{
+    display: flex;
+    border-radius: 6px;
+    background-color: var(--gray-50);
+    color: var(--gray-900);
+    position: absolute;
+    z-index: 2;
+    left: 10px;
+    top: 4px;
+    padding: 5px;
+}
+
+.map-toggle:hover{
+    cursor: pointer;
+    background-color: var(--blue-900);
+    color: var(--gray-50);
+}

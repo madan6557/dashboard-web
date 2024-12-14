@@ -1,0 +1,104 @@
+@import '../../variable.css';
+
+.details-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--primary-white);
+    border-radius: 6px;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.details-header-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.qrCode {
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    color: var(--gray-900);
+    padding: 5px;
+}
+
+.qrCode:hover{
+    cursor: pointer;
+    background-color: var(--blue-200);
+}
+
+.qrCode .icon{
+    padding: 0px 10px 0px 0px;
+}
+
+.qrCode p{
+    margin: 0px;
+    font-weight: 600;
+}
+
+.edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border-radius: 6px;
+    padding: 5px;
+    width: 28px;
+    height: 28px;
+    color: var(--gray-900);
+}
+
+.edit-button:hover{
+    cursor: pointer;
+    background-color: var(--blue-200);
+}
+
+.close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    border-radius: 6px;
+    padding: 5px;
+    width: 28px;
+    height: 28px;
+    color: var(--gray-900);
+}
+
+.close-button:hover{
+    cursor: pointer;
+    background-color: var(--blue-200);
+}
+
+.form-wrapper{
+    position: relative;
+    right: -5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    width: 100%;
+    padding-right: 10px;
+}
+
+/* Scrollbar */
+.form-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-wrapper::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 10px;
+}
+
+.form-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-500);
+}

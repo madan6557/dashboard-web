@@ -127,7 +127,7 @@ class Sidebar extends Component {
                 route: "/dashboard",
                 hasDropdown: false,
                 showDividerLine: false,
-                showDividerTitle: true,
+                showDividerTitle: false,
                 dividerTitle: "Menu",
             },
             {
@@ -228,8 +228,9 @@ class Sidebar extends Component {
                     </div>
                 </div>
 
-                <div className="divider">
+                <div className="divider start">
                     <div className="divider-line"></div>
+                    <p className="divider-name">Menu</p>
                 </div>
 
                 <div className="menu-wrapper">

@@ -4,7 +4,9 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useNotification } from "../../context/NotificationContext";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import Notification from "../../components/Notification/Notification";
+import DevTools from "../../components/DevTools/DevTools";
 import Sidebar from "../Sidebar/Sidebar";
+import Details from "../Details/Details";
 import Dashboard from "../Dashboard/Dashboard";
 import Map from "../Map/Map";
 import Overview from "../Activity/Overview/Overview";
@@ -17,11 +19,14 @@ import {
     BellOutline,
     Trash,
     Anotation,
+    ClipBoardListOutline,
 } from '../../components/Icons/Icon';
 
 const Layout = () => {
     const { notifications, addNotification, removeNotification } = useNotification();
     const [sidebarToggle, setSidebarToggle] = useState(true);
+    const [isDetailsVisible, setIsDetailsVisible] = useState(true);
+    const [isDetailsAnimating, setIsDetailsAnimating] = useState(false); // Status animasi
     const [selectedComponent, setSelectedComponent] = useState("Dashboard");
     const [tooltipText, setTooltipText] = useState("");
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -72,6 +77,14 @@ const Layout = () => {
             document.removeEventListener("mousedown", handleOutsideClick);
         };
     }, [openDropdown]);
+
+    const handleDetailsClose = () => {
+        setIsDetailsAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsDetailsVisible(false); // Hapus elemen setelah animasi selesai
+            setIsDetailsAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
+    };
 
     // Method untuk toggle sidebar
     const handleSidebarToggle = () => {
@@ -224,7 +237,34 @@ const Layout = () => {
                     </div>
                 )}
 
+                <DevTools>
+                    <ActionButton
+                        title="Send"
+                        icon={<Anotation />}
+                        type="confirm"
+                        disabled={false}
+                        onClick={() => handleSendNotification("This is a test notification!")} // Pasang fungsi ini sebagai handler
+                    />
+                    <ActionButton
+                        title="Open"
+                        icon={<ClipBoardListOutline />}
+                        type="confirm"
+                        disabled={false}
+                        onClick={() => setIsDetailsVisible(true)} // Pasang fungsi ini sebagai handler
+                    />
+                </DevTools>
+
+
                 <div className="content-container">
+
+                    {isDetailsVisible && (
+                        <div
+                            className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
+                        >
+                            <Details onClose={handleDetailsClose} />
+                        </div>
+                    )}
+
                     <div className="header-container">
                         <div
                             className={`sidebar-toggle ${sidebarToggle ? 'open' : 'closed'}`}
@@ -234,19 +274,10 @@ const Layout = () => {
                         </div>
                         <p className="menu-title">{selectedComponent}</p>
                         <div className="config-wrapper">
-                            <div style={{marginRight: 10 + 'px'}}>
-                                <ActionButton
-                                    title="Send"
-                                    icon={<Anotation />}
-                                    type="confirm"
-                                    disabled={false}
-                                    onClick={() => handleSendNotification("This is a test notification!")} // Pasang fungsi ini sebagai handler
-                                />
-                            </div>
 
                             <div
                                 className={`config-button ${openDropdown === 'notifications' ? 'open' : ''}`}
-                                onClick={() => handleDropdownClick('notifications') }
+                                onClick={() => handleDropdownClick('notifications')}
                             >
                                 <BellOutline />
                                 {notificationUpdateCount > 0 && (
@@ -259,13 +290,13 @@ const Layout = () => {
                             </div>
                             <div
                                 className={`config-button ${openDropdown === 'settings' ? 'open' : ''}`}
-                                onClick={() => [handleDropdownClick('settings'), handleSendNotification("This is a test notification!")]}
+                                onClick={() => [handleDropdownClick('settings'), handleSendNotification("This feature still under development!")]}
                             >
                                 <VerticalDots />
                             </div>
                             <div
                                 className={`user-icon ${openDropdown === 'profile' ? 'open' : ''}`}
-                                onClick={() => [handleDropdownClick('profile'), handleSendNotification("This is a test notification!")]}
+                                onClick={() => [handleDropdownClick('profile'), handleSendNotification("This feature still under development!")]}
                             >
                                 <p>A</p>
                             </div>

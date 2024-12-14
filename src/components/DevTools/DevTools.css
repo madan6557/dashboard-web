@@ -1,0 +1,29 @@
+.devTools {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--blue-900);
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.devTools .handle {
+    background-color: var(--gray-50);
+    border-radius: 10px;
+    height: 5px;
+    margin-bottom: 10px;
+    width: 50px;
+    cursor: grab;
+}
+
+.devTools-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Memberi jarak sama antar elemen */
+    align-items: center;
+    height: 100%; /* Pastikan tinggi kontainer mencakup semua elemen */
+    gap: 10px; /* Tambahkan jarak tambahan antar elemen jika diperlukan */
+}
