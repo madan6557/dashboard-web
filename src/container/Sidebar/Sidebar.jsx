@@ -84,7 +84,7 @@ class Sidebar extends Component {
                 route: "/data",
                 hasDropdown: true,
                 submenu: [
-                    { title: "Table", route: null },
+                    { title: "Table", route: "/table" },
                     { title: "Verification", route: null },
                     { title: "Generate QR Code", route: null },
                 ],
@@ -269,7 +269,7 @@ class Sidebar extends Component {
                 icon: <DBOutline />,
                 selectedIcon: <DBSolid />,
                 submenu: [
-                    { title: "Table", route: null },
+                    { title: "Table", route: "/table" },
                     { title: "Verification", route: null },
                     { title: "Generate QR Code", route: null },
                 ],

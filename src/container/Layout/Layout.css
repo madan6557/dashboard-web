@@ -147,7 +147,6 @@
     min-width: 18px;
     width: fit-content;
     background-color: var(--primary-red);
-    color: var(--gray-50);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -159,6 +158,8 @@
     margin: 0px 3px;
     font-size: 0.8rem;
     text-align: right;
+    font-weight: 600;
+    color: var(--gray-50);
 }
 
 .user-icon {

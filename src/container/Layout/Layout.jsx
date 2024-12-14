@@ -12,6 +12,7 @@ import Map from "../Map/Map";
 import Overview from "../Activity/Overview/Overview";
 import Analytics from "../Activity/Analytics/Analytics";
 import Evaluation from "../Activity/Evaluation/Evaluation";
+import Table from "../Data/Table/Table";
 import "./Layout.css";
 import {
     List,
@@ -310,6 +311,7 @@ const Layout = () => {
                             <Route path="/overview" element={<Overview />} />
                             <Route path="/analytics" element={<Analytics />} />
                             <Route path="/evaluation" element={<Evaluation />} />
+                            <Route path="/table" element={<Table />} />
                         </Routes>
                     </div>
                 </div>

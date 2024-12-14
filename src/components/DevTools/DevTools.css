@@ -1,3 +1,5 @@
+@import '../../variable.css';
+
 .devTools {
     position: absolute;
     display: flex;
