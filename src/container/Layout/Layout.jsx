@@ -25,7 +25,7 @@ import {
 const Layout = () => {
     const { notifications, addNotification, removeNotification } = useNotification();
     const [sidebarToggle, setSidebarToggle] = useState(true);
-    const [isDetailsVisible, setIsDetailsVisible] = useState(true);
+    const [isDetailsVisible, setIsDetailsVisible] = useState(false);
     const [isDetailsAnimating, setIsDetailsAnimating] = useState(false); // Status animasi
     const [selectedComponent, setSelectedComponent] = useState("Dashboard");
     const [tooltipText, setTooltipText] = useState("");

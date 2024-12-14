@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation  } from "react-router-dom";
 import "./Sidebar.css";
 import brand from "../../assets/images/logia.svg";
 import MenuButton from "../../components/MenuButton/MenuButton";
@@ -24,15 +24,125 @@ import {
     MarkSolid,
 } from '../../components/Icons/Icon';
 
+// Wrapper component to pass location to class component
+function SidebarWrapper(props) {
+    const location = useLocation(); // Use location hook here
+    return <Sidebar {...props} location={location} />;
+}
 
 class Sidebar extends Component {
-    state = {
-        selectedMenu: ["Dashboard"], // Allowing selected menus to be an array
-        selectedSubmenu: null, // Stores the selected submenu
-        openDropdowns: [], // Stores the menus with open dropdowns
-        isMinimize: false,
-        rotation: 90,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedMenu: [], // Allowing selected menus to be an array
+            selectedSubmenu: null, // Stores the selected submenu
+            openDropdowns: [], // Stores the menus with open dropdowns
+            isMinimize: false,
+            rotation: 90,
+        };
+    }
+
+    componentDidMount() {
+        this.updateSelectedMenuAndDropdowns();
+    }
+
+    componentDidUpdate(prevProps) {
+        // If the location has changed, update the selected menu and dropdowns
+        if (this.props.location.pathname !== prevProps.location.pathname) {
+            this.updateSelectedMenuAndDropdowns();
+        }
+    }
+
+    updateSelectedMenuAndDropdowns = () => {
+        const { pathname } = this.props.location;
+    
+        const menuConfig = [
+            {
+                title: "Dashboard",
+                route: "/dashboard",
+                hasDropdown: false,
+                submenu: [],
+            },
+            {
+                title: "Map",
+                route: "/map",
+                hasDropdown: false,
+                submenu: [],
+            },
+            {
+                title: "Activity",
+                route: "/activity",
+                hasDropdown: true,
+                submenu: [
+                    { title: "Overview", route: "/overview" },
+                    { title: "Analytics", route: "/analytics" },
+                    { title: "Evaluation", route: "/evaluation" },
+                ],
+            },
+            {
+                title: "Data",
+                route: "/data",
+                hasDropdown: true,
+                submenu: [
+                    { title: "Table", route: null },
+                    { title: "Verification", route: null },
+                    { title: "Generate QR Code", route: null },
+                ],
+            },
+            {
+                title: "Users",
+                route: "/users",
+                hasDropdown: true,
+                submenu: [
+                    { title: "Account", route: null },
+                    { title: "Logs", route: null },
+                ],
+            },
+            {
+                title: "Settings",
+                route: "/settings",
+                hasDropdown: true,
+                submenu: [
+                    { title: "Option", route: null },
+                    { title: "Watermark", route: null },
+                ],
+            },
+            {
+                title: "History",
+                route: "/history",
+                hasDropdown: false,
+                submenu: [],
+            },
+            {
+                title: "Help",
+                route: "/help",
+                hasDropdown: false,
+                submenu: [],
+            },
+        ];
+    
+        const selectedMenu = [];
+        const openDropdowns = [];
+    
+        menuConfig.forEach(menu => {
+            if (pathname === menu.route) {
+                selectedMenu.push(menu.title); // Select the menu
+                this.props.onMenuSelect(menu.title);
+            }
+    
+            if (menu.hasDropdown) {
+                menu.submenu.forEach(submenu => {
+                    if (pathname === submenu.route) {
+                        openDropdowns.push(menu.title); // Open the corresponding dropdown
+                        selectedMenu.push(menu.title); // Mark the parent menu as selected
+                        this.setState({ selectedSubmenu: submenu.title });
+                        this.props.onMenuSelect(submenu.title);
+                    }
+                });
+            }
+        });
+        this.setState({ selectedMenu, openDropdowns });
+    };    
 
     // Method untuk mengatur minimisasi dan rotasi
     handleMinimize = () => {
@@ -329,4 +439,4 @@ class Sidebar extends Component {
     }
 }
 
-export default Sidebar;
+export default SidebarWrapper;
