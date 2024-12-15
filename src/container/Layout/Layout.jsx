@@ -7,12 +7,14 @@ import Notification from "../../components/Notification/Notification";
 import DevTools from "../../components/DevTools/DevTools";
 import Sidebar from "../Sidebar/Sidebar";
 import Details from "../Details/Details";
-import Dashboard from "../Dashboard/Dashboard";
-import Map from "../Map/Map";
-import Overview from "../Activity/Overview/Overview";
-import Analytics from "../Activity/Analytics/Analytics";
-import Evaluation from "../Activity/Evaluation/Evaluation";
-import Table from "../Data/Table/Table";
+import Dashboard from "../../pages/Dashboard/Dashboard";
+import Map from "../../pages/Map/Map";
+import Analytics from "../../pages/Activity/Analytics/Analytics";
+import Evaluation from "../../pages/Activity/Evaluation/Evaluation";
+import Table from "../../pages/Data/Table/Table";
+import Verification from "../../pages/Data/Verification/Verification";
+import Account from "../../pages/Users/Account/Account";
+import History from "../../pages/History/History"
 import "./Layout.css";
 import {
     List,
@@ -308,10 +310,12 @@ const Layout = () => {
                             <Route path="/" element={<Navigate to="/dashboard" />} />
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/map" element={<Map />} />
-                            <Route path="/overview" element={<Overview />} />
                             <Route path="/analytics" element={<Analytics />} />
                             <Route path="/evaluation" element={<Evaluation />} />
                             <Route path="/table" element={<Table />} />
+                            <Route path="/verification" element={<Verification />} />
+                            <Route path="/account" element={<Account />} />
+                            <Route path="/history" element={<History />} />
                         </Routes>
                     </div>
                 </div>

@@ -74,7 +74,6 @@ class Sidebar extends Component {
                 route: "/activity",
                 hasDropdown: true,
                 submenu: [
-                    { title: "Overview", route: "/overview" },
                     { title: "Analytics", route: "/analytics" },
                     { title: "Evaluation", route: "/evaluation" },
                 ],
@@ -85,7 +84,7 @@ class Sidebar extends Component {
                 hasDropdown: true,
                 submenu: [
                     { title: "Table", route: "/table" },
-                    { title: "Verification", route: null },
+                    { title: "Verification", route: "/verification" },
                     { title: "Generate QR Code", route: null },
                 ],
             },
@@ -94,7 +93,7 @@ class Sidebar extends Component {
                 route: "/users",
                 hasDropdown: true,
                 submenu: [
-                    { title: "Account", route: null },
+                    { title: "Account", route: "/account" },
                     { title: "Logs", route: null },
                 ],
             },
@@ -255,7 +254,6 @@ class Sidebar extends Component {
                 icon: <ChartOutline />,
                 selectedIcon: <ChartSolid />,
                 submenu: [
-                    { title: "Overview", route: "/overview" },
                     { title: "Analytics", route: "/analytics" },
                     { title: "Evaluation", route: "/evaluation" },
                 ],
@@ -270,7 +268,7 @@ class Sidebar extends Component {
                 selectedIcon: <DBSolid />,
                 submenu: [
                     { title: "Table", route: "/table" },
-                    { title: "Verification", route: null },
+                    { title: "Verification", route: "/verification" },
                     { title: "Generate QR Code", route: null },
                 ],
                 hasDropdown: true,
@@ -283,7 +281,7 @@ class Sidebar extends Component {
                 icon: <UserOutline />,
                 selectedIcon: <UserSolid />,
                 submenu: [
-                    { title: "Account", route: null },
+                    { title: "Account", route: "/account" },
                     { title: "Logs", route: null },
                 ],
                 hasDropdown: true,

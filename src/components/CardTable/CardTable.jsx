@@ -3,24 +3,11 @@ import './CardTable.css';
 import { Magnifier, Chevron, Ascending } from '../Icons/Icon';
 
 const CardTable = ({
-    head = [],
-    items = [],
-    numberOfRows = 10,
-    sortBy = "modified",
-    orderBy = "asc",
+    tableHead = [],
+    tableItems = [],
+    sortByValue = "name",  // Default to 'name'
+    sortOptions = ["name", "age", "city"]  // Default options
 }) => {
-    // Data dummy jika tidak ada props
-    const tableHead = head.length > 0 ? head : ["ID", "Name", "Age", "City"];
-    const tableItems = items.length > 0 ? items : [
-        { id: 1, name: "John Doe", age: 25, city: "New York" },
-        { id: 2, name: "Jane Smith", age: 30, city: "Los Angeles" },
-        { id: 3, name: "Samuel Green", age: 22, city: "Chicago" },
-        { id: 4, name: "Emily Brown", age: 28, city: "Houston" },
-        { id: 4, name: "Emily Brown", age: 28, city: "Houston" },
-        { id: 4, name: "Emily Brown", age: 28, city: "Houston" },
-        { id: 4, name: "Emily Brown", age: 28, city: "Houston" },
-        { id: 4, name: "Emily Brown", age: 28, city: "Houston" },
-    ];
 
     return (
         <div className="cardTable-wrapper">
@@ -30,15 +17,22 @@ const CardTable = ({
                 </div>
                 <input className="search-bar" type="search" placeholder="Search..." />
                 <select className="cardTable-dropdown" name="rows" id="numberOfRows">
-                    <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
                 </select>
-                <select className="cardTable-dropdown" name="sortBy" id="sortBy">
-                    <option value="modified">Modified</option>
-                    <option value="name">Name</option>
-                    <option value="age">Age</option>
-                    <option value="city">City</option>
+                <select
+                    className="cardTable-dropdown"
+                    name="sortBy"
+                    id="sortBy"
+                    value={sortByValue}  // This will use sortByValue prop
+                >
+                    {sortOptions.map((option, index) => (
+                        <option key={index} value={option}>
+                            {option.charAt(0).toUpperCase() + option.slice(1)} {/* Capitalize first letter */}
+                        </option>
+                    ))}
                 </select>
                 <div className="icon" id="orderBy">
                     <Ascending />

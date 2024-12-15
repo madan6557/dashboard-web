@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import "./Overview.css"
+import "./History.css"
 
-class Overview extends Component {
+class Dashboard extends Component {
     state = {
         sidebarToggle: true
     }
 
     render() {
         return (
-            <div className="overview-container">
-                <h1>Ini adalah Overview</h1>
+            <div className="history-container">
+                <h1>Ini adalah History</h1>
                 <p>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae aut nobis ex voluptas, ut consectetur voluptatum soluta nesciunt veritatis porro facilis adipisci molestias consequatur, facere vel totam eveniet fuga ullam?
                     Officia corrupti tempore ullam necessitatibus perspiciatis? Perferendis quibusdam inventore eligendi vitae, illo, magni rerum sed, reiciendis fugit neque repudiandae? Soluta facilis dolorum hic velit labore ipsa libero consectetur iure deleniti.
@@ -28,4 +28,4 @@ class Overview extends Component {
     }
 }
 
-export default Overview;
+export default Dashboard;
