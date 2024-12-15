@@ -5,7 +5,6 @@ import { Magnifier, Chevron, Ascending } from '../Icons/Icon';
 const CardTable = ({
     tableHead = [],
     tableItems = [],
-    sortByValue = "name",  // Default to 'name'
     sortOptions = ["name", "age", "city"]  // Default options
 }) => {
 
@@ -26,7 +25,6 @@ const CardTable = ({
                     className="cardTable-dropdown"
                     name="sortBy"
                     id="sortBy"
-                    value={sortByValue}  // This will use sortByValue prop
                 >
                     {sortOptions.map((option, index) => (
                         <option key={index} value={option}>
@@ -50,10 +48,9 @@ const CardTable = ({
                     <tbody>
                         {tableItems.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.id}</td>
-                                <td>{item.name}</td>
-                                <td>{item.age}</td>
-                                <td>{item.city}</td>
+                                {Object.values(item).map((value, idx) => (
+                                    <td key={idx}>{value}</td>
+                                ))}
                             </tr>
                         ))}
                     </tbody>
@@ -62,7 +59,7 @@ const CardTable = ({
 
             <div className="pagination">
                 <div className="chevron left"><Chevron /></div>
-                <input type="text" id="pageNumber" value={1} />
+                <input type="text" id="pageNumber" />
                 <p className="totalPage">of <span>999</span></p>
                 <div className="chevron right"><Chevron /></div>
             </div>

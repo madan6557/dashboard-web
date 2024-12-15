@@ -17,7 +17,6 @@ const Verification = () => {
             <CardTable
                 tableHead={tableHead} 
                 tableItems={tableItems} 
-                sortByValue="modified"  // Can be changed based on need
                 sortOptions={sortOptions}  // Passing the list of options
             />
         </div>

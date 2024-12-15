@@ -155,14 +155,17 @@ const Sidebar = (props) => {
         // Always update `selectedMenu` and `openDropdowns`
         setSelectedMenu(newSelectedMenu);
         // Only update dropdown states if the sidebar is not minimized
-        if (!isMinimize) {
-            setOpenDropdowns(newOpenDropdowns);
-        }
+        setOpenDropdowns(newOpenDropdowns);
     }, [location, props, isMinimize]);
 
     useEffect(() => {
-        updateSelectedMenuAndDropdowns();
-    }, [updateSelectedMenuAndDropdowns]); // No warning now
+        // Check if the page is loaded via a refresh
+        const navigationType = window.performance.getEntriesByType("navigation")[0]?.type || window.performance.navigation.type;
+
+        if (navigationType === "reload" || navigationType === 1) {
+            updateSelectedMenuAndDropdowns();
+        }
+    }, []); // Empty dependency array ensures it only runs once after a reload.
 
     const handleMinimize = () => {
         setIsMinimize(prevState => !prevState);
@@ -174,46 +177,62 @@ const Sidebar = (props) => {
             const newSelectedMenu = [...prevSelectedMenu];
             const newOpenDropdowns = [...openDropdowns];
 
-            console.log(newSelectedMenu);
-
             if (hasDropdown) {
                 const isOpen = newOpenDropdowns.includes(title);
                 const isSelected = newSelectedMenu.includes(title);
 
-                // If the dropdown is open and the menu is selected, close it and remove from selectedMenu
                 if (isOpen) {
+                    // Jika dropdown terbuka, tutup dan hapus dari selectedMenu & openDropdowns
                     const updatedSelectedMenu = newSelectedMenu.filter(item => item !== title);
                     const updatedOpenDropdowns = newOpenDropdowns.filter(item => item !== title);
                     setOpenDropdowns(updatedOpenDropdowns);
                     return updatedSelectedMenu;
-                }
-
-                // If the dropdown is closed and the menu is not selected, select the menu and open the dropdown
-                if (!isSelected) {
-                    newSelectedMenu.push(title);
+                } else {
+                    // Jika dropdown tertutup, buka dan tambahkan ke selectedMenu & openDropdowns
+                    if (!isSelected) {
+                        newSelectedMenu.push(title);
+                    }
                     newOpenDropdowns.push(title);
+                    setOpenDropdowns(newOpenDropdowns);
+                    return newSelectedMenu;
                 }
-
-                // If the menu is already selected but the dropdown is closed, just open the dropdown
-                setOpenDropdowns(newOpenDropdowns);
-                return newSelectedMenu;
             }
 
-            // If the menu does not have a dropdown, reset selectedMenu and open the new menu
-            setOpenDropdowns([]); // Close all dropdowns when clicking on a non-dropdown item
-            return [title]; // Select only the current menu
+            // Jika menu tidak memiliki dropdown
+            if (!hasDropdown) {
+                // Hapus semua menu tanpa dropdown dari selectedMenu
+                const updatedSelectedMenu = newSelectedMenu.filter(item =>
+                    openDropdowns.includes(item) // Pertahankan hanya menu dengan dropdown
+                );
+
+                updatedSelectedMenu.push(title); // Tambahkan menu baru
+                setSelectedSubmenu(null); // Reset submenu
+                props.onMenuSelect(title); // Notify parent component
+                return updatedSelectedMenu;
+            }
+            return newSelectedMenu;
         });
 
         if (!hasDropdown) {
-            props.onMenuSelect(title); // Call props.onMenuSelect if the menu doesn't have a dropdown
+            setSelectedSubmenu(null); // Hapus submenu jika menu tanpa dropdown diklik
+            props.onMenuSelect(title); // Notify parent component
         }
     };
 
     const handleSubmenuClick = (submenuTitle, submenuRoute) => {
         setSelectedSubmenu(submenuTitle);
 
+        setSelectedMenu(prevSelectedMenu => {
+            const newSelectedMenu = prevSelectedMenu.filter(menu => {
+                // Remove menus without dropdowns when a submenu is selected
+                return menuConfig.find(m => m.title === menu)?.hasDropdown;
+            });
+
+            return newSelectedMenu;
+        });
+
         if (submenuRoute) {
-            props.onMenuSelect(submenuTitle);
+            props.onMenuSelect(submenuTitle); // Notify parent component with the submenu title
         } else {
             props.onSendNotification("This page is still under development!", "info");
         }
