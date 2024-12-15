@@ -120,7 +120,6 @@ const menuConfig = [
     },
 ];
 
-
 const Sidebar = (props) => {
     const location = useLocation();
     const [selectedMenu, setSelectedMenu] = useState([]);
@@ -138,7 +137,7 @@ const Sidebar = (props) => {
         menuConfig.forEach(menu => {
             if (pathname === menu.route) {
                 newSelectedMenu.push(menu.title);
-                props.onMenuSelect(menu.title);
+                props.onMenuSelect(menu.title); // Notify parent component
             }
 
             if (menu.hasDropdown) {
@@ -153,13 +152,17 @@ const Sidebar = (props) => {
             }
         });
 
+        // Always update `selectedMenu` and `openDropdowns`
         setSelectedMenu(newSelectedMenu);
-        setOpenDropdowns(newOpenDropdowns);
-    }, [location, props]); // `updateSelectedMenuAndDropdowns` is memoized
+        // Only update dropdown states if the sidebar is not minimized
+        if (!isMinimize) {
+            setOpenDropdowns(newOpenDropdowns);
+        }
+    }, [location, props, isMinimize]);
 
     useEffect(() => {
         updateSelectedMenuAndDropdowns();
-    }, [location, updateSelectedMenuAndDropdowns]); // No warning now
+    }, [updateSelectedMenuAndDropdowns]); // No warning now
 
     const handleMinimize = () => {
         setIsMinimize(prevState => !prevState);
@@ -171,27 +174,38 @@ const Sidebar = (props) => {
             const newSelectedMenu = [...prevSelectedMenu];
             const newOpenDropdowns = [...openDropdowns];
 
+            console.log(newSelectedMenu);
+
             if (hasDropdown) {
                 const isOpen = newOpenDropdowns.includes(title);
+                const isSelected = newSelectedMenu.includes(title);
 
+                // If the dropdown is open and the menu is selected, close it and remove from selectedMenu
                 if (isOpen) {
-                    newOpenDropdowns.splice(newOpenDropdowns.indexOf(title), 1);
-                    newSelectedMenu.splice(newSelectedMenu.indexOf(title), 1);
-                } else {
-                    newOpenDropdowns.push(title);
-                    newSelectedMenu.push(title);
+                    const updatedSelectedMenu = newSelectedMenu.filter(item => item !== title);
+                    const updatedOpenDropdowns = newOpenDropdowns.filter(item => item !== title);
+                    setOpenDropdowns(updatedOpenDropdowns);
+                    return updatedSelectedMenu;
                 }
-            } else {
-                newSelectedMenu.push(title);
-                setSelectedSubmenu(null);
+
+                // If the dropdown is closed and the menu is not selected, select the menu and open the dropdown
+                if (!isSelected) {
+                    newSelectedMenu.push(title);
+                    newOpenDropdowns.push(title);
+                }
+
+                // If the menu is already selected but the dropdown is closed, just open the dropdown
+                setOpenDropdowns(newOpenDropdowns);
+                return newSelectedMenu;
             }
 
-            setOpenDropdowns(newOpenDropdowns);
-            return newSelectedMenu;
+            // If the menu does not have a dropdown, reset selectedMenu and open the new menu
+            setOpenDropdowns([]); // Close all dropdowns when clicking on a non-dropdown item
+            return [title]; // Select only the current menu
         });
 
         if (!hasDropdown) {
-            props.onMenuSelect(title);
+            props.onMenuSelect(title); // Call props.onMenuSelect if the menu doesn't have a dropdown
         }
     };
 

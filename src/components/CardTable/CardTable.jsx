@@ -16,7 +16,7 @@ const CardTable = ({
                     <Magnifier />
                 </div>
                 <input className="search-bar" type="search" placeholder="Search..." />
-                <select className="cardTable-dropdown" name="rows" id="numberOfRows">
+                <select className="cardTable-dropdown" name="rows" id="numberOfRows" >
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="50">50</option>
