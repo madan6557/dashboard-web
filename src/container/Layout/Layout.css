@@ -227,6 +227,7 @@
 }
 
 .tooltip p {
+    color: var(--gray-50);
     margin: 0px;
 }
 

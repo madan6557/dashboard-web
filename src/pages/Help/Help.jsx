@@ -1,10 +1,10 @@
 import React from "react";
-import "./History.css";
+import "./Help.css";
 
-const History = () => {
+const Help = () => {
     return (
-        <div className="history-container">
-            <h1>Ini adalah History</h1>
+        <div className="help-container">
+            <h1>Ini adalah Help</h1>
             <p>
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae aut nobis ex voluptas, ut consectetur voluptatum soluta nesciunt veritatis porro facilis adipisci molestias consequatur, facere vel totam eveniet fuga ullam?
                 Officia corrupti tempore ullam necessitatibus perspiciatis? Perferendis quibusdam inventore eligendi vitae, illo, magni rerum sed, reiciendis fugit neque repudiandae? Soluta facilis dolorum hic velit labore ipsa libero consectetur iure deleniti.
@@ -21,4 +21,4 @@ const History = () => {
     );
 }
 
-export default History;
+export default Help;

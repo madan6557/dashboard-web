@@ -15,6 +15,7 @@ import Table from "../../pages/Data/Table/Table";
 import Verification from "../../pages/Data/Verification/Verification";
 import Account from "../../pages/Users/Account/Account";
 import History from "../../pages/History/History"
+import Help from "../../pages/Help/Help"
 import "./Layout.css";
 import {
     List,
@@ -316,6 +317,7 @@ const Layout = () => {
                             <Route path="/verification" element={<Verification />} />
                             <Route path="/account" element={<Account />} />
                             <Route path="/history" element={<History />} />
+                            <Route path="/help" element={<Help />} />
                         </Routes>
                     </div>
                 </div>
