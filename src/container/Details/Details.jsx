@@ -4,7 +4,7 @@ import FieldInput from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
 
-const Details = ({ onClose }) => {
+const Details = ({ onClose, onEdit }) => {
     return (
         <div className="details-wrapper">
             <div className="details-header-wrapper">
@@ -14,7 +14,7 @@ const Details = ({ onClose }) => {
                     </div>
                     <p className="value">22400001</p>
                 </div>
-                <div className="edit-button">
+                <div className="edit-button" onClick={onEdit}>
                     <PencileAltOutline />
                 </div>
                 <div className="close-button" onClick={onClose}>
@@ -23,6 +23,10 @@ const Details = ({ onClose }) => {
             </div>
             <div className="form-wrapper">
                 <Image />
+                <FieldInput />
+                <FieldInput />
+                <FieldInput />
+                <FieldInput />
                 <FieldInput />
                 <FieldInput />
                 <FieldInput />

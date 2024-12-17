@@ -3,13 +3,21 @@ import './Verification.css';
 import CardTable from "../../../components/CardTable/CardTable"
 
 const Verification = () => {
-    const [tableHead] = useState(["ID", "Name", "Age", "City"]);
+    const [tableHead] = useState(["ID", "Species", "Planting Date", "Activities", "Location", "Verification", "Uploaded"]);
     const [tableItems] = useState([
-        { id: 1, name: "John Doe", age: 25, city: "Table" },
-        { id: 2, name: "Jane Smith", age: 30, city: "Los Angeles" },
-        { id: 3, name: "Samuel Green", age: 22, city: "Chicago" },
-        { id: 4, name: "Emily Brown", age: 28, city: "Houston" },
-    ]);
+            { id: 22400001, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400002, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400003, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400004, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400005, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400006, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400007, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400008, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400009, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400010, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400011, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+            { id: 22400012, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location:"Body River Katal-Katal", verification:"Unverified", uploaded: "25-10-2024" },
+        ]);
     const [sortOptions] = useState(["modified", "name", "age", "city"]); // Sorting options array
 
     return (

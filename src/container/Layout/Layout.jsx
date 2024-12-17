@@ -7,6 +7,7 @@ import Notification from "../../components/Notification/Notification";
 import DevTools from "../../components/DevTools/DevTools";
 import Sidebar from "../Sidebar/Sidebar";
 import Details from "../Details/Details";
+import EditDetails from "../../pages/EditDetails/EditDetails";
 import Dashboard from "../../pages/Dashboard/Dashboard";
 import Map from "../../pages/Map/Map";
 import Analytics from "../../pages/Activity/Analytics/Analytics";
@@ -30,7 +31,9 @@ const Layout = () => {
     const { notifications, addNotification, removeNotification } = useNotification();
     const [sidebarToggle, setSidebarToggle] = useState(true);
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
+    const [isEditDetailsVisible, setIsEditDetailsVisible] = useState(false);
     const [isDetailsAnimating, setIsDetailsAnimating] = useState(false); // Status animasi
+    const [isEditDetailsAnimating, setIsEditDetailsAnimating] = useState(false); // Status animasi
     const [selectedComponent, setSelectedComponent] = useState("Dashboard");
     const [tooltipText, setTooltipText] = useState("");
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -87,6 +90,15 @@ const Layout = () => {
         setTimeout(() => {
             setIsDetailsVisible(false); // Hapus elemen setelah animasi selesai
             setIsDetailsAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
+    };
+
+    const handleEditDetailsClose = () => {
+        setIsDetailsVisible(true)
+        setIsEditDetailsAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsEditDetailsVisible(false); // Hapus elemen setelah animasi selesai
+            setIsEditDetailsAnimating(false);
         }, 300); // Durasi animasi sesuai CSS
     };
 
@@ -265,7 +277,10 @@ const Layout = () => {
                         <div
                             className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
                         >
-                            <Details onClose={handleDetailsClose} />
+                            <Details 
+                            onClose={handleDetailsClose}
+                            onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
+                            />
                         </div>
                     )}
 
@@ -307,6 +322,16 @@ const Layout = () => {
                         </div>
                     </div>
                     <div className="content-wrapper">
+                        {isEditDetailsVisible && (
+                            <div
+                                className={`editDetails-container ${isEditDetailsAnimating ? "fade-out" : "fade-in"}`}
+                            >
+                                <EditDetails
+                                    onClose={handleEditDetailsClose}
+                                />
+                            </div>
+                        )}
+
                         <Routes>
                             <Route path="/" element={<Navigate to="/dashboard" />} />
                             <Route path="/dashboard" element={<Dashboard />} />

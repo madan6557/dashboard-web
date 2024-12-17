@@ -1,0 +1,165 @@
+@import '../../variable.css';
+
+.edit-details-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--primary-white);
+    border-radius: 6px;
+    margin: 5px;
+    width: auto;
+    height: calc(100% - 10px);
+    padding: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.edit-details-header-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.qrCode {
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    color: var(--gray-900);
+    padding: 5px;
+}
+
+.qrCode:hover {
+    cursor: pointer;
+    background-color: var(--blue-200);
+}
+
+.qrCode .icon {
+    padding: 0px 10px 0px 0px;
+}
+
+.qrCode p {
+    margin: 0px;
+    font-weight: 600;
+}
+
+.detail-delete-button, .detail-save-button {
+    position: relative; /* Menjadikan elemen sebagai referensi posisi tooltip */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 5px;
+    width: 28px;
+    height: 28px;
+}
+
+.detail-delete-button {
+    margin-left: auto;
+    color: var(--red-600);
+}
+
+.detail-save-button {
+    margin-left: 5px;
+    color: var(--green-600);
+}
+
+.detail-delete-button:hover,
+.detail-save-button:hover {
+    cursor: pointer;
+    color: var(--gray-900);
+    background-color: var(--blue-200);
+}
+
+.detail-close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    border-radius: 6px;
+    padding: 5px;
+    width: 28px;
+    height: 28px;
+    color: var(--gray-900);
+}
+
+.detail-close-button:hover {
+    cursor: pointer;
+    color: var(--gray-900);
+    background-color: var(--blue-200);
+}
+
+.detail-form-wrapper {
+    display: flex;
+    width: calc(100% - 10px);
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.detail-input-wrapper {
+    position: relative;
+    right: -5px;
+    width: 60%;
+    height: max-content;
+    padding: 0px 10px;
+    display: flex; /* Aktifkan flexbox */
+    flex-wrap: wrap; /* Elemen akan membungkus ke baris berikutnya */
+    justify-content: space-between; /* Atur jarak antar kolom */
+    overflow: hidden;
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+.detail-input-wrapper > * {
+    flex: 0 1 calc(50% - 10px); /* Set lebar elemen 50% dikurangi margin */
+}
+
+
+.detail-image{
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+}
+/* Scrollbar */
+.detail-input-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.detail-input-wrapper::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 10px;
+}
+
+.detail-input-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-500);
+}
+
+.detail-tooltip {
+    position: absolute; /* Posisi absolut relatif ke tombol */
+    bottom: -35px; /* Atur jarak vertikal ke bawah */
+    left: 0; /* Mulai dari kiri tombol */
+    transform: translateX(-100%); /* Geser tooltip ke kiri agar tampil di luar tombol */
+    z-index: 10;
+    background-color: var(--blue-900);
+    color: var(--gray-50);
+    padding: 5px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 8px;
+    /* Apply radius to top-left corner */
+    border-top-right-radius: 0px;
+    /* Apply radius to top-right corner */
+    border-bottom-right-radius: 8px;
+    /* Apply radius to bottom-right corner */
+    border-bottom-left-radius: 8px;
+    /* No radius for the bottom-left corner */
+}
+
+.detail-tooltip p {
+    margin: 0;
+    color: var(--gray-50);
+}

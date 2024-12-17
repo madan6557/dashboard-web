@@ -37,6 +37,11 @@ const dummyUTMCoordinates = [
     [462300, 4311900],
     [462400, 4312000],
     [462500, 4312100],
+    [462600, 4312100],
+    [462900, 4312100],
+    [461900, 4312100],
+    [463900, 4312100],
+    [452900, 4212100],
 ];
 
 // Convert all UTM coordinates to Lat/Lon
@@ -59,6 +64,8 @@ const AddWMSLayer = () => {
                 format: "image/png",
                 transparent: true,
                 attribution: "GeoServer © JBG",
+                zIndex: 2, // Lebih tinggi dari ArcGIS
+                maxZoom: 22, // GeoServer tetap terlihat hingga zoom 22
             }
         );
         geoServerLayer.addTo(map);
@@ -84,12 +91,19 @@ const Map = () => {
                 zoom={13} // Adjust zoom level for closer view
                 scrollWheelZoom={true}
                 className="leaflet-map"
+                maxZoom={22}
             >
+                {/* Base map: ArcGIS */}
                 <TileLayer
                     url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
                     attribution="&copy; ArcGIS"
+                    zIndex={1} // Ensure it stays below the GeoServer layer
                 />
+
+                {/* GeoServer layer: Above the ArcGIS layer */}
                 <AddWMSLayer />
+
+                {/* Add clustered markers */}
                 <ClusteredMarkers markers={convertedCoordinates} />
             </MapContainer>
         </div>
@@ -100,7 +114,9 @@ const ClusteredMarkers = ({ markers }) => {
     const map = useMap();
 
     useEffect(() => {
-        const clusterGroup = L.markerClusterGroup();
+        const clusterGroup = L.markerClusterGroup({
+            maxClusterRadius: 10, // Default: 80 pixels
+        });
 
         markers.forEach(({ lon, lat, easting, northing }) => {
             const customIcon = L.icon({
