@@ -52,7 +52,7 @@ const EditDetails = ({ onClose }) => {
                     )}
                 </div>
 
-                <div className="detail-close-button">
+                <div className="detail-close-button" onClick={onClose}>
                     <Cross />
                 </div>
             </div>
