@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import './EditDetails.css';
 import FieldInput from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
-import { QRCode, Cross, PencileAltOutline, Save, Trash } from "../../components/Icons/Icon";
+import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
 
 const EditDetails = ({ onClose }) => {
     const [tooltipText, setTooltipText] = useState("");
-    const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
     const handleMenuHover = (title) => {
         setTooltipText(title);
@@ -58,7 +57,9 @@ const EditDetails = ({ onClose }) => {
             </div>
             <div className="detail-form-wrapper">
                 <div className="detail-image">
-                    <Image />
+                    <Image
+                        imageEditable={true}
+                    />
                 </div>
                 <div className="detail-input-wrapper">
                     <FieldInput />

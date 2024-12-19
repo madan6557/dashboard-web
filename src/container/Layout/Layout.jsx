@@ -14,6 +14,7 @@ import Analytics from "../../pages/Activity/Analytics/Analytics";
 import Evaluation from "../../pages/Activity/Evaluation/Evaluation";
 import Table from "../../pages/Data/Table/Table";
 import Verification from "../../pages/Data/Verification/Verification";
+import GenerateQRCode from "../../pages/Data/GenerateQRCode/GenerateQRCode";
 import Account from "../../pages/Users/Account/Account";
 import History from "../../pages/History/History"
 import Help from "../../pages/Help/Help"
@@ -136,7 +137,6 @@ const Layout = () => {
         setOpenDropdown((prev) => (prev === dropdownName ? null : dropdownName));
         if (dropdownName === 'notifications') setNotificationUpdateCount(0); // Reset notification count
     };
-
 
     const handleSendNotification = (message, type) => {
         // Generate a unique number for each notification
@@ -340,6 +340,7 @@ const Layout = () => {
                             <Route path="/evaluation" element={<Evaluation />} />
                             <Route path="/table" element={<Table />} />
                             <Route path="/verification" element={<Verification />} />
+                            <Route path="/generate" element={<GenerateQRCode />} />
                             <Route path="/account" element={<Account />} />
                             <Route path="/history" element={<History />} />
                             <Route path="/help" element={<Help />} />

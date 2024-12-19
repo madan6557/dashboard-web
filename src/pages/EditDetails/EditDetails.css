@@ -45,8 +45,10 @@
     font-weight: 600;
 }
 
-.detail-delete-button, .detail-save-button {
-    position: relative; /* Menjadikan elemen sebagai referensi posisi tooltip */
+.detail-delete-button,
+.detail-save-button {
+    position: relative;
+    /* Menjadikan elemen sebagai referensi posisi tooltip */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -95,6 +97,7 @@
     display: flex;
     width: calc(100% - 10px);
     height: 100%;
+    justify-content: space-around;
     box-sizing: border-box;
     overflow: hidden;
 }
@@ -105,23 +108,29 @@
     width: 60%;
     height: max-content;
     padding: 0px 10px;
-    display: flex; /* Aktifkan flexbox */
-    flex-wrap: wrap; /* Elemen akan membungkus ke baris berikutnya */
-    justify-content: space-between; /* Atur jarak antar kolom */
+    display: flex;
+    /* Aktifkan flexbox */
+    flex-wrap: wrap;
+    /* Elemen akan membungkus ke baris berikutnya */
+    justify-content: space-between;
+    /* Atur jarak antar kolom */
     overflow: hidden;
     overflow-y: scroll;
     box-sizing: border-box;
 }
 
-.detail-input-wrapper > * {
-    flex: 0 1 calc(50% - 10px); /* Set lebar elemen 50% dikurangi margin */
+.detail-input-wrapper>* {
+    flex: 0 1 calc(50% - 10px);
+    /* Set lebar elemen 50% dikurangi margin */
 }
 
 
-.detail-image{
+.detail-image {
+    position: relative;
     aspect-ratio: 3 / 4;
     overflow: hidden;
 }
+
 /* Scrollbar */
 .detail-input-wrapper::-webkit-scrollbar {
     width: 8px;
@@ -137,10 +146,14 @@
 }
 
 .detail-tooltip {
-    position: absolute; /* Posisi absolut relatif ke tombol */
-    bottom: -35px; /* Atur jarak vertikal ke bawah */
-    left: 0; /* Mulai dari kiri tombol */
-    transform: translateX(-100%); /* Geser tooltip ke kiri agar tampil di luar tombol */
+    position: absolute;
+    /* Posisi absolut relatif ke tombol */
+    bottom: -35px;
+    /* Atur jarak vertikal ke bawah */
+    left: 0;
+    /* Mulai dari kiri tombol */
+    transform: translateX(-100%);
+    /* Geser tooltip ke kiri agar tampil di luar tombol */
     z-index: 10;
     background-color: var(--blue-900);
     color: var(--gray-50);

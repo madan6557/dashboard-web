@@ -14,10 +14,6 @@
     width: 100%;
 }
 
-#numberOfRows {
-    margin-left: auto;
-}
-
 .cardTable-dropdown {
     margin-right: 5px;
 }
@@ -32,19 +28,24 @@
     background-color: var(--blue-200);
 }
 
+#numberOfRows{
+    margin-left: 5px;
+}
+
 .search-bar {
     font-family: inherit;
-    height: 30px;
+    height: 35px;
     border: 1px solid var(--gray-600);
     border-radius: 6px;
     padding-left: 5px;
+    margin-right: auto;
     box-sizing: border-box;
     color: var(--gray-900);
 }
 
 .cardTable-dropdown {
     font-family: inherit;
-    height: 30px;
+    height: 35px;
     border: 1px solid var(--gray-600);
     border-radius: 6px;
     padding-left: 5px;

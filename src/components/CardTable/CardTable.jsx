@@ -1,6 +1,7 @@
 import React from "react";
 import './CardTable.css';
-import { Magnifier, Chevron, Ascending } from '../Icons/Icon';
+import ActionButton from "../ActionButton/ActionButton";
+import { Magnifier, Chevron, Ascending, Print } from '../Icons/Icon';
 
 const CardTable = ({
     tableHead = [],
@@ -15,6 +16,16 @@ const CardTable = ({
                     <Magnifier />
                 </div>
                 <input className="search-bar" type="search" placeholder="Search..." />
+
+                <div className="export-button">
+                    <ActionButton
+                        title="Export"
+                        icon={<Print />}
+                        type="confirm"
+                        disabled={false}
+                    />
+                </div>
+
                 <select className="cardTable-dropdown" name="rows" id="numberOfRows" >
                     <option value="10">10</option>
                     <option value="20">20</option>

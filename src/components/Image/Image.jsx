@@ -1,20 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import './Image.css';
-import NoImage from "../../assets/images/No Image.jpg";
+import NoImage from "../../assets/images/sample.jpg";
+import Map from "../../pages/Map/Map"
 import {
-    Marker,
+    MarkerOutline,
+    MarkerSolid,
+    PencileAltOutline,
+    PhotographOutline,
+    PhotographSolid
 } from "../Icons/Icon";
 
 const Image = ({
     alt = "Plant Image",
-    src = NoImage
+    src = NoImage,
+    imageEditable = false,
 }) => {
+    const [selected, setSelected] = useState("photograph"); // State untuk menyimpan pilihan
+
     return (
         <div className="image-wrapper">
-            <div className="map-toggle">
-                <Marker />
+            <div className="viewport-toggle">
+                <div
+                    className={`viewport-button ${selected === "photograph" ? "selected" : ""}`}
+                    onClick={() => setSelected("photograph")}
+                >
+                    {selected === "photograph" ? <PhotographSolid /> : <PhotographOutline />}
+                </div>
+                <div
+                    className={`viewport-button ${selected === "marker" ? "selected" : ""}`}
+                    onClick={() => setSelected("marker")}
+                >
+                    {selected === "marker" ? <MarkerSolid /> : <MarkerOutline />}
+                </div>
             </div>
-            <img src={src} alt={alt} />
+
+            {selected === "photograph" && imageEditable && (
+                <div className="editImage-button">
+                    <PencileAltOutline />
+                </div>
+            )}
+
+            {selected === "photograph" ? <img src={src} alt={alt} /> : <Map />}
+
         </div>
     );
 }

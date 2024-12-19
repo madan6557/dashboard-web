@@ -65,7 +65,7 @@ const menuConfig = [
         submenu: [
             { title: "Table", route: "/table" },
             { title: "Verification", route: "/verification" },
-            { title: "Generate QR Code", route: null },
+            { title: "Generate QR Code", route: "/generate" },
         ],
         hasDropdown: true,
         showDividerLine: true,
@@ -252,10 +252,12 @@ const Sidebar = (props) => {
 
             <div className="divider start">
                 <div className="divider-line"></div>
-                <p className="divider-name">Menu</p>
             </div>
 
             <div className="menu-wrapper">
+                <div className="divider start">
+                    <p className="divider-name">Menu</p>
+                </div>
                 {menuConfig.map(menu => (
                     <React.Fragment key={menu.title}>
                         {menu.showDividerLine && (

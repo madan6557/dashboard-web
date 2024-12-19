@@ -2,11 +2,11 @@
 
 .actionButton-wrapper {
     display: flex;
-    height: 40px;
     align-items: center;
     border-radius: 6px;
+    height: 35px;
     overflow: hidden;
-    padding: 0px 6px;
+    padding: 0px 5px;
 }
 
 .actionButton-wrapper .icon{
