@@ -1,18 +1,18 @@
 import React from "react";
 import "./GenerateQRCode.css";
-import FieldInput from "../../../components/FieldInput/FieldInput";
+import ActionButton from "../../../components/ActionButton/ActionButton";
 import QRSample from "../../../assets/images/QR_Sample.png"
 
 const GenerateQRCode = () => {
     return (
         <div className="generateQR-container">
             <div className="qrGenerator-container">
-                <p>QR Generator</p>
+                <p className="container-title" >QR Generator</p>
                 <div className="qrGenerator-wrapper">
                     <div className="qr-image-container">
                         <img src={QRSample} alt="qr" />
                     </div>
-                    <div className="input-wrapper">
+                    <div className="qr-input-wrapper">
                         <div className="qr-counter">
                             <p>Start from <span>22400001</span> to <span>22400009</span></p>
                         </div>
@@ -25,7 +25,11 @@ const GenerateQRCode = () => {
                         </div>
                         <div className="input-container">
                             <p>Amount</p>
-                            <FieldInput title=""/>
+                            <input type="number" className="qr-number-value"/>
+                        </div>
+                        <div className="qr-button-container">
+                            <ActionButton title="Cancel" type="ghost"/>
+                            <ActionButton title="Generate" type="confirm"/>
                         </div>
                     </div>
 

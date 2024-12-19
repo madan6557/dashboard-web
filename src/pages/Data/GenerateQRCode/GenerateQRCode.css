@@ -3,16 +3,27 @@
 .generateQR-container {
     box-sizing: border-box;
     overflow-x: hidden;
+    padding: 5px;
 }
 
 .qrGenerator-container {
-    padding: 5px;
+    background-color: var(--gray-50);
+    padding: 10px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.qrGenerator-container .container-title{
+    font-size: larger;
+    margin-bottom: 10px;
 }
 
 .qr-image-container {
     background-color: var(--gray-50);
-    padding: 10px;
     border: 1px solid var(--gray-500);
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 300px;
 }
 
 .qr-image-container img {
@@ -23,4 +34,37 @@
 
 .qrGenerator-wrapper {
     display: flex;
+    gap: 10px;
+}
+
+.qr-input-wrapper{
+    width: fit-content;
+}
+
+.site-dropdown{
+    font-family: inherit;
+    height: 30px;
+    width: 100%;
+    border: 1px solid var(--gray-600);
+    border-radius: 6px;
+    padding-left: 5px;
+    box-sizing: border-box;
+    color: var(--gray-900);
+}
+
+.qr-number-value{
+    font-family: inherit;
+    height: 30px;
+    width: 100%;
+    border: 1px solid var(--gray-600);
+    border-radius: 6px;
+    padding-left: 5px;
+    box-sizing: border-box;
+    color: var(--gray-900);
+}
+
+.qr-button-container{
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-around;
 }

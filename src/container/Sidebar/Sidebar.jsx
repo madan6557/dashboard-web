@@ -156,8 +156,7 @@ const Sidebar = (props) => {
         setSelectedMenu(newSelectedMenu);
         // Only update dropdown states if the sidebar is not minimized
         setOpenDropdowns(newOpenDropdowns);
-    }, [location, props, isMinimize]);
-
+    }, [location, props]);
     useEffect(() => {
         // Check if the page is loaded via a refresh
         const navigationType = window.performance.getEntriesByType("navigation")[0]?.type || window.performance.navigation.type;
@@ -165,7 +164,9 @@ const Sidebar = (props) => {
         if (navigationType === "reload" || navigationType === 1) {
             updateSelectedMenuAndDropdowns();
         }
-    }, []); // Empty dependency array ensures it only runs once after a reload.
+        
+        // eslint-disable-next-line
+    }, []);
 
     const handleMinimize = () => {
         setIsMinimize(prevState => !prevState);
