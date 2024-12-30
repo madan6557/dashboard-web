@@ -122,7 +122,7 @@ const menuConfig = [
 
 const Sidebar = (props) => {
     const location = useLocation();
-    const [selectedMenu, setSelectedMenu] = useState([]);
+    const [selectedMenu, setSelectedMenu] = useState(["Dashboard"]);
     const [selectedSubmenu, setSelectedSubmenu] = useState(null);
     const [openDropdowns, setOpenDropdowns] = useState([]);
     const [isMinimize, setIsMinimize] = useState(false);
@@ -130,7 +130,6 @@ const Sidebar = (props) => {
 
     const updateSelectedMenuAndDropdowns = useCallback(() => {
         const { pathname } = location;
-
         const newSelectedMenu = [];
         const newOpenDropdowns = [];
 

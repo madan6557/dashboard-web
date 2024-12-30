@@ -143,7 +143,7 @@ const Layout = () => {
         const notificationCount = notifications.length + 1;  // Incremental numbering
 
         // Add a notification with a unique number and a dynamic type
-        addNotification(`Notification #${notificationCount}: ${message}`, type);
+        addNotification(`${message}`, type);
 
         if (openDropdown !== 'notifications') {
             setNotificationUpdateCount((prevCount) => prevCount + 1);
