@@ -14,18 +14,18 @@ const GenerateQRCode = () => {
                     </div>
                     <div className="qr-input-wrapper">
                         <div className="qr-counter">
-                            <p>Start from <span>22400001</span> to <span>22400009</span></p>
+                            <p>Start from <span><strong>22400001</strong></span> to <span><strong>22400001</strong></span></p>
                         </div>
-                        <div className="input-container">
+                        <div className="qr-input-container">
                             <p>Site</p>
                             <select className="site-dropdown" name="site" id="site" >
                                 <option value="2">JBG</option>
                                 <option value="1">Rehab Das</option>
                             </select>
                         </div>
-                        <div className="input-container">
+                        <div className="qr-input-container">
                             <p>Amount</p>
-                            <input type="number" className="qr-number-value"/>
+                            <input type="number" className="qr-number-value" defaultValue={1}/>
                         </div>
                         <div className="qr-button-container">
                             <ActionButton title="Cancel" type="ghost"/>

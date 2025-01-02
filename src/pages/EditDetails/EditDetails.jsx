@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import './EditDetails.css';
-import FieldInput from "../../components/FieldInput/FieldInput";
+import { TextField, OptionField } from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
 
@@ -62,20 +62,16 @@ const EditDetails = ({ onClose }) => {
                     />
                 </div>
                 <div className="detail-input-wrapper">
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
-                    <FieldInput />
+                    <OptionField id="species" title="Species" readonly={false} />
+                    <OptionField id="activity" title="Activity" readonly={false} />
+                    <OptionField id="skppkh" title="SKPPKH" readonly={false} />
+                    <TextField id="height" title="Height" readonly={false} />
+                    <TextField id="diameter" title="Diameter" type="number" readonly={false} />
+                    <OptionField id="status" title="Status" type="number" readonly={false} />
+                    <OptionField id="plot" title="Plot" readonly={false} />
+                    <TextField id="easting" title="Easting" type="number" readonly={false} />
+                    <TextField id="northing" title="Northing" type="number" readonly={false} />
+                    <TextField id="elevasi" title="Elevasi" type="number" readonly={false} />
                 </div>
             </div>
         </div>

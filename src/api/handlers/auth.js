@@ -29,7 +29,7 @@ export const login = async (credentials) => {
  */
 export const logout = async () => {
     try {
-        await API.post('/auth/logout'); // Endpoint: /auth/logout
+        // await API.post('/auth/logout'); 
         // Hapus token saat logout
         localStorage.removeItem('authToken');
     } catch (error) {

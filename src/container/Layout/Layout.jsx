@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useNotification } from "../../context/NotificationContext";
 import ActionButton from "../../components/ActionButton/ActionButton";
@@ -27,6 +27,8 @@ import {
     Anotation,
     ClipBoardListOutline,
 } from '../../components/Icons/Icon';
+
+import ProtectedRoute from '../../api/middleware/ProtectedRoute';
 
 const Layout = () => {
     const { notifications, addNotification, removeNotification } = useNotification();
@@ -139,8 +141,6 @@ const Layout = () => {
     };
 
     const handleSendNotification = (message, type) => {
-        // Generate a unique number for each notification
-        const notificationCount = notifications.length + 1;  // Incremental numbering
 
         // Add a notification with a unique number and a dynamic type
         addNotification(`${message}`, type);
@@ -155,210 +155,208 @@ const Layout = () => {
     };
 
     return (
-        <Router>
-            <div className={`page-container ${sidebarToggle ? 'sidebar-visible' : 'sidebar-hidden'}`}>
+        <div className={`page-container ${sidebarToggle ? 'sidebar-visible' : 'sidebar-hidden'}`}>
 
-                {/* Tooltip Positioning */}
-                {tooltipText && (
-                    <div
-                        className="tooltip"
-                        style={{
-                            top: tooltipPosition.top,
-                            left: tooltipPosition.left,
-                        }}
-                    >
-                        <p>{tooltipText}</p>
-                    </div>
-                )}
-
-                <div className="popup-notification">
-                    <TransitionGroup component={null}>
-                        {!isNotificationDropdownOpen && notificationUpdateCount > 0 && notifications.slice(
-                            notificationUpdateCount === 1 ? -1 : -2
-                        ).map((notif, index, array) => {
-                            const isLast = index === array.length - 1;
-                            const isMiddle = index === array.length - 2;
-
-                            return (
-                                <CSSTransition
-                                    key={notif.id}
-                                    timeout={300}
-                                    classNames={{
-                                        enter: "notification-enter",
-                                        exit: "notification-exit",
-                                    }}
-                                    nodeRef={notificationRefs.current[notif.id]} // Berikan nodeRef ke CSSTransition
-                                >
-                                    <div
-                                        ref={notificationRefs.current[notif.id]} // Tambahkan ref di elemen DOM
-                                        className={`${isMiddle ? "notification-slide-up" : ""} ${isLast ? "notification-enter" : ""}`}
-                                    >
-                                        <Notification
-                                            id={notif.id}
-                                            message={notif.message}
-                                            type={notif.type}
-                                            time={notif.time}
-                                            isPopup={true}
-                                            onClose={() => handleCloseNotification(notif.id, true)}
-                                        />
-                                    </div>
-                                </CSSTransition>
-                            );
-                        })}
-                    </TransitionGroup>
+            {/* Tooltip Positioning */}
+            {tooltipText && (
+                <div
+                    className="tooltip"
+                    style={{
+                        top: tooltipPosition.top,
+                        left: tooltipPosition.left,
+                    }}
+                >
+                    <p>{tooltipText}</p>
                 </div>
+            )}
 
-                {/* Dropdown Notification */}
-                {openDropdown === 'notifications' && (
-                    <div ref={notificationDropdownRef} className="notification-dropdown">
-                        <div className="notification-container">
-                            {notifications
-                                .slice()
-                                .reverse()
-                                .map((notif) => (
+            <div className="popup-notification">
+                <TransitionGroup component={null}>
+                    {!isNotificationDropdownOpen && notificationUpdateCount > 0 && notifications.slice(
+                        notificationUpdateCount === 1 ? -1 : -2
+                    ).map((notif, index, array) => {
+                        const isLast = index === array.length - 1;
+                        const isMiddle = index === array.length - 2;
+
+                        return (
+                            <CSSTransition
+                                key={notif.id}
+                                timeout={300}
+                                classNames={{
+                                    enter: "notification-enter",
+                                    exit: "notification-exit",
+                                }}
+                                nodeRef={notificationRefs.current[notif.id]} // Berikan nodeRef ke CSSTransition
+                            >
+                                <div
+                                    ref={notificationRefs.current[notif.id]} // Tambahkan ref di elemen DOM
+                                    className={`${isMiddle ? "notification-slide-up" : ""} ${isLast ? "notification-enter" : ""}`}
+                                >
                                     <Notification
-                                        key={notif.id}
                                         id={notif.id}
                                         message={notif.message}
                                         type={notif.type}
                                         time={notif.time}
-                                        isPopup={false}
-                                        onClose={handleCloseNotification}
+                                        isPopup={true}
+                                        onClose={() => handleCloseNotification(notif.id, true)}
                                     />
-                                ))}
-                        </div>
-                        <div
-                            className="clear-button"
-                            onClick={() => {
-                                removeNotification(); // Menghapus semua notifikasi
-                                setNotificationUpdateCount(0); // Reset jumlah notifikasi baru
-                                setOpenDropdown(null); // Tutup dropdown
-                            }}
-                        >
-                            <Trash />
-                            <p>Clear All</p>
-                        </div>
+                                </div>
+                            </CSSTransition>
+                        );
+                    })}
+                </TransitionGroup>
+            </div>
+
+            {/* Dropdown Notification */}
+            {openDropdown === 'notifications' && (
+                <div ref={notificationDropdownRef} className="notification-dropdown">
+                    <div className="notification-container">
+                        {notifications
+                            .slice()
+                            .reverse()
+                            .map((notif) => (
+                                <Notification
+                                    key={notif.id}
+                                    id={notif.id}
+                                    message={notif.message}
+                                    type={notif.type}
+                                    time={notif.time}
+                                    isPopup={false}
+                                    onClose={handleCloseNotification}
+                                />
+                            ))}
                     </div>
-                )}
-
-                {openDropdown === 'settings' && (
-                    <div ref={settingsDropdownRef} className="settings-dropdown">
-                        <p>Settings Dropdown</p>
+                    <div
+                        className="clear-button"
+                        onClick={() => {
+                            removeNotification(); // Menghapus semua notifikasi
+                            setNotificationUpdateCount(0); // Reset jumlah notifikasi baru
+                            setOpenDropdown(null); // Tutup dropdown
+                        }}
+                    >
+                        <Trash />
+                        <p>Clear All</p>
                     </div>
-                )}
+                </div>
+            )}
 
-                {openDropdown === 'profile' && (
-                    <div ref={profileDropdownRef} className="profile-dropdown" >
-                        <p>Profile Dropdown</p>
-                    </div>
-                )}
+            {openDropdown === 'settings' && (
+                <div ref={settingsDropdownRef} className="settings-dropdown">
+                    <p>Settings Dropdown</p>
+                </div>
+            )}
 
-                <DevTools>
-                    <ActionButton
-                        title="Send"
-                        icon={<Anotation />}
-                        type="confirm"
-                        disabled={false}
-                        onClick={() => handleSendNotification("This is a test notification!")} // Pasang fungsi ini sebagai handler
-                    />
-                    <ActionButton
-                        title="Open"
-                        icon={<ClipBoardListOutline />}
-                        type="confirm"
-                        disabled={false}
-                        onClick={() => setIsDetailsVisible(true)} // Pasang fungsi ini sebagai handler
-                    />
-                </DevTools>
+            {openDropdown === 'profile' && (
+                <div ref={profileDropdownRef} className="profile-dropdown" >
+                    <p>Profile Dropdown</p>
+                </div>
+            )}
+
+            <DevTools>
+                <ActionButton
+                    title="Send"
+                    icon={<Anotation />}
+                    type="confirm"
+                    disabled={false}
+                    onClick={() => handleSendNotification("This is a test notification!")} // Pasang fungsi ini sebagai handler
+                />
+                <ActionButton
+                    title="Open"
+                    icon={<ClipBoardListOutline />}
+                    type="confirm"
+                    disabled={false}
+                    onClick={() => setIsDetailsVisible(true)} // Pasang fungsi ini sebagai handler
+                />
+            </DevTools>
 
 
-                <div className="content-container">
+            <div className="content-container">
 
-                    {isDetailsVisible && (
-                        <div
-                            className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
-                        >
-                            <Details 
+                {isDetailsVisible && (
+                    <div
+                        className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
+                    >
+                        <Details
                             onClose={handleDetailsClose}
                             onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
+                        />
+                    </div>
+                )}
+
+                <div className="header-container">
+                    <div
+                        className={`sidebar-toggle ${sidebarToggle ? 'open' : 'closed'}`}
+                        onClick={handleSidebarToggle}
+                    >
+                        <List />
+                    </div>
+                    <p className="menu-title">{selectedComponent}</p>
+                    <div className="config-wrapper">
+
+                        <div
+                            className={`config-button ${openDropdown === 'notifications' ? 'open' : ''}`}
+                            onClick={() => handleDropdownClick('notifications')}
+                        >
+                            <BellOutline />
+                            {notificationUpdateCount > 0 && (
+                                <div className="notification-number">
+                                    <p className="notification-count">
+                                        {notificationUpdateCount > 99 ? "99+" : notificationUpdateCount}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        <div
+                            className={`config-button ${openDropdown === 'settings' ? 'open' : ''}`}
+                            onClick={() => [handleDropdownClick('settings'), handleSendNotification("This feature still under development!")]}
+                        >
+                            <VerticalDots />
+                        </div>
+                        <div
+                            className={`user-icon ${openDropdown === 'profile' ? 'open' : ''}`}
+                            onClick={() => [handleDropdownClick('profile'), handleSendNotification("This feature still under development!")]}
+                        >
+                            <p>A</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="content-wrapper">
+                    {isEditDetailsVisible && (
+                        <div
+                            className={`editDetails-container ${isEditDetailsAnimating ? "fade-out" : "fade-in"}`}
+                        >
+                            <EditDetails
+                                onClose={handleEditDetailsClose}
                             />
                         </div>
                     )}
 
-                    <div className="header-container">
-                        <div
-                            className={`sidebar-toggle ${sidebarToggle ? 'open' : 'closed'}`}
-                            onClick={handleSidebarToggle}
-                        >
-                            <List />
-                        </div>
-                        <p className="menu-title">{selectedComponent}</p>
-                        <div className="config-wrapper">
-
-                            <div
-                                className={`config-button ${openDropdown === 'notifications' ? 'open' : ''}`}
-                                onClick={() => handleDropdownClick('notifications')}
-                            >
-                                <BellOutline />
-                                {notificationUpdateCount > 0 && (
-                                    <div className="notification-number">
-                                        <p className="notification-count">
-                                            {notificationUpdateCount > 99 ? "99+" : notificationUpdateCount}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                            <div
-                                className={`config-button ${openDropdown === 'settings' ? 'open' : ''}`}
-                                onClick={() => [handleDropdownClick('settings'), handleSendNotification("This feature still under development!")]}
-                            >
-                                <VerticalDots />
-                            </div>
-                            <div
-                                className={`user-icon ${openDropdown === 'profile' ? 'open' : ''}`}
-                                onClick={() => [handleDropdownClick('profile'), handleSendNotification("This feature still under development!")]}
-                            >
-                                <p>A</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="content-wrapper">
-                        {isEditDetailsVisible && (
-                            <div
-                                className={`editDetails-container ${isEditDetailsAnimating ? "fade-out" : "fade-in"}`}
-                            >
-                                <EditDetails
-                                    onClose={handleEditDetailsClose}
-                                />
-                            </div>
-                        )}
-
-                        <Routes>
-                            <Route path="/" element={<Navigate to="/dashboard" />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/map" element={<Map />} />
-                            <Route path="/analytics" element={<Analytics />} />
-                            <Route path="/evaluation" element={<Evaluation />} />
-                            <Route path="/table" element={<Table />} />
-                            <Route path="/verification" element={<Verification />} />
-                            <Route path="/generate" element={<GenerateQRCode />} />
-                            <Route path="/account" element={<Account />} />
-                            <Route path="/history" element={<History />} />
-                            <Route path="/help" element={<Help />} />
-                        </Routes>
-                    </div>
-                </div>
-
-                <div className={`sidebar ${sidebarToggle ? 'visible' : 'hidden'}`}>
-                    <Sidebar
-                        onMenuSelect={handleMenuSelect}
-                        onMenuHover={handleMenuHover}
-                        onMenuLeave={handleMenuLeave}
-                        onSendNotification={handleSendNotification}
-                        sidebarToggle={sidebarToggle}
-                    />
+                    <Routes>
+                        <Route path="/landing" element={null} />
+                        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                        <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
+                        <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+                        <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
+                        <Route path="/table" element={<ProtectedRoute><Table /></ProtectedRoute>} />
+                        <Route path="/verification" element={<ProtectedRoute><Verification /></ProtectedRoute>} />
+                        <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
+                        <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+                        <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+                        <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
+                    </Routes>
                 </div>
             </div>
-        </Router>
+
+            <div className={`sidebar ${sidebarToggle ? 'visible' : 'hidden'}`}>
+                <Sidebar
+                    onMenuSelect={handleMenuSelect}
+                    onMenuHover={handleMenuHover}
+                    onMenuLeave={handleMenuLeave}
+                    onSendNotification={handleSendNotification}
+                    sidebarToggle={sidebarToggle}
+                />
+            </div>
+        </div>
     );
 };
 

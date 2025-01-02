@@ -1,18 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { NotificationProvider } from "./context/NotificationContext";
+import { BrowserRouter as Router } from 'react-router-dom'; // Menggunakan Router di sini
+import { NotificationProvider } from './context/NotificationContext';
 import './index.css';
-import Layout from './container/Layout/Layout';
+import App from './App'; // Mengimport App
 import reportWebVitals from './reportWebVitals';
 
+// Menggunakan Router di luar komponen App
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <Router>
     <NotificationProvider>
-        <Layout />
+      <App />
     </NotificationProvider>
+  </Router>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Untuk mengukur performa aplikasi
 reportWebVitals();

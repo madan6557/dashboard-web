@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 import brand from "../../assets/images/logia.svg";
 import MenuButton from "../../components/MenuButton/MenuButton";
@@ -23,6 +23,7 @@ import {
     MarkOutline,
     MarkSolid,
 } from '../../components/Icons/Icon';
+import { logout } from "../../api/handlers/auth"
 
 const menuConfig = [
     {
@@ -121,6 +122,8 @@ const menuConfig = [
 ];
 
 const Sidebar = (props) => {
+    const navigate = useNavigate(); // Hook untuk navigasi
+
     const location = useLocation();
     const [selectedMenu, setSelectedMenu] = useState(["Dashboard"]);
     const [selectedSubmenu, setSelectedSubmenu] = useState(null);
@@ -133,23 +136,30 @@ const Sidebar = (props) => {
         const newSelectedMenu = [];
         const newOpenDropdowns = [];
 
-        menuConfig.forEach(menu => {
-            if (pathname === menu.route) {
-                newSelectedMenu.push(menu.title);
-                props.onMenuSelect(menu.title); // Notify parent component
-            }
+        if (pathname === "/") {
+            newSelectedMenu.push("Dashboard");
+            props.onMenuSelect("Dashboard");
+        } else {
+            menuConfig.forEach(menu => {
+                if (pathname === menu.route) {
+                    newSelectedMenu.push(menu.title);
+                    props.onMenuSelect(menu.title); // Notify parent component
+                }
 
-            if (menu.hasDropdown) {
-                menu.submenu.forEach(submenu => {
-                    if (pathname === submenu.route) {
-                        newOpenDropdowns.push(menu.title);
-                        newSelectedMenu.push(menu.title);
-                        setSelectedSubmenu(submenu.title);
-                        props.onMenuSelect(submenu.title);
-                    }
-                });
-            }
-        });
+                if (menu.hasDropdown) {
+                    menu.submenu.forEach(submenu => {
+                        if (pathname === submenu.route) {
+                            newOpenDropdowns.push(menu.title);
+                            newSelectedMenu.push(menu.title);
+                            setSelectedSubmenu(submenu.title);
+                            props.onMenuSelect(submenu.title);
+                        }
+                    });
+                }
+            });
+        }
+
+
 
         // Always update `selectedMenu` and `openDropdowns`
         setSelectedMenu(newSelectedMenu);
@@ -163,7 +173,7 @@ const Sidebar = (props) => {
         if (navigationType === "reload" || navigationType === 1) {
             updateSelectedMenuAndDropdowns();
         }
-        
+
         // eslint-disable-next-line
     }, []);
 
@@ -331,7 +341,7 @@ const Sidebar = (props) => {
                         props.onMenuHover(isMinimize, "Log Out", event.currentTarget);
                     }}
                     onMouseLeave={props.onMenuLeave}
-                    onClick={() => props.onSendNotification("You have logged out!", "success")}
+                    onClick={() => [logout(), navigate('/')]}
                 >
                     <div className="icon">
                         <LogOut />
