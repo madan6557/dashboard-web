@@ -4,7 +4,7 @@ import { TextField, OptionField } from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
 
-const EditDetails = ({ onClose }) => {
+const EditDetails = ({ onClose, data}) => {
     const [tooltipText, setTooltipText] = useState("");
 
     const handleMenuHover = (title) => {

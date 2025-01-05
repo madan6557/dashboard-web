@@ -89,6 +89,7 @@
 
 .cardTable tr:hover {
     background-color: var(--blue-200);
+    cursor: pointer;
 }
 
 .cardTable th {

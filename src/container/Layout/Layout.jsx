@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect} from "react";
 import { Route, Routes } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useNotification } from "../../context/NotificationContext";
@@ -27,7 +27,6 @@ import {
     Anotation,
     ClipBoardListOutline,
 } from '../../components/Icons/Icon';
-
 import ProtectedRoute from '../../api/middleware/ProtectedRoute';
 
 const Layout = () => {
@@ -153,6 +152,10 @@ const Layout = () => {
     const handleCloseNotification = (id) => {
         removeNotification(id);
     };
+
+    const handleRowClick = () => {
+        setIsDetailsVisible(true); // This will set the row details visibility
+      };
 
     return (
         <div className={`page-container ${sidebarToggle ? 'sidebar-visible' : 'sidebar-hidden'}`}>
@@ -320,6 +323,7 @@ const Layout = () => {
                         </div>
                     </div>
                 </div>
+
                 <div className="content-wrapper">
                     {isEditDetailsVisible && (
                         <div
@@ -337,7 +341,7 @@ const Layout = () => {
                         <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                         <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
-                        <Route path="/table" element={<ProtectedRoute><Table /></ProtectedRoute>} />
+                        <Route path="/table" element={<ProtectedRoute><Table  onRowClick={handleRowClick}/></ProtectedRoute>} />
                         <Route path="/verification" element={<ProtectedRoute><Verification /></ProtectedRoute>} />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
                         <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />

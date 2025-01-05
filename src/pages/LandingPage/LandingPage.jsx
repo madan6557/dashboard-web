@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import "./LandingPage.css";
 import { TextField } from "../../components/FieldInput/FieldInput";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import { login } from "../../api/handlers/auth";
+import { login } from "../../api/handlers/authHandler";
 
 const LandingPage = () => {
     const [email, setEmail] = useState("");

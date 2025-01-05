@@ -19,6 +19,16 @@ export const fetchPlants = async (config) => {
     }
 };
 
+export const fetchPlantByID = async (id_plant) => {
+    try {
+        const response = await API.get(`/approve/plant/${id_plant}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching plant data:', error);
+        throw error;
+    }
+};
+
 // Update data tanaman berdasarkan ID
 export const updatePlant = async (plantId, data) => {
     try {

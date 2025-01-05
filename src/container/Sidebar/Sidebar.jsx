@@ -23,7 +23,7 @@ import {
     MarkOutline,
     MarkSolid,
 } from '../../components/Icons/Icon';
-import { logout } from "../../api/handlers/auth"
+import { logout } from "../../api/handlers/authHandler"
 
 const menuConfig = [
     {

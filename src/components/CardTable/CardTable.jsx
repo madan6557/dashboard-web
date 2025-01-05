@@ -19,20 +19,21 @@ const CardTable = ({
     onOrderChange,
     onRowsChange,
     onSortChange,
-    onSearchChange
+    onSearchChange,
+    onRowClick // New prop for handling row click
 }) => {
     const [pageNumber, setPageNumber] = useState(currentPage);
-    const [order, setOrder] = useState(orderOptions[0]);
+    const [order, setOrder] = useState(orderOptions[0][1]);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [sortOrder, setSortOrder] = useState('asc'); // Default to ascending
-    const [searchTerm, setSearchTerm] = useState(''); // State for search term
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm); // For debounced term
-    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearchTerm(searchTerm);
-        }, 500); // 500 ms delay
+        }, 500);
 
         return () => {
             clearTimeout(handler);
@@ -46,12 +47,11 @@ const CardTable = ({
     }, [debouncedSearchTerm, onSearchChange]);
 
     useEffect(() => {
-        setIsLoading(true); // Set loading to true before fetching
-        // Simulate data fetch delay
+        setIsLoading(true);
         setTimeout(() => {
-            setIsLoading(false); // Set loading to false after fetching
+            setIsLoading(false);
         }, 2000);
-    }, [tableItems]); // Change this as needed to simulate data fetching
+    }, [tableItems]);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -80,6 +80,12 @@ const CardTable = ({
         const value = parseInt(e.target.value, 10);
         setRowsPerPage(value);
         if (onRowsChange) onRowsChange(value);
+    };
+
+    const handleRowClick = (item) => {
+        if (onRowClick) {
+            onRowClick(item);
+        }
     };
 
     return (
@@ -121,7 +127,7 @@ const CardTable = ({
                     className="cardTable-dropdown"
                     name="orderBy"
                     id="orderBy"
-                    value={order} // Assuming 'order' is the state holding the selected value
+                    value={order}
                     onChange={handleOrderChange}
                 >
                     {orderOptions.map(([textContent, value], index) => (
@@ -155,7 +161,7 @@ const CardTable = ({
                             ))
                         ) : (
                             tableItems.map((item, index) => (
-                                <tr key={index}>
+                                <tr key={index} onClick={() => handleRowClick(item)}>
                                     {Object.values(item).map((value, idx) => (
                                         <td key={idx}>{value}</td>
                                     ))}

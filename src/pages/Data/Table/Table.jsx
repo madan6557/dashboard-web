@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import './Table.css';
 import CardTable from "../../../components/CardTable/CardTable";
-import { approvedPlants } from "../../../api/controller/plants";
+import { searchApprovedPlants } from "../../../api/controller/plantsController";
+import { DataContext } from "../../../context/DataContext";
 
-const Table = () => {
+const Table = ({ onRowClick }) => {
     const [tableHead] = useState(["ID", "Species", "Planting Date", "Activities", "Location", "Status"]);
     const [orderOptions] = useState([
         ["Modified Date", "dateModified"],
@@ -20,6 +21,7 @@ const Table = () => {
     const [sortOrder, setSortOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState(orderOptions[0][1]);
     const [searchTerm, setSearchTerm] = useState('');
+    const { setSelectedRowData } = useContext(DataContext);
 
     const fetchData = async () => {
         var plantSite = "jbg";
@@ -35,7 +37,7 @@ const Table = () => {
         console.log("Fetching data with config:", config);
 
         try {
-            const response = await approvedPlants(config);
+            const response = await searchApprovedPlants(config);
             setTableItems(response.data);
             setTotalPages(response.totalPages);
         } catch (error) {
@@ -73,6 +75,14 @@ const Table = () => {
         setSearchTerm(search);
     };
 
+    const handleRowClick = (item) => {
+        console.log("Row clicked:", item.id_plant);
+        if (onRowClick) {
+            onRowClick(); // This will call the passed function from Layout (which sets isDetailsVisible)
+        }
+        setSelectedRowData(item.id_plant); // Update selected row data
+    };
+
     return (
         <div className="table-container">
             <CardTable
@@ -86,6 +96,7 @@ const Table = () => {
                 onRowsChange={handleRowsChange}
                 onSortChange={handleSortChange}
                 onSearchChange={handleSearchChange}
+                onRowClick={handleRowClick}
             />
         </div>
     );

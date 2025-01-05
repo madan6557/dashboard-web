@@ -1,7 +1,7 @@
-import { fetchPlants } from "../handlers/plants";
+import { fetchPlants, fetchPlantByID } from "../handlers/plantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
 
-export const approvedPlants = async (config) => {
+export const searchApprovedPlants = async (config) => {
     const response = await fetchPlants(config);
 
     // Destructure the response to get data, totalPages, and currentPage
@@ -29,3 +29,15 @@ export const approvedPlants = async (config) => {
         currentPage
     };
 };
+
+export const getSelectedApprovedPlants = async (id_plant, isEditable=false) => {
+    const response = await fetchPlantByID(parseInt(id_plant));
+
+    if (response.data && response.data.plantingDate) {
+        const formattedDate = dateFormat(response.data.plantingDate, 'dd-mm-yyyy hh-mm-ss', '+0')
+        
+        response.data.plantingDate = formattedDate;
+    }
+
+    return response.data;
+}
