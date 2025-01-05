@@ -341,7 +341,7 @@ const Sidebar = (props) => {
                         props.onMenuHover(isMinimize, "Log Out", event.currentTarget);
                     }}
                     onMouseLeave={props.onMenuLeave}
-                    onClick={() => [logout(), navigate('/')]}
+                    onClick={() => [logout(), navigate('/landing')]}
                 >
                     <div className="icon">
                         <LogOut />

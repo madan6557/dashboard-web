@@ -8,7 +8,6 @@ const App = () => {
   const navigate = useNavigate();  // Hook untuk navigasi programatik
 
   useEffect(() => {
-    // localStorage.setItem('authToken', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkdW1teS11c2VyLWlkIiwidXNlcm5hbWUiOiJkdW1teXVzZXIiLCJyb2xlIjoiZXhhbXBsZSJ9.CpTj1qFhhH3G6j6HvF1zO-Pel3VfukdAW59fdbGVg9g");
     const token = localStorage.getItem('authToken');
 
     if (token) {

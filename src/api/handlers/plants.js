@@ -1,9 +1,17 @@
-import API from '../config';
+import API from '../service';
 
 // Mendapatkan semua tanaman
-export const fetchPlants = async () => {
+export const fetchPlants = async (config) => {
+    const {
+        page,
+        rows,
+        orderBy,
+        sort,
+        search,
+        site
+    } = config;
     try {
-        const response = await API.get('/plants'); // Endpoint: /users
+        const response = await API.get(`/approve/search?keyword=${search}&orderBy=${orderBy}&sortBy=${sort}&site=${site}&page=${page}&limit=${rows}`); // Endpoint: /users
         return response.data; // Data hasil response dari server
     } catch (error) {
         console.error('Error fetching plants data:', error);
@@ -14,7 +22,7 @@ export const fetchPlants = async () => {
 // Update data tanaman berdasarkan ID
 export const updatePlant = async (plantId, data) => {
     try {
-        const response = await API.patch(`/plants/${plantId}`, data);
+        const response = await API.patch(`/approve/:${plantId}`, data);
         return response.message;
     } catch (error) {
         console.error('Error updating plant data:', error);
@@ -23,9 +31,9 @@ export const updatePlant = async (plantId, data) => {
 };
 
 // Menghapus tanaman berdasarkan ID
-export const deletePlant = async (userId) => {
+export const deletePlant = async (plantId) => {
     try {
-        const response = await API.delete(`/plants/${userId}`); // Endpoint: /users/:id
+        const response = await API.delete(`/approve/:${plantId}`); // Endpoint: /users/:id
         return response.message;
     } catch (error) {
         console.error('Error deleting plant data:', error);

@@ -1,41 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Magnifier, Chevron, Ascending, Descending, Print } from '../Icons/Icon';
 import './CardTable.css';
 import ActionButton from "../ActionButton/ActionButton";
-import { Magnifier, Chevron, Ascending, Print } from '../Icons/Icon';
 
 const CardTable = ({
     tableHead = [],
     tableItems = [],
-    sortOptions = ["name", "age", "city"], // Default options
-    totalPages = 999 // You can pass the totalPages as a prop or leave it static
+    orderOptions = [
+        ["Modified Date", "dateModified"],
+        ["ID", "id_plant"],
+        ["Species", "plant"],
+        ["Location", "location"],
+        ["Status", "status"]
+    ],
+    totalPages = 999,
+    currentPage = 1,
+    onPageChange,
+    onOrderChange,
+    onRowsChange,
+    onSortChange,
+    onSearchChange
 }) => {
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState(currentPage);
+    const [order, setOrder] = useState(orderOptions[0]);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [sortOrder, setSortOrder] = useState('asc'); // Default to ascending
+    const [searchTerm, setSearchTerm] = useState(''); // State for search term
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm); // For debounced term
+    const [isLoading, setIsLoading] = useState(true); // Loading state
 
-    const handleChange = (e) => {
-        let value = e.target.value;
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 500); // 500 ms delay
 
-        // Only allow numbers
-        if (!/^\d*$/.test(value)) {
-            return;
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [searchTerm]);
+
+    useEffect(() => {
+        if (onSearchChange) {
+            onSearchChange(debouncedSearchTerm);
         }
+    }, [debouncedSearchTerm, onSearchChange]);
 
-        // Convert to integer and constrain within totalPages
-        value = parseInt(value, 10);
-        if (!isNaN(value) && value >= 1 && value <= totalPages) {
+    useEffect(() => {
+        setIsLoading(true); // Set loading to true before fetching
+        // Simulate data fetch delay
+        setTimeout(() => {
+            setIsLoading(false); // Set loading to false after fetching
+        }, 2000);
+    }, [tableItems]); // Change this as needed to simulate data fetching
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSortToggle = () => {
+        const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        setSortOrder(newSortOrder);
+        if (onSortChange) onSortChange(newSortOrder);
+    };
+
+    const handleChangePage = (value) => {
+        if (value >= 1 && value <= totalPages) {
             setPageNumber(value);
-        } else if (value < 1) {
-            setPageNumber(1);
-        } else if (value > totalPages) {
-            setPageNumber(totalPages);
+            if (onPageChange) onPageChange(value);
         }
     };
 
-    const handlePreviousPage = () => {
-        setPageNumber((prev) => Math.max(1, prev - 1)); // Prevent going below page 1
+    const handleOrderChange = (e) => {
+        const value = e.target.value;
+        setOrder(value);
+        if (onOrderChange) onOrderChange(value);
     };
 
-    const handleNextPage = () => {
-        setPageNumber((prev) => Math.min(totalPages, prev + 1)); // Prevent going beyond totalPages
+    const handleRowsChange = (e) => {
+        const value = parseInt(e.target.value, 10);
+        setRowsPerPage(value);
+        if (onRowsChange) onRowsChange(value);
     };
 
     return (
@@ -44,7 +88,13 @@ const CardTable = ({
                 <div className="icon">
                     <Magnifier />
                 </div>
-                <input className="search-bar" type="search" placeholder="Search..." />
+                <input
+                    className="search-bar"
+                    type="search"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
 
                 <div className="export-button">
                     <ActionButton
@@ -55,7 +105,13 @@ const CardTable = ({
                     />
                 </div>
 
-                <select className="cardTable-dropdown" name="rows" id="numberOfRows" >
+                <select
+                    className="cardTable-dropdown"
+                    name="rows"
+                    id="numberOfRows"
+                    value={rowsPerPage}
+                    onChange={handleRowsChange}
+                >
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="50">50</option>
@@ -63,17 +119,20 @@ const CardTable = ({
                 </select>
                 <select
                     className="cardTable-dropdown"
-                    name="sortBy"
-                    id="sortBy"
+                    name="orderBy"
+                    id="orderBy"
+                    value={order} // Assuming 'order' is the state holding the selected value
+                    onChange={handleOrderChange}
                 >
-                    {sortOptions.map((option, index) => (
-                        <option key={index} value={option}>
-                            {option.charAt(0).toUpperCase() + option.slice(1)} {/* Capitalize first letter */}
+                    {orderOptions.map(([textContent, value], index) => (
+                        <option key={index} value={value}>
+                            {textContent}
                         </option>
                     ))}
                 </select>
-                <div className="icon" id="orderBy">
-                    <Ascending />
+
+                <div className="icon" id="sortBy" onClick={handleSortToggle}>
+                    {sortOrder === 'asc' ? <Ascending /> : <Descending />}
                 </div>
             </div>
             <div className="cardTable-outline">
@@ -86,35 +145,43 @@ const CardTable = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {tableItems.map((item, index) => (
-                            <tr key={index}>
-                                {Object.values(item).map((value, idx) => (
-                                    <td key={idx}>{value}</td>
-                                ))}
-                            </tr>
-                        ))}
+                        {isLoading ? (
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <tr key={index} className="shimmering-row">
+                                    {tableHead.map((_, idx) => (
+                                        <td key={idx}><div className="shimmering-cell"></div></td>
+                                    ))}
+                                </tr>
+                            ))
+                        ) : (
+                            tableItems.map((item, index) => (
+                                <tr key={index}>
+                                    {Object.values(item).map((value, idx) => (
+                                        <td key={idx}>{value}</td>
+                                    ))}
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
 
             <div className="pagination">
-                <div className="chevron left" onClick={handlePreviousPage}>
+                <div className="chevron left" onClick={() => handleChangePage(pageNumber - 1)}>
                     <Chevron />
                 </div>
                 <input
                     type="text"
                     id="pageNumber"
                     value={pageNumber}
-                    onChange={handleChange}
+                    onChange={(e) => setPageNumber(e.target.value)}
                     onBlur={(e) => {
                         let value = parseInt(e.target.value, 10);
-                        if (isNaN(value) || value < 1) value = 1;
-                        if (value > totalPages) value = totalPages;
-                        setPageNumber(value); // Update to valid value on blur
+                        if (!isNaN(value)) handleChangePage(value);
                     }}
                 />
                 <p className="totalPage">of <span id="totalPages">{totalPages}</span></p>
-                <div className="chevron right" onClick={handleNextPage}>
+                <div className="chevron right" onClick={() => handleChangePage(pageNumber + 1)}>
                     <Chevron />
                 </div>
             </div>

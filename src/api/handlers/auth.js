@@ -1,4 +1,4 @@
-import API from '../config';
+import API from '../service';
 
 /**
  * Login pengguna
@@ -7,15 +7,17 @@ import API from '../config';
  */
 export const login = async (credentials) => {
     try {
-        const response = await API.post('/auth/login', credentials); // Endpoint: /auth/login
-        const { token, user } = response.data;
+        const response = await API.post('/user/login/admin', credentials); // Endpoint: /auth/login
+        const { token, uuid, role, message } = response.data;
 
         // Simpan token ke localStorage
         if (token) {
             localStorage.setItem('authToken', token);
+            localStorage.setItem('userId', uuid);
+            localStorage.setItem('userRole', role);
         }
 
-        return { token, user }; // Misalnya: { token, user }
+        return { message }; // Misalnya: { token, user }
 
     } catch (error) {
         console.error('Error during login:', error);
@@ -45,7 +47,7 @@ export const logout = async () => {
  */
 export const register = async (userData) => {
     try {
-        const response = await API.post('/auth/register', userData); // Endpoint: /auth/register
+        const response = await API.post('/user/sign-up', userData); // Endpoint: /auth/register
         return response.data; // Misalnya: { id, name, email }
     } catch (error) {
         console.error('Error during registration:', error);

@@ -1,9 +1,9 @@
-import API from '../config';
+import API from '../service';
 
 // Mendapatkan semua pengguna
 export const fetchUsers = async () => {
   try {
-    const response = await API.get('/users'); // Endpoint: /users
+    const response = await API.get(`/user/?keyword=&orderBy=uuid&sortBy=ASC&page=${page}&limit=${rows}`); // Endpoint: /users
     return response.data; // Data hasil response dari server
   } catch (error) {
     console.error('Error fetching users:', error);
