@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import './Table.css';
 import CardTable from "../../../components/CardTable/CardTable";
 import { searchApprovedPlants } from "../../../api/controller/plantsController";
-import { DataContext } from "../../../context/DataContext";
+import { DataIDContext } from "../../../context/SelectedIDContext";
 
 const Table = ({ onRowClick }) => {
     const [tableHead] = useState(["ID", "Species", "Planting Date", "Activities", "Location", "Status"]);
@@ -21,7 +21,7 @@ const Table = ({ onRowClick }) => {
     const [sortOrder, setSortOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState(orderOptions[0][1]);
     const [searchTerm, setSearchTerm] = useState('');
-    const { setSelectedRowData } = useContext(DataContext);
+    const { setSelectedRowData } = useContext(DataIDContext);
 
     const fetchData = async () => {
         var plantSite = "jbg";

@@ -3,11 +3,11 @@ import './Details.css';
 import { TextField } from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
-import { DataContext } from "../../context/DataContext";
+import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
 
 const Details = ({ onClose, onEdit }) => {
-    const { selectedRowData } = useContext(DataContext);
+    const { selectedRowData } = useContext(DataIDContext);
     const [plantDetails, setPlantDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -30,16 +30,44 @@ const Details = ({ onClose, onEdit }) => {
     }, [selectedRowData]);
 
     const renderShimmer = () => (
-        <div className="shimmer-wrapper">
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
-            <div className="shimmer-field"></div>
+        <div className="shimmer-fields">
+            <div className="shimmer-image"></div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
+            <div className="shimmer-field">
+                <div className="shimmer-title"></div>
+                <div className="shimmer-input"></div>
+            </div>
         </div>
     );
 
@@ -61,25 +89,23 @@ const Details = ({ onClose, onEdit }) => {
             </div>
             <div className="form-wrapper">
                 {isLoading ? (
-                    <div className="shimmer-image"></div>
-                ) : (
-                    <Image alt="Plant Image" />
-                )}
-                {isLoading ? (
                     renderShimmer()
                 ) : (
                     <>
-                        <TextField id="species" title="Species" value={plantDetails.plant} readonly={true} />
-                        <TextField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate} readonly={true} />
-                        <TextField id="activity" title="Activity" value={plantDetails.activity} readonly={true} />
-                        <TextField id="skppkh" title="SKPPKH" value={plantDetails.skppkh} readonly={true} />
-                        <TextField id="height" title="Height" value={plantDetails.height} readonly={true} />
-                        <TextField id="diameter" title="Diameter" value={plantDetails.diameter} readonly={true} />
-                        <TextField id="status" title="Status" value={plantDetails.status} readonly={true} />
-                        <TextField id="plot" title="Plot" value={plantDetails.rehabilitationPlot} readonly={true} />
-                        <TextField id="easting" title="Easting" value={plantDetails.easting} readonly={true} />
-                        <TextField id="northing" title="Northing" value={plantDetails.northing} readonly={true} />
-                        <TextField id="elevation" title="Elevation" value={plantDetails.elevation} readonly={true} />
+                        <div className="image-wrapper">
+                            <Image alt="Plant Image" />
+                        </div>
+                            <TextField id="species" title="Species" value={plantDetails.plant} readonly={true} />
+                            <TextField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate} readonly={true} />
+                            <TextField id="activity" title="Activity" value={plantDetails.activity} readonly={true} />
+                            <TextField id="skppkh" title="SKPPKH" value={plantDetails.skppkh} readonly={true} />
+                            <TextField id="height" title="Height" value={plantDetails.height} readonly={true} />
+                            <TextField id="diameter" title="Diameter" value={plantDetails.diameter} readonly={true} />
+                            <TextField id="status" title="Status" value={plantDetails.status} readonly={true} />
+                            <TextField id="plot" title="Plot" value={plantDetails.rehabilitationPlot} readonly={true} />
+                            <TextField id="easting" title="Easting" value={plantDetails.easting} readonly={true} />
+                            <TextField id="northing" title="Northing" value={plantDetails.northing} readonly={true} />
+                            <TextField id="elevation" title="Elevation" value={plantDetails.elevation} readonly={true} />
                     </>
                 )}
             </div>

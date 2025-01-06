@@ -1,11 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import './EditDetails.css';
-import { TextField, OptionField } from "../../components/FieldInput/FieldInput";
+import { TextField, OptionField, DateField } from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
+import { DataIDContext } from "../../context/SelectedIDContext";
+import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
 
-const EditDetails = ({ onClose, data}) => {
+const EditDetails = ({ onClose, data }) => {
+    const { selectedRowData } = useContext(DataIDContext);
+    const [plantDetails, setPlantDetails] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
+
+    const fetchData = async () => {
+        setIsLoading(true);
+        try {
+            const response = await getSelectedApprovedPlants(selectedRowData, false);
+            console.log(response);
+            setPlantDetails(response);
+        } catch (error) {
+            console.error("Error fetching plants:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+        // eslint-disable-next-line
+    }, [selectedRowData]);
 
     const handleMenuHover = (title) => {
         setTooltipText(title);
@@ -23,7 +46,7 @@ const EditDetails = ({ onClose, data}) => {
                     <div className="icon">
                         <QRCode />
                     </div>
-                    <p className="value">22400001</p>
+                    <p className="value">{selectedRowData}</p>
                 </div>
                 <div
                     className="detail-delete-button"
@@ -56,23 +79,38 @@ const EditDetails = ({ onClose, data}) => {
                 </div>
             </div>
             <div className="detail-form-wrapper">
-                <div className="detail-image">
-                    <Image
-                        imageEditable={true}
-                    />
-                </div>
-                <div className="detail-input-wrapper">
-                    <OptionField id="species" title="Species" readonly={false} />
-                    <OptionField id="activity" title="Activity" readonly={false} />
-                    <OptionField id="skppkh" title="SKPPKH" readonly={false} />
-                    <TextField id="height" title="Height" readonly={false} />
-                    <TextField id="diameter" title="Diameter" type="number" readonly={false} />
-                    <OptionField id="status" title="Status" type="number" readonly={false} />
-                    <OptionField id="plot" title="Plot" readonly={false} />
-                    <TextField id="easting" title="Easting" type="number" readonly={false} />
-                    <TextField id="northing" title="Northing" type="number" readonly={false} />
-                    <TextField id="elevasi" title="Elevasi" type="number" readonly={false} />
-                </div>
+                {isLoading ? (
+                    <div className="shimmer-wrapper">
+                        <div className="shimmer-image"></div>
+                        <div className="shimmer-fields">
+                            {Array.from({ length: 11 }).map((_, index) => (
+                                <div key={index} className="shimmer-placeholder">
+                                    <div className="shimmer-line-title"></div>
+                                    <div className="shimmer-line-input"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <div className="detail-image">
+                            <Image imageEditable={true} />
+                        </div>
+                        <div className="detail-input-wrapper">
+                            <TextField id="species" title="Species" value={plantDetails.plant} readonly={true} />
+                            <DateField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate} />
+                            <TextField id="activity" title="Activity" value={plantDetails.activity} readonly={true} />
+                            <TextField id="skppkh" title="SKPPKH" value={plantDetails.skppkh} readonly={true} />
+                            <TextField id="height" title="Height" value={plantDetails.height} readonly={true} />
+                            <TextField id="diameter" title="Diameter" value={plantDetails.diameter} readonly={true} />
+                            <TextField id="status" title="Status" value={plantDetails.status} readonly={true} />
+                            <TextField id="plot" title="Plot" value={plantDetails.rehabilitationPlot} readonly={true} />
+                            <TextField id="easting" title="Easting" value={plantDetails.easting} readonly={true} />
+                            <TextField id="northing" title="Northing" value={plantDetails.northing} readonly={true} />
+                            <TextField id="elevation" title="Elevation" value={plantDetails.elevation} readonly={true} />
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

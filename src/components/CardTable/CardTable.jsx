@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { Magnifier, Chevron, Ascending, Descending, Print } from '../Icons/Icon';
 import './CardTable.css';
 import ActionButton from "../ActionButton/ActionButton";

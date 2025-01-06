@@ -14,7 +14,7 @@ export const dateFormat = (date, type = 'yyyy-mm-dd', gmt = '+8') => {
     const hours = pad(utcDate.getUTCHours());
     const minutes = pad(utcDate.getUTCMinutes());
     const seconds = pad(utcDate.getUTCSeconds());
-    
+
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const dayName = dayNames[utcDate.getUTCDay()];
 
@@ -29,6 +29,8 @@ export const dateFormat = (date, type = 'yyyy-mm-dd', gmt = '+8') => {
             return `${dayName}-${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
         case 'dd-mm-yyyy hh-mm-ss':
             return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        case 'yyyy-mm-dd hh-mm-ss':
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         case 'hh:mm:ss':
             return `${hours}:${minutes}:${seconds}`;
         case 'mm-dd-yyyy':

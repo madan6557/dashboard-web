@@ -34,7 +34,7 @@ export const getSelectedApprovedPlants = async (id_plant, isEditable=false) => {
     const response = await fetchPlantByID(parseInt(id_plant));
 
     if (response.data && response.data.plantingDate) {
-        const formattedDate = dateFormat(response.data.plantingDate, 'dd-mm-yyyy hh-mm-ss', '+0')
+        const formattedDate = dateFormat(response.data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+0')
         
         response.data.plantingDate = formattedDate;
     }

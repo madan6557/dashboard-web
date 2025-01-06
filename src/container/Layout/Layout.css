@@ -67,9 +67,12 @@
 }
 
 .editDetails-container {
+    top: 0px;
+    right: 0px;
     position: absolute;
     z-index: 1;
-    height: 100%;
+    height: calc(100%);
+    box-sizing: border-box;
     animation-duration: 0.3s;
     animation-fill-mode: forwards;
 }

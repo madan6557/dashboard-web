@@ -155,6 +155,9 @@ const Layout = () => {
 
     const handleRowClick = () => {
         setIsDetailsVisible(true); // This will set the row details visibility
+        if(isEditDetailsVisible){
+            handleEditDetailsClose();
+        }
       };
 
     return (
