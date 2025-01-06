@@ -2,9 +2,7 @@ import React, { useState, useRef, useEffect} from "react";
 import { Route, Routes } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useNotification } from "../../context/NotificationContext";
-import ActionButton from "../../components/ActionButton/ActionButton";
 import Notification from "../../components/Notification/Notification";
-import DevTools from "../../components/DevTools/DevTools";
 import Sidebar from "../Sidebar/Sidebar";
 import Details from "../Details/Details";
 import EditDetails from "../../pages/EditDetails/EditDetails";
@@ -24,8 +22,6 @@ import {
     VerticalDots,
     BellOutline,
     Trash,
-    Anotation,
-    ClipBoardListOutline,
 } from '../../components/Icons/Icon';
 import ProtectedRoute from '../../api/middleware/ProtectedRoute';
 
@@ -257,23 +253,6 @@ const Layout = () => {
                     <p>Profile Dropdown</p>
                 </div>
             )}
-
-            <DevTools>
-                <ActionButton
-                    title="Send"
-                    icon={<Anotation />}
-                    type="confirm"
-                    disabled={false}
-                    onClick={() => handleSendNotification("This is a test notification!")} // Pasang fungsi ini sebagai handler
-                />
-                <ActionButton
-                    title="Open"
-                    icon={<ClipBoardListOutline />}
-                    type="confirm"
-                    disabled={false}
-                    onClick={() => setIsDetailsVisible(true)} // Pasang fungsi ini sebagai handler
-                />
-            </DevTools>
 
 
             <div className="content-container">
