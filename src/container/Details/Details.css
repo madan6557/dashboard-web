@@ -45,11 +45,15 @@
     font-weight: 600;
 }
 
+.header-button{
+    display: flex;
+    margin-left: auto;
+}
+
 .edit-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: auto;
     border-radius: 6px;
     padding: 5px;
     width: 28px;

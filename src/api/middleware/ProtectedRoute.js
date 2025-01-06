@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isTokenValid) {
     // Jika token tidak ada atau sudah kadaluwarsa, arahkan ke halaman landing
-    return <Navigate to="/" replace />;
+    return <Navigate to="/landing" replace />;
   }
 
   return children; // Jika token valid, lanjutkan render children

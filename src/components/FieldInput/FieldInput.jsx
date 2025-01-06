@@ -19,7 +19,7 @@ const TextField = ({
     const handleChange = (e) => {
         const newValue = e.target.value;
         setInputValue(newValue); // Update local state
-        if (onChange) onChange(newValue); // Trigger onChange prop
+        if (onChange) onChange(e); // Pass the event correctly
     };
 
     return (
@@ -67,8 +67,8 @@ const NumericField = ({
             <div className="input-suffix-wrapper">
                 <input
                     id={id}
-                    className="input-value"
-                    type="number" // Set input type to number
+                    className="input-value no-spinner"
+                    type="number"
                     placeholder={placeholder}
                     value={inputValue}
                     readOnly={readonly}
@@ -79,6 +79,7 @@ const NumericField = ({
         </div>
     );
 };
+
 
 const OptionField = ({
     id = "",

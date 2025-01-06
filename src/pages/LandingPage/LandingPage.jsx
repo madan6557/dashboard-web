@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./LandingPage.css";
 import { TextField } from "../../components/FieldInput/FieldInput";
@@ -10,6 +10,10 @@ const LandingPage = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setErrorMessage(""); // Clear error message when email or password changes
+    }, [email, password]);
 
     const handleLoginAuthentication = async () => {
         const credentials = { email, password };
@@ -48,19 +52,17 @@ const LandingPage = () => {
                 <div className="login-input-form">
                     <TextField
                         title="Email"
+                        id="email"
                         type="email"
                         placeholder="Email"
-                        readonly={false}
-                        id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <TextField
                         title="Password"
+                        id="password"
                         type="password"
                         placeholder="Password"
-                        readonly={false}
-                        id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />

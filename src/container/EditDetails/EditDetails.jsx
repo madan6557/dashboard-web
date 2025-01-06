@@ -1,27 +1,31 @@
 import React, { useContext, useState, useEffect } from "react";
 import './EditDetails.css';
-import { TextField, NumericField, OptionField, DateField } from "../../components/FieldInput/FieldInput";
+import { NumericField, OptionField, DateField } from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
+import { DataOptionContext } from "../../context/dataOptionContext";
 
 const EditDetails = ({ onClose, data }) => {
     const { selectedRowData } = useContext(DataIDContext);
+    const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
 
     const fetchData = async () => {
-        setIsLoading(true);
-        try {
-            const response = await getSelectedApprovedPlants(selectedRowData, false);
-            console.log(response);
-            setPlantDetails(response);
-        } catch (error) {
-            console.error("Error fetching plants:", error);
-        } finally {
-            setIsLoading(false);
+        if (selectedRowData) {
+            setIsLoading(true);
+            try {
+                const response = await getSelectedApprovedPlants(selectedRowData, false);
+                console.log(response);
+                setPlantDetails(response);
+            } catch (error) {
+                console.error("Error fetching plants:", error);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -97,17 +101,17 @@ const EditDetails = ({ onClose, data }) => {
                             <Image imageEditable={true} />
                         </div>
                         <div className="detail-input-wrapper">
-                            <TextField id="species" title="Species" value={plantDetails.plant} />
-                            <DateField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate} />
-                            <TextField id="activity" title="Activity" value={plantDetails.activity} />
-                            <TextField id="skppkh" title="SKPPKH" value={plantDetails.skppkh} />
-                            <NumericField id="height" title="Height" value={plantDetails.height} suffix="cm" readonly={true} />
-                            <NumericField id="diameter" title="Diameter" value={plantDetails.diameter} suffix="cm" readonly={true} />
-                            <TextField id="status" title="Status" value={plantDetails.status} />
-                            <TextField id="plot" title="Plot" value={plantDetails.rehabilitationPlot}/>
-                            <TextField id="easting" title="Easting" value={plantDetails.easting} />
-                            <TextField id="northing" title="Northing" value={plantDetails.northing} />
-                            <TextField id="elevation" title="Elevation" value={plantDetails.elevation} />
+                            <OptionField id="species" title="Species" value={plantDetails.id_species} optionItem={dataOption.tb_species}/>
+                            <DateField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate}/>
+                            <OptionField id="activity" title="Activity" value={plantDetails.id_activity} optionItem={dataOption.tb_activity}/>
+                            <OptionField id="skppkh" title="SKPPKH" value={plantDetails.id_sk} optionItem={dataOption.tb_sk}/>
+                            <NumericField id="height" title="Height" value={plantDetails.height} suffix="cm" readonly={true}/>
+                            <NumericField id="diameter" title="Diameter" value={plantDetails.diameter} suffix="cm" readonly={true}/>
+                            <OptionField id="status" title="Status" value={plantDetails.id_status} optionItem={dataOption.tb_status}/>
+                            <OptionField id="plot" title="Plot" value={plantDetails.id_rehabilitationPlot} optionItem={dataOption.tb_rehabilitationPlot}/>
+                            <NumericField id="easting" title="Easting" value={plantDetails.easting} suffix="m"/>
+                            <NumericField id="northing" title="Northing" value={plantDetails.northing} suffix="m"/>
+                            <NumericField id="elevation" title="Elevation" value={plantDetails.elevation} suffix="m"/>
                         </div>
                     </>
                 )}

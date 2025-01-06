@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useNotification } from "../../context/NotificationContext";
 import Notification from "../../components/Notification/Notification";
 import Sidebar from "../Sidebar/Sidebar";
 import Details from "../Details/Details";
-import EditDetails from "../../pages/EditDetails/EditDetails";
+import EditDetails from "../EditDetails/EditDetails";
 import Dashboard from "../../pages/Dashboard/Dashboard";
 import Map from "../../pages/Map/Map";
 import Analytics from "../../pages/Activity/Analytics/Analytics";
@@ -26,11 +26,15 @@ import {
 import ProtectedRoute from '../../api/middleware/ProtectedRoute';
 import { OptionField } from "../../components/FieldInput/FieldInput";
 import { SiteIDContext } from "../../context/SiteIDContext";
+import { DataOptionContext } from "../../context/dataOptionContext";
+import { getDataOptions } from "../../api/controller/optionController";
 
 const Layout = () => {
+    const location = useLocation();
     const { notifications, addNotification, removeNotification } = useNotification();
     const [sidebarToggle, setSidebarToggle] = useState(true);
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
+    const [isDetailsReadonly, setIsDetailsReadonly] = useState(false);
     const [isEditDetailsVisible, setIsEditDetailsVisible] = useState(false);
     const [isDetailsAnimating, setIsDetailsAnimating] = useState(false); // Status animasi
     const [isEditDetailsAnimating, setIsEditDetailsAnimating] = useState(false); // Status animasi
@@ -41,6 +45,7 @@ const Layout = () => {
     const [notificationUpdateCount, setNotificationUpdateCount] = useState(0);
     const [openDropdown, setOpenDropdown] = useState(null); // 'notifications', 'settings', 'profile', or null
     const { setSelectedSite } = useContext(SiteIDContext);
+    const { setDataOption } = useContext(DataOptionContext);
 
     // Buat ref untuk setiap notifikasi
     const notificationRefs = useRef({});
@@ -49,6 +54,15 @@ const Layout = () => {
     const notificationDropdownRef = useRef(null);
     const settingsDropdownRef = useRef(null);
     const profileDropdownRef = useRef(null);
+
+    const fetchDataOptions = async () => {
+        try {
+            const response = await getDataOptions();
+            setDataOption(response); // Update state with fetched data
+        } catch (error) {
+            console.error("Error fetching options:", error);
+        }
+    };
 
     // Inisialisasi ref untuk setiap notifikasi
     notifications.forEach((notif) => {
@@ -85,6 +99,18 @@ const Layout = () => {
             document.removeEventListener("mousedown", handleOutsideClick);
         };
     }, [openDropdown]);
+
+    useEffect(() => {
+        if (location.pathname === "/table") {
+            setIsDetailsReadonly(false);
+        } else {
+            setIsDetailsReadonly(true); // Optional: Reset or handle other routes
+        }
+        handleDetailsClose();
+        handleEditDetailsClose();
+        fetchDataOptions();
+        // eslint-disable-next-line
+    }, [location.pathname]);
 
     const handleDetailsClose = () => {
         setIsDetailsAnimating(true); // Mulai animasi keluar
@@ -271,6 +297,7 @@ const Layout = () => {
                         <Details
                             onClose={handleDetailsClose}
                             onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
+                            readonly={isDetailsReadonly}
                         />
                     </div>
                 )}
@@ -285,11 +312,12 @@ const Layout = () => {
                     <p className="menu-title">{selectedComponent}</p>
                     <div className="config-wrapper">
                         <div className="site-option">
+                            <p>Site</p>
                             <OptionField optionItem={[
                                 { text: "JBG", value: "jbg" },
                                 { text: "Rehab DAS", value: "rehab das" },
                             ]}
-                            onChange={handleSiteChange} 
+                                onChange={handleSiteChange}
                             />
                         </div>
                         <div

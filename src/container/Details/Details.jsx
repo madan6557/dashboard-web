@@ -6,21 +6,23 @@ import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
 
-const Details = ({ onClose, onEdit }) => {
+const Details = ({ onClose, onEdit, readonly = false }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const [plantDetails, setPlantDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchData = async () => {
-        setIsLoading(true);
-        try {
-            const response = await getSelectedApprovedPlants(selectedRowData, false);
-            console.log(response);
-            setPlantDetails(response);
-        } catch (error) {
-            console.error("Error fetching plants:", error);
-        } finally {
-            setIsLoading(false);
+        if (selectedRowData) {
+            setIsLoading(true);
+            try {
+                const response = await getSelectedApprovedPlants(selectedRowData, false);
+                console.log(response);
+                setPlantDetails(response);
+            } catch (error) {
+                console.error("Error fetching plants:", error);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -80,21 +82,26 @@ const Details = ({ onClose, onEdit }) => {
                     </div>
                     <p className="value">{selectedRowData}</p>
                 </div>
-                <div className="edit-button" onClick={onEdit}>
-                    <PencileAltOutline />
+                <div className="header-button">
+                    {readonly ? '' :
+                        <div className="edit-button" onClick={onEdit}>
+                            <PencileAltOutline />
+                        </div>
+                    }
+                    <div className="close-button" onClick={onClose}>
+                        <Cross />
+                    </div>
                 </div>
-                <div className="close-button" onClick={onClose}>
-                    <Cross />
-                </div>
+
             </div>
             <div className="form-wrapper">
-                {isLoading ? (
+                {isLoading ?
                     renderShimmer()
-                ) : (
-                    <>
-                        <div className="image-wrapper">
-                            <Image alt="Plant Image" />
-                        </div>
+                    : (
+                        <>
+                            <div className="image-wrapper">
+                                <Image alt="Plant Image" />
+                            </div>
                             <TextField id="species" title="Species" value={plantDetails.plant} readonly={true} />
                             <TextField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate} readonly={true} />
                             <TextField id="activity" title="Activity" value={plantDetails.activity} readonly={true} />
@@ -103,11 +110,11 @@ const Details = ({ onClose, onEdit }) => {
                             <NumericField id="diameter" title="Diameter" value={plantDetails.diameter} suffix="cm" readonly={true} />
                             <TextField id="status" title="Status" value={plantDetails.status} readonly={true} />
                             <TextField id="plot" title="Plot" value={plantDetails.rehabilitationPlot} readonly={true} />
-                            <TextField id="easting" title="Easting" value={plantDetails.easting} readonly={true} />
-                            <TextField id="northing" title="Northing" value={plantDetails.northing} readonly={true} />
-                            <TextField id="elevation" title="Elevation" value={plantDetails.elevation} readonly={true} />
-                    </>
-                )}
+                            <NumericField id="easting" title="Easting" value={plantDetails.easting} suffix="m" readonly={true} />
+                            <NumericField id="northing" title="Northing" value={plantDetails.northing} suffix="m" readonly={true} />
+                            <NumericField id="elevation" title="Elevation" value={plantDetails.elevation} suffix="m" readonly={true} />
+                        </>
+                    )}
             </div>
         </div>
     );

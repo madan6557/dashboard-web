@@ -17,14 +17,12 @@ const App = () => {
       }
     } else {
       setIsAuthenticated(false);
-      if (window.location.pathname === '/') {
         navigate('/landing'); // Redirect ke /landing jika token tidak ada
-      }
     }
   }, [navigate]);
 
   // Render berdasarkan path
-  if (window.location.pathname === '' || !isAuthenticated) {
+  if (!isAuthenticated) {
     return <LandingPage />;
   } else {
     return <Layout />;

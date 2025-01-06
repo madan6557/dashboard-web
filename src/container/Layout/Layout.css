@@ -162,6 +162,9 @@
 
 .site-option {
     margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .site-option .input-wrapper {
