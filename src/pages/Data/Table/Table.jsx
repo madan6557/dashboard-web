@@ -3,25 +3,27 @@ import './Table.css';
 import CardTable from "../../../components/CardTable/CardTable";
 import { searchApprovedPlants } from "../../../api/controller/plantsController";
 import { DataIDContext } from "../../../context/SelectedIDContext";
+import { SiteIDContext } from "../../../context/SiteIDContext";
 
 const Table = ({ onRowClick }) => {
     const [tableHead] = useState(["ID", "Species", "Planting Date", "Activities", "Location", "Status"]);
     const [orderOptions] = useState([
-        ["Modified Date", "dateModified"],
-        ["ID", "id_plant"],
-        ["Species", "plant"],
-        ["Planting Date", "plantingDate"],
-        ["Location", "location"],
-        ["Status", "status"]
-    ]);
+        { text: "Modified Date", value: "dateModified" },
+        { text: "ID", value: "id_plant" },
+        { text: "Species", value: "plant" },
+        { text: "Planting Date", value: "plantingDate" },
+        { text: "Location", value: "location" },
+        { text: "Status", value: "status" }
+    ]);    
     const [tableItems, setTableItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [sortOrder, setSortOrder] = useState('asc');
-    const [orderBy, setOrderBy] = useState(orderOptions[0][1]);
+    const [orderBy, setOrderBy] = useState(orderOptions[0].value);
     const [searchTerm, setSearchTerm] = useState('');
     const { setSelectedRowData } = useContext(DataIDContext);
+    const { selectedSite } = useContext(SiteIDContext);
 
     const fetchData = async () => {
         var plantSite = "jbg";
@@ -31,7 +33,7 @@ const Table = ({ onRowClick }) => {
             orderBy: orderBy,
             sort: sortOrder,
             search: searchTerm,
-            site: plantSite
+            site: selectedSite||plantSite
         };
 
         console.log("Fetching data with config:", config);

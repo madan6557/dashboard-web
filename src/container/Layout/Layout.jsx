@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useNotification } from "../../context/NotificationContext";
@@ -24,6 +24,8 @@ import {
     Trash,
 } from '../../components/Icons/Icon';
 import ProtectedRoute from '../../api/middleware/ProtectedRoute';
+import { OptionField } from "../../components/FieldInput/FieldInput";
+import { SiteIDContext } from "../../context/SiteIDContext";
 
 const Layout = () => {
     const { notifications, addNotification, removeNotification } = useNotification();
@@ -38,6 +40,7 @@ const Layout = () => {
     const [isNotificationDropdownOpen, setisNotificationDropdownOpen] = useState(false);
     const [notificationUpdateCount, setNotificationUpdateCount] = useState(0);
     const [openDropdown, setOpenDropdown] = useState(null); // 'notifications', 'settings', 'profile', or null
+    const { setSelectedSite } = useContext(SiteIDContext);
 
     // Buat ref untuk setiap notifikasi
     const notificationRefs = useRef({});
@@ -151,10 +154,15 @@ const Layout = () => {
 
     const handleRowClick = () => {
         setIsDetailsVisible(true); // This will set the row details visibility
-        if(isEditDetailsVisible){
+        if (isEditDetailsVisible) {
             handleEditDetailsClose();
         }
-      };
+    };
+
+    const handleSiteChange = (value) => {
+        console.log(value);
+        setSelectedSite(value);
+    };
 
     return (
         <div className={`page-container ${sidebarToggle ? 'sidebar-visible' : 'sidebar-hidden'}`}>
@@ -254,7 +262,6 @@ const Layout = () => {
                 </div>
             )}
 
-
             <div className="content-container">
 
                 {isDetailsVisible && (
@@ -277,7 +284,14 @@ const Layout = () => {
                     </div>
                     <p className="menu-title">{selectedComponent}</p>
                     <div className="config-wrapper">
-
+                        <div className="site-option">
+                            <OptionField optionItem={[
+                                { text: "JBG", value: "jbg" },
+                                { text: "Rehab DAS", value: "rehab das" },
+                            ]}
+                            onChange={handleSiteChange} 
+                            />
+                        </div>
                         <div
                             className={`config-button ${openDropdown === 'notifications' ? 'open' : ''}`}
                             onClick={() => handleDropdownClick('notifications')}
@@ -323,7 +337,7 @@ const Layout = () => {
                         <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                         <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
-                        <Route path="/table" element={<ProtectedRoute><Table  onRowClick={handleRowClick}/></ProtectedRoute>} />
+                        <Route path="/table" element={<ProtectedRoute><Table onRowClick={handleRowClick} /></ProtectedRoute>} />
                         <Route path="/verification" element={<ProtectedRoute><Verification /></ProtectedRoute>} />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
                         <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Magnifier, Chevron, Ascending, Descending, Print } from '../Icons/Icon';
 import './CardTable.css';
 import ActionButton from "../ActionButton/ActionButton";
@@ -23,7 +23,7 @@ const CardTable = ({
     onRowClick // New prop for handling row click
 }) => {
     const [pageNumber, setPageNumber] = useState(currentPage);
-    const [order, setOrder] = useState(orderOptions[0][1]);
+    const [order, setOrder] = useState(orderOptions[0].value);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortOrder, setSortOrder] = useState('asc');
     const [searchTerm, setSearchTerm] = useState('');
@@ -130,12 +130,13 @@ const CardTable = ({
                     value={order}
                     onChange={handleOrderChange}
                 >
-                    {orderOptions.map(([textContent, value], index) => (
-                        <option key={index} value={value}>
-                            {textContent}
+                    {orderOptions.map((option, index) => (
+                        <option key={index} value={option.value}>
+                            {option.text}
                         </option>
                     ))}
                 </select>
+
 
                 <div className="icon" id="sortBy" onClick={handleSortToggle}>
                     {sortOrder === 'asc' ? <Ascending /> : <Descending />}

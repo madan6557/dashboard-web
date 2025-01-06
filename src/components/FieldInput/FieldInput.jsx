@@ -8,47 +8,116 @@ const TextField = ({
     readonly = false,
     type = "text",
     value = "",
-    onChange = () => { }
+    onChange = () => {}
 }) => {
+    const [inputValue, setInputValue] = useState(value);
+
+    useEffect(() => {
+        setInputValue(value); // Update input value when prop changes
+    }, [value]);
+
+    const handleChange = (e) => {
+        const newValue = e.target.value;
+        setInputValue(newValue); // Update local state
+        if (onChange) onChange(newValue); // Trigger onChange prop
+    };
+
     return (
         <div className="input-wrapper">
-            <p className="title">{title}</p>
+            {title && <p className="title">{title}</p>}
             <input
                 id={id}
                 className="input-value"
                 type={type}
                 placeholder={placeholder}
-                value={readonly ? value : undefined}
-                defaultValue={!readonly ? value : undefined}
+                value={inputValue}
                 readOnly={readonly}
-                onChange={onChange}
+                onChange={readonly ? undefined : handleChange}
             />
+        </div>
+    );
+};
+
+const NumericField = ({
+    id = "",
+    placeholder = "Input",
+    title = "Input",
+    readonly = false,
+    suffix = "",
+    value = "",
+    onChange = () => {}
+}) => {
+    const [inputValue, setInputValue] = useState(value);
+
+    useEffect(() => {
+        setInputValue(value); // Update input value when prop changes
+    }, [value]);
+
+    const handleChange = (e) => {
+        const newValue = e.target.value;
+        if (!isNaN(newValue) || newValue === '') { // Check if the input is a number or empty
+            setInputValue(newValue); // Update local state
+            if (onChange) onChange(newValue); // Trigger onChange prop
+        }
+    };
+
+    return (
+        <div className="input-wrapper">
+            {title && <p className="title">{title}</p>}
+            <div className="input-suffix-wrapper">
+                <input
+                    id={id}
+                    className="input-value"
+                    type="number" // Set input type to number
+                    placeholder={placeholder}
+                    value={inputValue}
+                    readOnly={readonly}
+                    onChange={readonly ? undefined : handleChange}
+                />
+                {suffix && <span className="input-suffix">{suffix}</span>}
+            </div>
         </div>
     );
 };
 
 const OptionField = ({
     id = "",
-    title = "Input",
+    title = null,
     readonly = false,
     value = "",
-    options = [],
-    onChange = () => { }
+    optionItem = [],
+    onChange = () => {}
 }) => {
+    const [selectedValue, setSelectedValue] = useState(value);
+    const [options, setOptions] = useState(optionItem);
+
+    useEffect(() => {
+        setOptions(optionItem); // Update options when prop changes
+    }, [optionItem]);
+
+    useEffect(() => {
+        setSelectedValue(value); // Update selected value when prop changes
+    }, [value]);
+
+    const handleChange = (e) => {
+        const newValue = e.target.value;
+        setSelectedValue(newValue); // Update local state
+        if (onChange) onChange(newValue); // Trigger onChange prop
+    };
+
     return (
         <div className="input-wrapper">
-            <p className="title">{title}</p>
+            {title && <p className="title">{title}</p>}
             <select
                 id={id}
                 className="input-value"
-                value={readonly ? value : undefined}
-                defaultValue={!readonly ? value : undefined}
-                onChange={readonly ? undefined : onChange}
+                value={selectedValue}
+                onChange={readonly ? undefined : handleChange}
                 disabled={readonly}
             >
                 {options.map((option, index) => (
                     <option key={index} value={option.value}>
-                        {option.label}
+                        {option.text}
                     </option>
                 ))}
             </select>
@@ -67,7 +136,6 @@ const DateField = ({
     const [dateValue, setDateValue] = useState('');
     const [timeValue, setTimeValue] = useState('');
 
-    // Initialize date and time values based on the input value
     useEffect(() => {
         if (value.includes(' ')) {
             const [date, time] = value.split(' ');
@@ -81,21 +149,18 @@ const DateField = ({
         }
     }, [value]);
 
-    // Handle date change
     const handleDateChange = (e) => {
         const newDate = e.target.value;
         setDateValue(newDate);
-        onChange(`${formatDateToDisplay(newDate)} ${timeValue}`); // Send value as dd-MM-yyyy HH:mm:ss
+        onChange(`${formatDateToDisplay(newDate)} ${timeValue}`);
     };
 
-    // Handle time change
     const handleTimeChange = (e) => {
         const newTime = e.target.value;
         setTimeValue(newTime);
-        onChange(`${formatDateToDisplay(dateValue)} ${newTime}`); // Send value with time in HH:mm:ss
+        onChange(`${formatDateToDisplay(dateValue)} ${newTime}`);
     };
 
-    // Helper function to format date for display (dd-MM-yyyy)
     const formatDateToDisplay = (date) => {
         const [year, month, day] = date.split('-');
         return `${day}-${month}-${year}`;
@@ -103,14 +168,14 @@ const DateField = ({
 
     return (
         <div className="input-wrapper">
-            <p className="title">{title}</p>
+            {title && <p className="title">{title}</p>}
             <div className="date-time-container">
                 <input
                     id={`${id}-date`}
                     className="input-value"
                     type="date"
                     placeholder={placeholder}
-                    value={dateValue} // In yyyy-MM-dd format
+                    value={dateValue}
                     readOnly={readonly}
                     onChange={readonly ? undefined : handleDateChange}
                 />
@@ -129,4 +194,4 @@ const DateField = ({
     );
 };
 
-export { TextField, OptionField, DateField };
+export { TextField, NumericField, OptionField, DateField };

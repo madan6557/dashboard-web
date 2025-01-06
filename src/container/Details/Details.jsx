@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import './Details.css';
-import { TextField } from "../../components/FieldInput/FieldInput";
+import { TextField, NumericField } from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
@@ -99,8 +99,8 @@ const Details = ({ onClose, onEdit }) => {
                             <TextField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate} readonly={true} />
                             <TextField id="activity" title="Activity" value={plantDetails.activity} readonly={true} />
                             <TextField id="skppkh" title="SKPPKH" value={plantDetails.skppkh} readonly={true} />
-                            <TextField id="height" title="Height" value={plantDetails.height} readonly={true} />
-                            <TextField id="diameter" title="Diameter" value={plantDetails.diameter} readonly={true} />
+                            <NumericField id="height" title="Height" value={plantDetails.height} suffix="cm" readonly={true} />
+                            <NumericField id="diameter" title="Diameter" value={plantDetails.diameter} suffix="cm" readonly={true} />
                             <TextField id="status" title="Status" value={plantDetails.status} readonly={true} />
                             <TextField id="plot" title="Plot" value={plantDetails.rehabilitationPlot} readonly={true} />
                             <TextField id="easting" title="Easting" value={plantDetails.easting} readonly={true} />
