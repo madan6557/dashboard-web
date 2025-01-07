@@ -27,34 +27,34 @@ const CardTable = ({
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortOrder, setSortOrder] = useState('asc');
     const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Debounce search term: Only trigger search after no typing for 500ms
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedSearchTerm(searchTerm);
-        }, 500);
-
+        const timeoutId = setTimeout(() => {
+            if (onSearchChange) {
+                onSearchChange(searchTerm); // Trigger search when searchTerm changes
+            }
+        }, 500); // 500ms debounce delay
+    
         return () => {
-            clearTimeout(handler);
-        };
-    }, [searchTerm]);
-
-    useEffect(() => {
-        if (onSearchChange) {
-            onSearchChange(debouncedSearchTerm);
-        }
-    }, [debouncedSearchTerm, onSearchChange]);
+            clearTimeout(timeoutId); // Cleanup the previous timeout on rerender or input change
+        };// eslint-disable-next-line
+    }, [searchTerm]); // only watch `searchTerm` for change    
 
     useEffect(() => {
         setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
         }, 2000);
+        if (totalPages < pageNumber) {
+            setPageNumber(1);
+        }// eslint-disable-next-line
     }, [tableItems]);
 
+    // Handle search input change
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
+        setSearchTerm(e.target.value); // Update the searchTerm state
     };
 
     const handleSortToggle = () => {
@@ -99,7 +99,7 @@ const CardTable = ({
                     type="search"
                     placeholder="Search..."
                     value={searchTerm}
-                    onChange={handleSearchChange}
+                    onChange={handleSearchChange} // Only search when this input changes
                 />
 
                 <div className="export-button">
@@ -116,7 +116,7 @@ const CardTable = ({
                     name="rows"
                     id="numberOfRows"
                     value={rowsPerPage}
-                    onChange={handleRowsChange}
+                    onChange={handleRowsChange} // Only update rows per page
                 >
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -128,7 +128,7 @@ const CardTable = ({
                     name="orderBy"
                     id="orderBy"
                     value={order}
-                    onChange={handleOrderChange}
+                    onChange={handleOrderChange} // Only change ordering
                 >
                     {orderOptions.map((option, index) => (
                         <option key={index} value={option.value}>
@@ -136,7 +136,6 @@ const CardTable = ({
                         </option>
                     ))}
                 </select>
-
 
                 <div className="icon" id="sortBy" onClick={handleSortToggle}>
                     {sortOrder === 'asc' ? <Ascending /> : <Descending />}

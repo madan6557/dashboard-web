@@ -129,6 +129,14 @@ const Layout = () => {
         }, 300); // Durasi animasi sesuai CSS
     };
 
+    const handleEditDetailsDelete = () => {
+        setIsEditDetailsAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsEditDetailsVisible(false); // Hapus elemen setelah animasi selesai
+            setIsEditDetailsAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
+    };
+
     // Method untuk toggle sidebar
     const handleSidebarToggle = () => {
         setSidebarToggle(!sidebarToggle);
@@ -317,7 +325,7 @@ const Layout = () => {
                                 { text: "JBG", value: "jbg" },
                                 { text: "Rehab DAS", value: "rehab das" },
                             ]}
-                                onChange={(e) => { handleSiteChange(e.target.value)}}
+                                onChange={(e) => { handleSiteChange(e.target.value) }}
                             />
                         </div>
                         <div
@@ -355,6 +363,7 @@ const Layout = () => {
                         >
                             <EditDetails
                                 onClose={handleEditDetailsClose}
+                                onDelete={handleEditDetailsDelete}
                             />
                         </div>
                     )}

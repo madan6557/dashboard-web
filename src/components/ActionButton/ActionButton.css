@@ -12,11 +12,11 @@
 .actionButton-wrapper .icon{
     color: var(--gray-900);
     padding: 0;
+    margin: 5px 0px 0px 0px;
 }
 
 .actionButton-wrapper p {
     color: var(--gray-900);
-    margin: 0px 0px 0px 5px;
 }
 
 .actionButton-wrapper:hover {

@@ -5,6 +5,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { DataIDProvider } from './context/SelectedIDContext';
 import { SiteIDProvider } from './context/SiteIDContext';
 import { DataOptionProvider } from './context/dataOptionContext';
+import { ConfirmationProvider } from "./context/ActionConfirmationContext";
 import './index.css';
 import App from './App'; // Mengimport App
 import reportWebVitals from './reportWebVitals';
@@ -17,7 +18,9 @@ root.render(
       <SiteIDProvider>
         <DataIDProvider>
           <NotificationProvider>
+            <ConfirmationProvider>
             <App />
+            </ConfirmationProvider>
           </NotificationProvider>
         </DataIDProvider>
       </SiteIDProvider>

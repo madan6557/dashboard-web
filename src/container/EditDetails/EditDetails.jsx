@@ -6,15 +6,16 @@ import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
 import { DataOptionContext } from "../../context/dataOptionContext";
+import { useConfirmation } from "../../context/ActionConfirmationContext";
 
-const EditDetails = ({ onClose }) => {
+const EditDetails = ({ onClose, onDelete }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
-    const [isProcessing, setIsProcessing] = useState(false);
     const [unsavedChanges, setUnsavedChanges] = useState(false);
+    const requestConfirmation = useConfirmation();
 
     // State for each field
     const [species, setSpecies] = useState('');
@@ -61,7 +62,7 @@ const EditDetails = ({ onClose }) => {
     }
 
     useEffect(() => {
-        fetchData();
+        fetchData();// eslint-disable-next-line
     }, [selectedRowData]);
 
     const handleMenuHover = (title) => {
@@ -77,46 +78,64 @@ const EditDetails = ({ onClose }) => {
     };
 
     const handleSaveChanges = async () => {
-        const uuid = localStorage.getItem('userId');
-        const updatedData = {
-            id_plant: parseInt(selectedRowData, 10), // INT
-            id_species: parseInt(species, 10), // INT
-            id_activity: parseInt(activity, 10), // INT
-            id_location: parseInt(plantDetails.id_location, 10), // INT
-            id_sk: parseInt(skppkh, 10), // INT
-            id_status: parseInt(status, 10), // INT
-            diameter: parseFloat(diameter), // DOUBLE
-            height: parseFloat(height), // DOUBLE
-            plantingDate: plantingDate ? plantingDate.split('T')[0] : '', // DATE (YYYY-MM-DD)
-            dateModified: new Date().toISOString(), // DATE (YYYY-MM-DD)
-            elevation: String(elevation), // STRING
-            easting: String(easting), // STRING
-            northing: String(northing), // STRING
-            images: String(plantDetails.images), // STRING
-            id_action: 4, // INT
-            uuid: String(uuid) // STRING
-        };
-
-        setIsLoading(true);
-        try {
-            await updateData(selectedRowData, updatedData);
-            await fetchData();
-            setUnsavedChanges(false);
-        } catch (error) {
-            console.error("Error saving data:", error);
-        } finally {
-            setIsLoading(false);
-        }
+        requestConfirmation(
+            "Are you sure you want to save the changes?",
+            async () => {
+                const uuid = localStorage.getItem('userId');
+                const updatedData = {
+                    id_plant: parseInt(selectedRowData, 10),
+                    id_species: parseInt(species, 10),
+                    id_activity: parseInt(activity, 10),
+                    id_location: parseInt(plantDetails.id_location, 10),
+                    id_sk: parseInt(skppkh, 10),
+                    id_status: parseInt(status, 10),
+                    diameter: parseFloat(diameter),
+                    height: parseFloat(height),
+                    plantingDate: plantingDate ? plantingDate.split('T')[0] : '',
+                    dateModified: new Date().toISOString(),
+                    elevation: String(elevation),
+                    easting: String(easting),
+                    northing: String(northing),
+                    images: String(plantDetails.images),
+                    id_action: 4,
+                    uuid: String(uuid),
+                };
+    
+                setIsLoading(true);
+                try {
+                    await updateData(selectedRowData, updatedData);
+                    await fetchData();
+                    setUnsavedChanges(false);
+                } catch (error) {
+                    console.error("Error saving data:", error);
+                    alert("Failed to save changes. Please try again."); // Feedback to user
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        );
     };
 
     const handleDeleteData = () => {
-        console.log(`Data ${selectedRowData} deleted succesfully`);
+        requestConfirmation(
+            "Data will be deleted permanently. Are you sure you want to perform this action?",
+            () => {
+                console.log(`Data ${selectedRowData} deleted succesfully`);
+                onDelete();
+            }
+        );
     }
 
     const handleClose = () => {
         if (unsavedChanges) {
             console.log("There are unsaved changes.");
             // Additional logic can be added here (e.g., show confirmation dialog)
+            requestConfirmation(
+                "There are unsaved changes. Keep countinue?",
+                () => {
+                    onClose();
+                }
+            );
         } else {
             onClose();
         }
