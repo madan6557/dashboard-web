@@ -317,7 +317,7 @@ const Layout = () => {
                                 { text: "JBG", value: "jbg" },
                                 { text: "Rehab DAS", value: "rehab das" },
                             ]}
-                                onChange={handleSiteChange}
+                                onChange={(e) => { handleSiteChange(e.target.value)}}
                             />
                         </div>
                         <div

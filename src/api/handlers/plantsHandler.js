@@ -32,7 +32,7 @@ export const fetchPlantByID = async (id_plant) => {
 // Update data tanaman berdasarkan ID
 export const updatePlant = async (plantId, data) => {
     try {
-        const response = await API.patch(`/approve/:${plantId}`, data);
+        const response = await API.patch(`/approve/${plantId}`, data);
         return response.message;
     } catch (error) {
         console.error('Error updating plant data:', error);
@@ -43,7 +43,7 @@ export const updatePlant = async (plantId, data) => {
 // Menghapus tanaman berdasarkan ID
 export const deletePlant = async (plantId) => {
     try {
-        const response = await API.delete(`/approve/:${plantId}`); // Endpoint: /users/:id
+        const response = await API.delete(`/approve/${plantId}`); // Endpoint: /users/:id
         return response.message;
     } catch (error) {
         console.error('Error deleting plant data:', error);

@@ -7,20 +7,46 @@ import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
 import { DataOptionContext } from "../../context/dataOptionContext";
 
-const EditDetails = ({ onClose, data }) => {
+const EditDetails = ({ onClose }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [unsavedChanges, setUnsavedChanges] = useState(false);
+
+    // State for each field
+    const [species, setSpecies] = useState('');
+    const [plantingDate, setPlantingDate] = useState('');
+    const [activity, setActivity] = useState('');
+    const [skppkh, setSkppkh] = useState('');
+    const [height, setHeight] = useState('');
+    const [diameter, setDiameter] = useState('');
+    const [status, setStatus] = useState('');
+    const [plot, setPlot] = useState('');
+    const [easting, setEasting] = useState('');
+    const [northing, setNorthing] = useState('');
+    const [elevation, setElevation] = useState('');
 
     const fetchData = async () => {
         if (selectedRowData) {
             setIsLoading(true);
             try {
                 const response = await getSelectedApprovedPlants(selectedRowData, false);
-                console.log(response);
                 setPlantDetails(response);
+                // Initialize fields with fetched data
+                setSpecies(response.id_species);
+                setPlantingDate(response.plantingDate);
+                setActivity(response.id_activity);
+                setSkppkh(response.id_sk);
+                setHeight(response.height);
+                setDiameter(response.diameter);
+                setStatus(response.id_status);
+                setPlot(response.id_rehabilitationPlot);
+                setEasting(response.easting);
+                setNorthing(response.northing);
+                setElevation(response.elevation);
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {
@@ -29,9 +55,13 @@ const EditDetails = ({ onClose, data }) => {
         }
     };
 
+    const updateData = async (id_plant, data) => {
+        console.log(`Data ${id_plant} updated successfully`);
+        console.log(data);
+    }
+
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line
     }, [selectedRowData]);
 
     const handleMenuHover = (title) => {
@@ -39,12 +69,61 @@ const EditDetails = ({ onClose, data }) => {
     };
 
     const handleMenuLeave = () => {
-        setTooltipText(""); // Clear tooltip when mouse leaves
+        setTooltipText("");
+    };
+
+    const handleInputChange = () => {
+        setUnsavedChanges(true);
+    };
+
+    const handleSaveChanges = async () => {
+        const uuid = localStorage.getItem('userId');
+        const updatedData = {
+            id_plant: parseInt(selectedRowData, 10), // INT
+            id_species: parseInt(species, 10), // INT
+            id_activity: parseInt(activity, 10), // INT
+            id_location: parseInt(plantDetails.id_location, 10), // INT
+            id_sk: parseInt(skppkh, 10), // INT
+            id_status: parseInt(status, 10), // INT
+            diameter: parseFloat(diameter), // DOUBLE
+            height: parseFloat(height), // DOUBLE
+            plantingDate: plantingDate ? plantingDate.split('T')[0] : '', // DATE (YYYY-MM-DD)
+            dateModified: new Date().toISOString(), // DATE (YYYY-MM-DD)
+            elevation: String(elevation), // STRING
+            easting: String(easting), // STRING
+            northing: String(northing), // STRING
+            images: String(plantDetails.images), // STRING
+            id_action: 4, // INT
+            uuid: String(uuid) // STRING
+        };
+
+        setIsLoading(true);
+        try {
+            await updateData(selectedRowData, updatedData);
+            await fetchData();
+            setUnsavedChanges(false);
+        } catch (error) {
+            console.error("Error saving data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteData = () => {
+        console.log(`Data ${selectedRowData} deleted succesfully`);
+    }
+
+    const handleClose = () => {
+        if (unsavedChanges) {
+            console.log("There are unsaved changes.");
+            // Additional logic can be added here (e.g., show confirmation dialog)
+        } else {
+            onClose();
+        }
     };
 
     return (
         <div className="edit-details-wrapper">
-
             <div className="edit-details-header-wrapper">
                 <div className="qrCode">
                     <div className="icon">
@@ -56,6 +135,7 @@ const EditDetails = ({ onClose, data }) => {
                     className="detail-delete-button"
                     onMouseEnter={() => handleMenuHover("Delete")}
                     onMouseLeave={handleMenuLeave}
+                    onClick={handleDeleteData}
                 >
                     <Trash />
                     {tooltipText === "Delete" && (
@@ -64,11 +144,11 @@ const EditDetails = ({ onClose, data }) => {
                         </div>
                     )}
                 </div>
-
                 <div
                     className="detail-save-button"
                     onMouseEnter={() => handleMenuHover("Save")}
                     onMouseLeave={handleMenuLeave}
+                    onClick={handleSaveChanges}
                 >
                     <Save />
                     {tooltipText === "Save" && (
@@ -77,8 +157,7 @@ const EditDetails = ({ onClose, data }) => {
                         </div>
                     )}
                 </div>
-
-                <div className="detail-close-button" onClick={onClose}>
+                <div className="detail-close-button" onClick={handleClose}>
                     <Cross />
                 </div>
             </div>
@@ -101,23 +180,23 @@ const EditDetails = ({ onClose, data }) => {
                             <Image imageEditable={true} />
                         </div>
                         <div className="detail-input-wrapper">
-                            <OptionField id="species" title="Species" value={plantDetails.id_species} optionItem={dataOption.tb_species}/>
-                            <DateField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate}/>
-                            <OptionField id="activity" title="Activity" value={plantDetails.id_activity} optionItem={dataOption.tb_activity}/>
-                            <OptionField id="skppkh" title="SKPPKH" value={plantDetails.id_sk} optionItem={dataOption.tb_sk}/>
-                            <NumericField id="height" title="Height" value={plantDetails.height} suffix="cm" readonly={true}/>
-                            <NumericField id="diameter" title="Diameter" value={plantDetails.diameter} suffix="cm" readonly={true}/>
-                            <OptionField id="status" title="Status" value={plantDetails.id_status} optionItem={dataOption.tb_status}/>
-                            <OptionField id="plot" title="Plot" value={plantDetails.id_rehabilitationPlot} optionItem={dataOption.tb_rehabilitationPlot}/>
-                            <NumericField id="easting" title="Easting" value={plantDetails.easting} suffix="m"/>
-                            <NumericField id="northing" title="Northing" value={plantDetails.northing} suffix="m"/>
-                            <NumericField id="elevation" title="Elevation" value={plantDetails.elevation} suffix="m"/>
+                            <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />
+                            <DateField id="plantingDate" title="Planting Date" value={plantingDate} onChange={(e) => { setPlantingDate(e.target.value); handleInputChange(); }} />
+                            <OptionField id="activity" title="Activity" value={activity} optionItem={dataOption.tb_activity} onChange={(e) => { setActivity(e.target.value); handleInputChange(); }} />
+                            <OptionField id="skppkh" title="SKPPKH" value={skppkh} optionItem={dataOption.tb_sk} onChange={(e) => { setSkppkh(e.target.value); handleInputChange(); }} />
+                            <NumericField id="height" title="Height" value={height} suffix="cm" onChange={(e) => { setHeight(e.target.value); handleInputChange(); }} />
+                            <NumericField id="diameter" title="Diameter" value={diameter} suffix="cm" onChange={(e) => { setDiameter(e.target.value); handleInputChange(); }} />
+                            <OptionField id="status" title="Status" value={status} optionItem={dataOption.tb_status} onChange={(e) => { setStatus(e.target.value); handleInputChange(); }} />
+                            <OptionField id="plot" title="Plot" value={plot} optionItem={dataOption.tb_rehabilitationPlot} onChange={(e) => { setPlot(e.target.value); handleInputChange(); }} />
+                            <NumericField id="easting" title="Easting" value={easting} suffix="m" onChange={(e) => { setEasting(e.target.value); handleInputChange(); }} />
+                            <NumericField id="northing" title="Northing" value={northing} suffix="m" onChange={(e) => { setNorthing(e.target.value); handleInputChange(); }} />
+                            <NumericField id="elevation" title="Elevation" value={elevation} suffix="m" onChange={(e) => { setElevation(e.target.value); handleInputChange(); }} />
                         </div>
                     </>
                 )}
             </div>
         </div>
     );
-}
+};
 
 export default EditDetails;

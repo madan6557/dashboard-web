@@ -17,9 +17,11 @@ const TextField = ({
     }, [value]);
 
     const handleChange = (e) => {
-        const newValue = e.target.value;
-        setInputValue(newValue); // Update local state
-        if (onChange) onChange(e); // Pass the event correctly
+        if (e && e.target) {
+            const newValue = e.target.value;
+            setInputValue(newValue); // Update local state
+            if (onChange) onChange({ target: { value: newValue } }); // Pass formatted event
+        }
     };
 
     return (
@@ -54,10 +56,12 @@ const NumericField = ({
     }, [value]);
 
     const handleChange = (e) => {
-        const newValue = e.target.value;
-        if (!isNaN(newValue) || newValue === '') { // Check if the input is a number or empty
-            setInputValue(newValue); // Update local state
-            if (onChange) onChange(newValue); // Trigger onChange prop
+        if (e && e.target) {
+            const newValue = e.target.value;
+            if (!isNaN(newValue) || newValue === '') { // Check if the input is a number or empty
+                setInputValue(newValue); // Update local state
+                if (onChange) onChange({ target: { value: newValue } }); // Trigger onChange prop with formatted event
+            }
         }
     };
 
@@ -80,7 +84,6 @@ const NumericField = ({
     );
 };
 
-
 const OptionField = ({
     id = "",
     title = null,
@@ -101,9 +104,11 @@ const OptionField = ({
     }, [value]);
 
     const handleChange = (e) => {
-        const newValue = e.target.value;
-        setSelectedValue(newValue); // Update local state
-        if (onChange) onChange(newValue); // Trigger onChange prop
+        if (e && e.target) {
+            const newValue = e.target.value;
+            setSelectedValue(newValue); // Update local state
+            if (onChange) onChange({ target: { value: newValue } }); // Trigger onChange prop with formatted event
+        }
     };
 
     return (
@@ -138,33 +143,37 @@ const DateField = ({
     const [timeValue, setTimeValue] = useState('');
 
     useEffect(() => {
-        if (value.includes(' ')) {
-            const [date, time] = value.split(' ');
-            const [year, month, day] = date.split('-');
-            const [hour, minute, second] = time.split(':');
-            setDateValue(`${year}-${month}-${day}`); // yyyy-MM-dd
-            setTimeValue(`${hour}:${minute}:${second}`); // HH:mm:ss
-        } else {
-            const [year, month, day] = value.split('-');
-            setDateValue(`${year}-${month}-${day}`); // yyyy-MM-dd
+        if (value) {
+            if (value.includes(' ')) {
+                const [date, time] = value.split(' ');
+                setDateValue(date); // yyyy-MM-dd
+                setTimeValue(time); // HH:mm:ss
+            } else {
+                setDateValue(value); // yyyy-MM-dd
+            }
         }
     }, [value]);
 
     const handleDateChange = (e) => {
-        const newDate = e.target.value;
-        setDateValue(newDate);
-        onChange(`${formatDateToDisplay(newDate)} ${timeValue}`);
+        if (e && e.target) {
+            const newDate = e.target.value; // yyyy-MM-dd
+            setDateValue(newDate);
+            // Make sure newDate and timeValue are valid before calling onChange
+            if (onChange && newDate && timeValue !== undefined) {
+                onChange({ target: { value: `${newDate} ${timeValue}`.trim() } });
+            }
+        }
     };
 
     const handleTimeChange = (e) => {
-        const newTime = e.target.value;
-        setTimeValue(newTime);
-        onChange(`${formatDateToDisplay(dateValue)} ${newTime}`);
-    };
-
-    const formatDateToDisplay = (date) => {
-        const [year, month, day] = date.split('-');
-        return `${day}-${month}-${year}`;
+        if (e && e.target) {
+            const newTime = e.target.value; // HH:mm:ss
+            setTimeValue(newTime);
+            // Make sure newTime and dateValue are valid before calling onChange
+            if (onChange && newTime && dateValue !== undefined) {
+                onChange({ target: { value: `${dateValue} ${newTime}`.trim() } });
+            }
+        }
     };
 
     return (

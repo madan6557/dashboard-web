@@ -1,4 +1,4 @@
-import { fetchPlants, fetchPlantByID } from "../handlers/plantsHandler";
+import { fetchPlants, fetchPlantByID, updatePlant, deletePlant } from "../handlers/plantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
 
 export const searchApprovedPlants = async (config) => {
@@ -30,14 +30,24 @@ export const searchApprovedPlants = async (config) => {
     };
 };
 
-export const getSelectedApprovedPlants = async (id_plant, isEditable=false) => {
-    const response = await fetchPlantByID(parseInt(id_plant));
+export const getSelectedApprovedPlants = async (id_plant, isEditable = false) => {
+    const response = await fetchPlantByID(id_plant);
 
     if (response.data && response.data.plantingDate) {
         const formattedDate = dateFormat(response.data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+0')
-        
+
         response.data.plantingDate = formattedDate;
     }
 
     return response.data;
+}
+
+export const patchApprovedPlants = async (id_plant, data) => {
+    const response = await updatePlant(id_plant, data);
+    return response;
+}
+
+export const deleteApprovedPlants = async (id_plant) => {
+    const response = await deletePlant(id_plant);
+    return response;
 }
