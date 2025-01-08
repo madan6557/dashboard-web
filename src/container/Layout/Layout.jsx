@@ -49,6 +49,8 @@ const Layout = () => {
 
     // Buat ref untuk setiap notifikasi
     const notificationRefs = useRef({});
+    //Ref untuk table
+    const tableRef = useRef(null);
 
     // Refs untuk dropdown
     const notificationDropdownRef = useRef(null);
@@ -107,7 +109,7 @@ const Layout = () => {
             setIsDetailsReadonly(true); // Optional: Reset or handle other routes
         }
         handleDetailsClose();
-        handleEditDetailsClose();
+        handleEditDetailsClose(false);
         fetchDataOptions();
         // eslint-disable-next-line
     }, [location.pathname]);
@@ -120,8 +122,10 @@ const Layout = () => {
         }, 300); // Durasi animasi sesuai CSS
     };
 
-    const handleEditDetailsClose = () => {
-        setIsDetailsVisible(true)
+    const handleEditDetailsClose = (isDetail = true) => {
+        if (isDetail) {
+            setIsDetailsVisible(true)
+        }
         setIsEditDetailsAnimating(true); // Mulai animasi keluar
         setTimeout(() => {
             setIsEditDetailsVisible(false); // Hapus elemen setelah animasi selesai
@@ -173,7 +177,6 @@ const Layout = () => {
     };
 
     const handleSendNotification = (message, type) => {
-
         // Add a notification with a unique number and a dynamic type
         addNotification(`${message}`, type);
 
@@ -196,6 +199,12 @@ const Layout = () => {
     const handleSiteChange = (value) => {
         console.log(value);
         setSelectedSite(value);
+    };
+
+    const handleRefreshTable = () => {
+        if (tableRef.current) {
+            tableRef.current.fetchTableData();  // Memanggil fetchTableData lewat ref
+        }
     };
 
     return (
@@ -364,6 +373,10 @@ const Layout = () => {
                             <EditDetails
                                 onClose={handleEditDetailsClose}
                                 onDelete={handleEditDetailsDelete}
+                                onAction={(message, type) => {
+                                    handleSendNotification(message, type);
+                                    handleRefreshTable();  // Refresh data after save
+                                }}
                             />
                         </div>
                     )}
@@ -374,7 +387,7 @@ const Layout = () => {
                         <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                         <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
-                        <Route path="/table" element={<ProtectedRoute><Table onRowClick={handleRowClick} /></ProtectedRoute>} />
+                        <Route path="/table" element={<ProtectedRoute><Table onRowClick={handleRowClick} ref={tableRef}/></ProtectedRoute>} />
                         <Route path="/verification" element={<ProtectedRoute><Verification /></ProtectedRoute>} />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
                         <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />

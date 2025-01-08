@@ -25,7 +25,7 @@ const CardTable = ({
     const [pageNumber, setPageNumber] = useState(currentPage);
     const [order, setOrder] = useState(orderOptions[0].value);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState('desc');
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 

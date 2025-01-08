@@ -4,11 +4,11 @@ import { NumericField, OptionField, DateField } from "../../components/FieldInpu
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
-import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
+import { deleteApprovedPlants, getSelectedApprovedPlants, patchApprovedPlants } from "../../api/controller/plantsController";
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 
-const EditDetails = ({ onClose, onDelete }) => {
+const EditDetails = ({ onClose, onDelete, onAction }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
@@ -56,9 +56,45 @@ const EditDetails = ({ onClose, onDelete }) => {
         }
     };
 
-    const updateData = async (id_plant, data) => {
-        console.log(`Data ${id_plant} updated successfully`);
-        console.log(data);
+    const updateData = async () => {
+        const uuid = localStorage.getItem('userId');
+        const updatedData = {
+            id_species: parseInt(species, 10),
+            id_activity: parseInt(activity, 10),
+            id_location: parseInt(plantDetails.id_location, 10),
+            id_rehabilitationPlot: parseInt(plot, 10),
+            id_sk: parseInt(skppkh, 10),
+            id_status: parseInt(status, 10),
+            id_workDecree: plantDetails.id_workDecree,
+            id_areaStatus: plantDetails.id_areaStatus,
+            diameter: parseFloat(diameter),
+            height: parseFloat(height),
+            plantingDate: new Date(plantingDate).toISOString(),
+            dateModified: new Date().toISOString(),
+            latitude: plantDetails.latitude,
+            longitude: plantDetails.longitude,
+            elevation: String(elevation),
+            easting: String(easting),
+            northing: String(northing),
+            images: String(plantDetails.images),
+            compass: plantDetails.compass,
+            id_action: 4,
+            uuid: String(uuid),
+        };
+
+        setIsLoading(true);
+        try {
+            await patchApprovedPlants(parseInt(selectedRowData, 10), updatedData)
+            await fetchData();
+            setUnsavedChanges(false);
+            onAction(`Data ${selectedRowData} updated successfully`, 'success');
+        } catch (error) {
+            console.error("Error saving data:", error);
+            onAction(`Failed to save changes. Please try again.`, 'failed');
+        } finally {
+            setIsLoading(false);
+        }
+        console.log(updatedData);
     }
 
     useEffect(() => {
@@ -81,36 +117,11 @@ const EditDetails = ({ onClose, onDelete }) => {
         requestConfirmation(
             "Are you sure you want to save the changes?",
             async () => {
-                const uuid = localStorage.getItem('userId');
-                const updatedData = {
-                    id_plant: parseInt(selectedRowData, 10),
-                    id_species: parseInt(species, 10),
-                    id_activity: parseInt(activity, 10),
-                    id_location: parseInt(plantDetails.id_location, 10),
-                    id_sk: parseInt(skppkh, 10),
-                    id_status: parseInt(status, 10),
-                    diameter: parseFloat(diameter),
-                    height: parseFloat(height),
-                    plantingDate: plantingDate ? plantingDate.split('T')[0] : '',
-                    dateModified: new Date().toISOString(),
-                    elevation: String(elevation),
-                    easting: String(easting),
-                    northing: String(northing),
-                    images: String(plantDetails.images),
-                    id_action: 4,
-                    uuid: String(uuid),
-                };
-    
-                setIsLoading(true);
                 try {
-                    await updateData(selectedRowData, updatedData);
-                    await fetchData();
-                    setUnsavedChanges(false);
+                    await updateData();
                 } catch (error) {
                     console.error("Error saving data:", error);
-                    alert("Failed to save changes. Please try again."); // Feedback to user
-                } finally {
-                    setIsLoading(false);
+                    onAction(`Error saving data ${selectedRowData} deleted succesfully`, 'failed');
                 }
             }
         );
@@ -118,10 +129,16 @@ const EditDetails = ({ onClose, onDelete }) => {
 
     const handleDeleteData = () => {
         requestConfirmation(
-            "Data will be deleted permanently. Are you sure you want to perform this action?",
-            () => {
-                console.log(`Data ${selectedRowData} deleted succesfully`);
-                onDelete();
+            "Data will be deleted permanently. Are you sure you want to perform this action?","danger",
+            async () => {
+                try {
+                    await deleteApprovedPlants(selectedRowData);
+                    onDelete();
+                    onAction(`Data ${selectedRowData} deleted succesfully`, 'success');
+                } catch (error) {
+                    console.error("Error deleting data:", error);
+                    onAction(`Error deleting data ${selectedRowData} deleted succesfully`, 'failed');
+                }
             }
         );
     }
@@ -137,6 +154,7 @@ const EditDetails = ({ onClose, onDelete }) => {
                 }
             );
         } else {
+            onAction(`Error deleting data ${selectedRowData} deleted succesfully`, 'failed');
             onClose();
         }
     };

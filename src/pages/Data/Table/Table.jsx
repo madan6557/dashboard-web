@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useImperativeHandle, forwardRef } from 'react';
 import './Table.css';
 import CardTable from "../../../components/CardTable/CardTable";
 import { searchApprovedPlants } from "../../../api/controller/plantsController";
 import { DataIDContext } from "../../../context/SelectedIDContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
 
-const Table = ({ onRowClick }) => {
+const Table = forwardRef(({ onRowClick }, ref) => {
     const [tableHead] = useState(["ID", "Species", "Planting Date", "Activities", "Location", "Status"]);
     const [orderOptions] = useState([
         { text: "Modified Date", value: "dateModified" },
@@ -14,18 +14,18 @@ const Table = ({ onRowClick }) => {
         { text: "Planting Date", value: "plantingDate" },
         { text: "Location", value: "location" },
         { text: "Status", value: "status" }
-    ]);    
+    ]);
     const [tableItems, setTableItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState('desc');
     const [orderBy, setOrderBy] = useState(orderOptions[0].value);
     const [searchTerm, setSearchTerm] = useState('');
     const { setSelectedRowData } = useContext(DataIDContext);
     const { selectedSite } = useContext(SiteIDContext);
 
-    const fetchData = async () => {
+    const fetchTableData = async () => {
         var plantSite = "jbg";
         const config = {
             page: currentPage,
@@ -33,7 +33,7 @@ const Table = ({ onRowClick }) => {
             orderBy: orderBy,
             sort: sortOrder,
             search: searchTerm,
-            site: selectedSite||plantSite
+            site: selectedSite || plantSite
         };
 
         console.log("Fetching data with config:", config);
@@ -47,8 +47,14 @@ const Table = ({ onRowClick }) => {
         }
     };
 
+    // Expose fetchTableData to the parent component
+    useImperativeHandle(ref, () => ({
+        fetchTableData
+    }));
+
+
     useEffect(() => {
-        fetchData();
+        fetchTableData();
         // eslint-disable-next-line
     }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm]);
 
@@ -86,22 +92,22 @@ const Table = ({ onRowClick }) => {
     };
 
     return (
-        <div className="table-container">
-            <CardTable
-                tableHead={tableHead}
-                tableItems={tableItems}
-                orderOptions={orderOptions}
-                totalPages={totalPages} // Assuming total items is 100 for this example
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-                onOrderChange={handleOrderChange}
-                onRowsChange={handleRowsChange}
-                onSortChange={handleSortChange}
-                onSearchChange={handleSearchChange}
-                onRowClick={handleRowClick}
-            />
-        </div>
+            <div className="table-container">
+                <CardTable
+                    tableHead={tableHead}
+                    tableItems={tableItems}
+                    orderOptions={orderOptions}
+                    totalPages={totalPages} // Assuming total items is 100 for this example
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                    onOrderChange={handleOrderChange}
+                    onRowsChange={handleRowsChange}
+                    onSortChange={handleSortChange}
+                    onSearchChange={handleSearchChange}
+                    onRowClick={handleRowClick}
+                />
+            </div>
     );
-};
+});
 
 export default Table;

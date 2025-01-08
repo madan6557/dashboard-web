@@ -13,6 +13,7 @@ export const login = async (credentials) => {
         // Simpan token ke localStorage
         if (token) {
             localStorage.setItem('authToken', token);
+            console.log(token);
             localStorage.setItem('userId', uuid);
             localStorage.setItem('userRole', role);
         }

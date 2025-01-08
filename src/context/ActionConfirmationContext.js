@@ -11,15 +11,17 @@ export const useConfirmation = () => useContext(ConfirmationContext);
 export const ConfirmationProvider = ({ children }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [message, setMessage] = useState("");
+    const [type, setType] = useState("");
     const [onConfirm, setOnConfirm] = useState(() => () => {});
 
     // Menggunakan useCallback untuk memastikan bahwa fungsi onConfirm tidak berubah secara terus menerus
-    const requestConfirmation = useCallback((msg, onConfirmAction) => {
+    const requestConfirmation = useCallback((msg, type="primary", onConfirmAction) => {
         // Mengecek apakah user sudah memilih untuk tidak menampilkan konfirmasi lagi
         if (sessionStorage.getItem('confirmationCheckbox') === 'true') {
             onConfirmAction(); // Langsung eksekusi jika sudah diingat
         } else {
             setMessage(msg);
+            setType(type);
             setOnConfirm(() => onConfirmAction);
             setShowConfirmation(true);
         }
@@ -43,6 +45,7 @@ export const ConfirmationProvider = ({ children }) => {
             {showConfirmation && (
                 <ConfirmationMessage 
                     message={message} 
+                    type={type}
                     onConfirm={handleConfirm} 
                     onCancel={handleCancel}
                 />

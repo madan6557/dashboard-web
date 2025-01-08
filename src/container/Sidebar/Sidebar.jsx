@@ -22,6 +22,8 @@ import {
     ClockSolid,
     MarkOutline,
     MarkSolid,
+    GarageSolid,
+    GarageOutline,
 } from '../../components/Icons/Icon';
 import { logout } from "../../api/handlers/authHandler"
 
@@ -80,6 +82,19 @@ const menuConfig = [
         submenu: [
             { title: "Account", route: "/account" },
             { title: "Logs", route: null },
+        ],
+        hasDropdown: true,
+        showDividerLine: false,
+        showDividerTitle: false,
+        dividerTitle: "",
+    },
+    {
+        title: "Nursery",
+        icon: <GarageOutline />,
+        selectedIcon: <GarageSolid />,
+        submenu: [
+            { title: "Monitor", route: null },
+            { title: "Configuration", route: null },
         ],
         hasDropdown: true,
         showDividerLine: false,
