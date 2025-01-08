@@ -36,8 +36,6 @@ const Table = forwardRef(({ onRowClick }, ref) => {
             site: selectedSite || plantSite
         };
 
-        console.log("Fetching data with config:", config);
-
         try {
             const response = await searchApprovedPlants(config);
             setTableItems(response.data);
@@ -56,35 +54,29 @@ const Table = forwardRef(({ onRowClick }, ref) => {
     useEffect(() => {
         fetchTableData();
         // eslint-disable-next-line
-    }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm]);
+    }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite]);
 
     const handlePageChange = (page) => {
-        console.log("Page changed to:", page);
         setCurrentPage(page);
     };
 
     const handleOrderChange = (order) => {
-        console.log("Order changed to:", order);
         setOrderBy(order);
     };
 
     const handleRowsChange = (rows) => {
-        console.log("Rows per page changed to:", rows);
         setRowsPerPage(rows);
     };
 
     const handleSortChange = (sort) => {
-        console.log("Sort order changed to:", sort);
         setSortOrder(sort);
     };
 
     const handleSearchChange = (search) => {
-        console.log("Search term changed to:", search);
         setSearchTerm(search);
     };
 
     const handleRowClick = (item) => {
-        console.log("Row clicked:", item.id_plant);
         if (onRowClick) {
             onRowClick(); // This will call the passed function from Layout (which sets isDetailsVisible)
         }

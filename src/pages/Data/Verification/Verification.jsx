@@ -11,7 +11,14 @@ const Verification = () => {
         { id: 22400011, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location: "Body River Katal-Katal", verification: "Unverified", uploaded: "25-10-2024" },
         { id: 22400012, species: "Alaban", planting_date: "25-10-2024", activities: "Monitoring", location: "Body River Katal-Katal", verification: "Unverified", uploaded: "25-10-2024" },
     ]);
-    const [sortOptions] = useState(["modified", "name", "age", "city"]); // Sorting options array
+    const [orderOptions] = useState([
+        { text: "Modified Date", value: "dateModified" },
+        { text: "ID", value: "id_plant" },
+        { text: "Species", value: "plant" },
+        { text: "Planting Date", value: "plantingDate" },
+        { text: "Location", value: "location" },
+        { text: "Status", value: "status" }
+    ]);
 
     // Tambahkan state untuk menyimpan FloorButton yang sedang dipilih
     const [selected, setSelected] = useState("Unverified");
@@ -30,11 +37,16 @@ const Verification = () => {
                     isSelected={selected === "Rejected"}
                     onClick={() => setSelected("Rejected")}
                 />
+                <FloorButton
+                    title="Draft"
+                    isSelected={selected === "Draft"}
+                    onClick={() => setSelected("Draft")}
+                />
             </div>
             <CardTable
                 tableHead={tableHead}
                 tableItems={tableItems}
-                sortOptions={sortOptions} // Passing the list of options
+                orderOptions={orderOptions} // Passing the list of options
             />
         </div>
     );

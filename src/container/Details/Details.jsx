@@ -16,7 +16,6 @@ const Details = ({ onClose, onEdit, readonly = false }) => {
             setIsLoading(true);
             try {
                 const response = await getSelectedApprovedPlants(selectedRowData, false);
-                console.log(response);
                 setPlantDetails(response);
             } catch (error) {
                 console.error("Error fetching plants:", error);

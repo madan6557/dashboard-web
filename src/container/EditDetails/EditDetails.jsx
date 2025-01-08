@@ -7,11 +7,13 @@ import { DataIDContext } from "../../context/SelectedIDContext";
 import { deleteApprovedPlants, getSelectedApprovedPlants, patchApprovedPlants } from "../../api/controller/plantsController";
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
+import { renameFile } from "../../utils/renameImage";
 
 const EditDetails = ({ onClose, onDelete, onAction }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
+    const [plantImage, setPlantImage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
     const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -57,7 +59,8 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
     };
 
     const updateData = async () => {
-        const uuid = localStorage.getItem('userId');
+        const renamedImageFile = plantImage ? renameFile(plantImage, selectedRowData) : null;
+
         const updatedData = {
             id_species: parseInt(species, 10),
             id_activity: parseInt(activity, 10),
@@ -76,15 +79,15 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
             elevation: String(elevation),
             easting: String(easting),
             northing: String(northing),
-            images: String(plantDetails.images),
+            images: String(renamedImageFile ? renamedImageFile.name : plantDetails.images),
             compass: plantDetails.compass,
             id_action: 4,
-            uuid: String(uuid),
         };
 
         setIsLoading(true);
         try {
             await patchApprovedPlants(parseInt(selectedRowData, 10), updatedData)
+            plantImage ? console.log("Image Uploded") : console.log("Image Undefined");
             await fetchData();
             setUnsavedChanges(false);
             onAction(`Data ${selectedRowData} updated successfully`, 'success');
@@ -94,7 +97,6 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
         } finally {
             setIsLoading(false);
         }
-        console.log(updatedData);
     }
 
     useEffect(() => {
@@ -115,13 +117,13 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
 
     const handleSaveChanges = async () => {
         requestConfirmation(
-            "Are you sure you want to save the changes?",
+            "Are you sure you want to save the changes?", "confirm",
             async () => {
                 try {
                     await updateData();
                 } catch (error) {
                     console.error("Error saving data:", error);
-                    onAction(`Error saving data ${selectedRowData} deleted succesfully`, 'failed');
+                    onAction(`Error saving data ${selectedRowData}`, 'failed');
                 }
             }
         );
@@ -129,7 +131,7 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
 
     const handleDeleteData = () => {
         requestConfirmation(
-            "Data will be deleted permanently. Are you sure you want to perform this action?","danger",
+            "Data will be deleted permanently. Are you sure you want to perform this action?", "danger",
             async () => {
                 try {
                     await deleteApprovedPlants(selectedRowData);
@@ -148,15 +150,18 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
             console.log("There are unsaved changes.");
             // Additional logic can be added here (e.g., show confirmation dialog)
             requestConfirmation(
-                "There are unsaved changes. Keep countinue?",
+                "There are unsaved changes. Keep countinue?", "confirm",
                 () => {
                     onClose();
                 }
             );
         } else {
-            onAction(`Error deleting data ${selectedRowData} deleted succesfully`, 'failed');
             onClose();
         }
+    };
+
+    const handleImageUpload = (file) => {
+        setPlantImage(file);
     };
 
     return (
@@ -214,7 +219,7 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
                 ) : (
                     <>
                         <div className="detail-image">
-                            <Image imageEditable={true} />
+                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} />
                         </div>
                         <div className="detail-input-wrapper">
                             <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />

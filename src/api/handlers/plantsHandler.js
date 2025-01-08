@@ -31,9 +31,7 @@ export const fetchPlantByID = async (id_plant) => {
 // Update data tanaman berdasarkan ID
 export const updatePlant = async (id_plant, data) => {
     try {
-        console.log(data);
         const response = await API.patch(`/approve/${id_plant}`, data);
-        console.log(response);
         return response.message;
     } catch (error) {
         handleError(error);
@@ -43,7 +41,6 @@ export const updatePlant = async (id_plant, data) => {
 // Menghapus tanaman berdasarkan ID
 export const deletePlant = async (id_plant) => {
     try {
-        console.log(id_plant);
         const response = await API.delete(`/approve/${id_plant}`); // Endpoint: /users/:id
         return response.message;
     } catch (error) {

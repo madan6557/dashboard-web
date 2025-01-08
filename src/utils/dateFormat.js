@@ -41,7 +41,3 @@ export const dateFormat = (date, type = 'yyyy-mm-dd', gmt = '+8') => {
             return `${year}-${month}-${day}`; // Default to 'yyyy-mm-dd'
     }
 };
-
-// Example usage
-console.log(dateFormat(new Date(), 'dayname-dd-mm-yyyy hh-mm-ss', '+8')); // Example: "Monday-01-01-2025 18:30:45" for GMT+8
-console.log(dateFormat(new Date(), 'dd-mm-yyyy', '+8')); // Example: "01-01-2025" for GMT+8

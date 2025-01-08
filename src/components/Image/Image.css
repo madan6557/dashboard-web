@@ -70,3 +70,22 @@ img {
     color: var(--gray-50);
     backdrop-filter: blur(5px); /* Efek blur untuk elemen di belakang */
 }
+
+.imageUpload-form{
+    position: absolute;
+    bottom: 0;
+    background-color: var(--gray-50);
+    padding: 10px;
+    z-index: 10;
+    border-radius: 8px;
+    width: auto;
+    margin: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.imageUpload-form-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}

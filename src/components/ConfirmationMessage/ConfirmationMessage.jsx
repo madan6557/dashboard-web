@@ -4,7 +4,7 @@ import ActionButton from "../ActionButton/ActionButton";
 
 const ConfirmationMessage = ({
     message = "Are you sure want to continue?",
-    type = "confirm",
+    type = "primary",
     onConfirm,
     onCancel
 }) => {

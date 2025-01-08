@@ -21,6 +21,7 @@
 
 .message-container {
     width: 100%;
+    padding: 5px;
 }
 
 .notification-wrapper .time {
@@ -28,9 +29,7 @@
     align-items: center;
     color: var(--gray-500);
     width: max-content;
-    height: 20px;
     margin-left: auto;
-    padding: 5px;
     font-size: 0.8rem;
 }
 
@@ -40,32 +39,32 @@
     padding: 0px 10px 0px 0px;
 }
 
-.icon.caution {
+.notification-wrapper .icon.caution {
     color: var(--primary-orange);
 }
 
-.icon.error {
+.notification-wrapper .icon.error {
     color: var(--primary-red);
 }
 
-.icon.failed {
+.notification-wrapper .icon.failed {
     color: var(--primary-red);
 }
 
-.icon.info {
+.notification-wrapper .icon.info {
     color: var(--primary-blue);
 }
 
-.icon.success {
+.notification-wrapper .icon.success {
     color: var(--primary-green);
 }
 
-.close-button {
+.notification-wrapper .close-button {
     color: var(--gray-500);
     height: 28px;
 }
 
-.close-button:hover {
+.notification-wrapper .close-button:hover {
     color: var(--gray-900);
     cursor: pointer;
 }
