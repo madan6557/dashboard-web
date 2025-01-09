@@ -136,7 +136,7 @@ const menuConfig = [
     },
 ];
 
-const Sidebar = (props) => {
+const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, sidebarToggle }) => {
     const navigate = useNavigate(); // Hook untuk navigasi
 
     const location = useLocation();
@@ -150,37 +150,39 @@ const Sidebar = (props) => {
         const { pathname } = location;
         const newSelectedMenu = [];
         const newOpenDropdowns = [];
-
+    
         if (pathname === "/") {
             newSelectedMenu.push("Dashboard");
-            props.onMenuSelect("Dashboard");
         } else {
             menuConfig.forEach(menu => {
                 if (pathname === menu.route) {
                     newSelectedMenu.push(menu.title);
-                    props.onMenuSelect(menu.title); // Notify parent component
                 }
-
+    
                 if (menu.hasDropdown) {
                     menu.submenu.forEach(submenu => {
                         if (pathname === submenu.route) {
                             newOpenDropdowns.push(menu.title);
                             newSelectedMenu.push(menu.title);
                             setSelectedSubmenu(submenu.title);
-                            props.onMenuSelect(submenu.title);
                         }
                     });
                 }
             });
         }
-
-
-
-        // Always update `selectedMenu` and `openDropdowns`
+    
+        // Update state
         setSelectedMenu(newSelectedMenu);
-        // Only update dropdown states if the sidebar is not minimized
         setOpenDropdowns(newOpenDropdowns);
-    }, [location, props]);
+    }, [location]);
+    
+    // UseEffect untuk memanggil onMenuSelect setelah state diupdate
+    useEffect(() => {
+        if (selectedMenu.length > 0) {
+            onMenuSelect(selectedMenu[0]); // Mengirim menu pertama yang terpilih
+        }
+    }, [selectedMenu, onMenuSelect]); // Memanggil onMenuSelect hanya setelah selectedMenu berubah 
+
     useEffect(() => {
         // Check if the page is loaded via a refresh
         const navigationType = window.performance.getEntriesByType("navigation")[0]?.type || window.performance.navigation.type;
@@ -198,19 +200,20 @@ const Sidebar = (props) => {
     };
 
     const handleMenuClick = (title, hasDropdown) => {
+        // Melakukan update dengan benar pada selectedMenu dan openDropdowns
         setSelectedMenu(prevSelectedMenu => {
             const newSelectedMenu = [...prevSelectedMenu];
             const newOpenDropdowns = [...openDropdowns];
-
+    
             if (hasDropdown) {
                 const isOpen = newOpenDropdowns.includes(title);
                 const isSelected = newSelectedMenu.includes(title);
-
+    
                 if (isOpen) {
                     // Jika dropdown terbuka, tutup dan hapus dari selectedMenu & openDropdowns
                     const updatedSelectedMenu = newSelectedMenu.filter(item => item !== title);
                     const updatedOpenDropdowns = newOpenDropdowns.filter(item => item !== title);
-                    setOpenDropdowns(updatedOpenDropdowns);
+                    setOpenDropdowns(updatedOpenDropdowns); // Perbarui state dropdown
                     return updatedSelectedMenu;
                 } else {
                     // Jika dropdown tertutup, buka dan tambahkan ke selectedMenu & openDropdowns
@@ -218,48 +221,45 @@ const Sidebar = (props) => {
                         newSelectedMenu.push(title);
                     }
                     newOpenDropdowns.push(title);
-                    setOpenDropdowns(newOpenDropdowns);
+                    setOpenDropdowns(newOpenDropdowns); // Perbarui state dropdown
                     return newSelectedMenu;
                 }
             }
-
+    
             // Jika menu tidak memiliki dropdown
             if (!hasDropdown) {
                 // Hapus semua menu tanpa dropdown dari selectedMenu
                 const updatedSelectedMenu = newSelectedMenu.filter(item =>
                     openDropdowns.includes(item) // Pertahankan hanya menu dengan dropdown
                 );
-
                 updatedSelectedMenu.push(title); // Tambahkan menu baru
                 setSelectedSubmenu(null); // Reset submenu
-                props.onMenuSelect(title); // Notify parent component
                 return updatedSelectedMenu;
             }
+    
             return newSelectedMenu;
         });
-
+    
+        // Delay the onMenuSelect state update in useEffect
         if (!hasDropdown) {
             setSelectedSubmenu(null); // Hapus submenu jika menu tanpa dropdown diklik
-            props.onMenuSelect(title); // Notify parent component
         }
     };
 
     const handleSubmenuClick = (submenuTitle, submenuRoute) => {
         setSelectedSubmenu(submenuTitle);
-
+    
+        // Filter selected menu only for dropdown items
         setSelectedMenu(prevSelectedMenu => {
-            const newSelectedMenu = prevSelectedMenu.filter(menu => {
-                // Remove menus without dropdowns when a submenu is selected
-                return menuConfig.find(m => m.title === menu)?.hasDropdown;
-            });
-
-            return newSelectedMenu;
+            return prevSelectedMenu.filter(menu => 
+                menuConfig.find(m => m.title === menu)?.hasDropdown // Keep only dropdown menus
+            ).concat(submenuTitle); // Add submenu to selectedMenu
         });
-
+    
         if (submenuRoute) {
-            props.onMenuSelect(submenuTitle); // Notify parent component with the submenu title
+            onMenuSelect(submenuTitle); // Notify parent component with submenu
         } else {
-            props.onSendNotification("This page is still under development!", "info");
+            onSendNotification("This page is still under development!", "info");
         }
     };
 
@@ -310,14 +310,14 @@ const Sidebar = (props) => {
                                     selectedSubmenu={selectedSubmenu}
                                     onSubmenuMouseEnter={(submenuTitle, element) => {
                                         if (isMinimize) {
-                                            props.onMenuHover(isMinimize, submenuTitle, element);
+                                            onMenuHover(isMinimize, submenuTitle, element);
                                         }
                                     }}
-                                    onSubmenuMouseLeave={props.onMenuLeave}
+                                    onSubmenuMouseLeave={onMenuLeave}
                                     onMouseEnter={(event) => {
-                                        props.onMenuHover(isMinimize, menu.title, event.currentTarget);
+                                        onMenuHover(isMinimize, menu.title, event.currentTarget);
                                     }}
-                                    onMouseLeave={props.onMenuLeave}
+                                    onMouseLeave={onMenuLeave}
                                 />
                             </Link>
                         ) : (
@@ -333,14 +333,14 @@ const Sidebar = (props) => {
                                 selectedSubmenu={selectedSubmenu}
                                 onSubmenuMouseEnter={(submenuTitle, element) => {
                                     if (isMinimize) {
-                                        props.onMenuHover(isMinimize, submenuTitle, element);
+                                        onMenuHover(isMinimize, submenuTitle, element);
                                     }
                                 }}
-                                onSubmenuMouseLeave={props.onMenuLeave}
+                                onSubmenuMouseLeave={onMenuLeave}
                                 onMouseEnter={(event) => {
-                                    props.onMenuHover(isMinimize, menu.title, event.currentTarget);
+                                    onMenuHover(isMinimize, menu.title, event.currentTarget);
                                 }}
-                                onMouseLeave={props.onMenuLeave}
+                                onMouseLeave={onMenuLeave}
                             />
                         )}
                     </React.Fragment>
@@ -353,9 +353,9 @@ const Sidebar = (props) => {
                 <div
                     className="logout-button"
                     onMouseEnter={(event) => {
-                        props.onMenuHover(isMinimize, "Log Out", event.currentTarget);
+                        onMenuHover(isMinimize, "Log Out", event.currentTarget);
                     }}
-                    onMouseLeave={props.onMenuLeave}
+                    onMouseLeave={onMenuLeave}
                     onClick={() => [logout(), navigate('/landing')]}
                 >
                     <div className="icon">

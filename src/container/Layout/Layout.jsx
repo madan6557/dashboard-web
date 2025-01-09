@@ -46,6 +46,8 @@ const Layout = () => {
     const [openDropdown, setOpenDropdown] = useState(null); // 'notifications', 'settings', 'profile', or null
     const { setSelectedSite } = useContext(SiteIDContext);
     const { setDataOption } = useContext(DataOptionContext);
+    const [siteOption, setSiteOption] = useState([{text:"", value:""}]);
+    
 
     // Buat ref untuk setiap notifikasi
     const notificationRefs = useRef({});
@@ -61,6 +63,8 @@ const Layout = () => {
         try {
             const response = await getDataOptions();
             setDataOption(response); // Update state with fetched data
+            setSiteOption(response.tb_site)
+            console.log(response);
         } catch (error) {
             console.error("Error fetching options:", error);
         }
@@ -112,7 +116,7 @@ const Layout = () => {
         handleEditDetailsClose(false);
         fetchDataOptions();
         // eslint-disable-next-line
-    }, [location.pathname]);
+    }, []);
 
     const handleDetailsClose = () => {
         setIsDetailsAnimating(true); // Mulai animasi keluar
@@ -197,7 +201,6 @@ const Layout = () => {
     };
 
     const handleSiteChange = (value) => {
-        console.log(value);
         setSelectedSite(value);
     };
 
@@ -336,10 +339,7 @@ const Layout = () => {
                     <div className="config-wrapper">
                         <div className="site-option">
                             <p>Site</p>
-                            <OptionField optionItem={[
-                                { text: "JBG", value: "jbg" },
-                                { text: "Rehab DAS", value: "rehab das" },
-                            ]}
+                            <OptionField optionItem={siteOption}
                                 onChange={(e) => { handleSiteChange(e.target.value) }}
                             />
                         </div>
@@ -394,8 +394,16 @@ const Layout = () => {
                         <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                         <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
-                        <Route path="/table" element={<ProtectedRoute><Table onRowClick={handlePlantTableRowClick} ref={tableRef}/></ProtectedRoute>} />
-                        <Route path="/verification" element={<ProtectedRoute><Verification onRowClick={handlePlantTableRowClick} ref={tableRef}/></ProtectedRoute>} />
+                        <Route path="/table" element={<ProtectedRoute>
+                            <Table
+                                onRowClick={handlePlantTableRowClick}
+                                ref={tableRef} /></ProtectedRoute>
+                        } />
+                        <Route path="/verification" element={<ProtectedRoute>
+                            <Verification
+                                onRowClick={handlePlantTableRowClick}
+                                ref={tableRef} /></ProtectedRoute>}
+                        />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
                         <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
                         <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
