@@ -1,4 +1,4 @@
-import { fetchPlants, fetchPlantByID, updatePlant, deletePlant } from "../handlers/plantsHandler";
+import { fetchPlants, fetchPlantByID, updatePlant, deletePlant } from "../handlers/approvePlantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
 
 export const searchApprovedPlants = async (config) => {

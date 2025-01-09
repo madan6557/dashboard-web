@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useImperativeHandle, forwardRef } from 'react';
 import './Table.css';
 import CardTable from "../../../components/CardTable/CardTable";
-import { searchApprovedPlants } from "../../../api/controller/plantsController";
+import { searchApprovedPlants } from "../../../api/controller/approvedPlantsController";
 import { DataIDContext } from "../../../context/SelectedIDContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
 
@@ -24,8 +24,10 @@ const Table = forwardRef(({ onRowClick }, ref) => {
     const [searchTerm, setSearchTerm] = useState('');
     const { setSelectedRowData } = useContext(DataIDContext);
     const { selectedSite } = useContext(SiteIDContext);
+     const [isLoading, setIsLoading] = useState(false);
 
     const fetchTableData = async () => {
+        setIsLoading(true);
         var plantSite = "jbg";
         const config = {
             page: currentPage,
@@ -47,14 +49,16 @@ const Table = forwardRef(({ onRowClick }, ref) => {
 
     // Expose fetchTableData to the parent component
     useImperativeHandle(ref, () => ({
-        fetchTableData
+        fetchTableData,
+        setIsLoading: () => {
+            setIsLoading({ value: true, timestamp: Date.now() });
+        },
     }));
-
 
     useEffect(() => {
         fetchTableData();
         // eslint-disable-next-line
-    }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite]);
+    }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite, isLoading]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -97,6 +101,7 @@ const Table = forwardRef(({ onRowClick }, ref) => {
                     onSortChange={handleSortChange}
                     onSearchChange={handleSearchChange}
                     onRowClick={handleRowClick}
+                    onLoading={isLoading}
                 />
             </div>
     );

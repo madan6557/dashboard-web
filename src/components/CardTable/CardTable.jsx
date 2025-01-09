@@ -20,14 +20,19 @@ const CardTable = ({
     onRowsChange,
     onSortChange,
     onSearchChange,
-    onRowClick // New prop for handling row click
+    onRowClick,
+    onLoading, 
 }) => {
     const [pageNumber, setPageNumber] = useState(currentPage);
     const [order, setOrder] = useState(orderOptions[0].value);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortOrder, setSortOrder] = useState('desc');
     const [searchTerm, setSearchTerm] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(onLoading);
+    }, [onLoading]);
 
     // Debounce search term: Only trigger search after no typing for 500ms
     useEffect(() => {
@@ -36,50 +41,54 @@ const CardTable = ({
                 onSearchChange(searchTerm); // Trigger search when searchTerm changes
             }
         }, 500); // 500ms debounce delay
-    
+
         return () => {
             clearTimeout(timeoutId); // Cleanup the previous timeout on rerender or input change
         };// eslint-disable-next-line
     }, [searchTerm]); // only watch `searchTerm` for change    
 
     useEffect(() => {
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 2000);
         if (totalPages < pageNumber) {
             setPageNumber(1);
-        }// eslint-disable-next-line
+        }
+        setIsLoading(false);
+        // eslint-disable-next-line
     }, [tableItems]);
 
     // Handle search input change
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value); // Update the searchTerm state
+        setIsLoading(true);
     };
 
     const handleSortToggle = () => {
         const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
         setSortOrder(newSortOrder);
         if (onSortChange) onSortChange(newSortOrder);
+        setIsLoading(true);
     };
 
     const handleChangePage = (value) => {
         if (value >= 1 && value <= totalPages) {
             setPageNumber(value);
+        setIsLoading(true);
             if (onPageChange) onPageChange(value);
         }
+        setIsLoading(true);
     };
 
     const handleOrderChange = (e) => {
         const value = e.target.value;
         setOrder(value);
         if (onOrderChange) onOrderChange(value);
+        setIsLoading(true);
     };
 
     const handleRowsChange = (e) => {
         const value = parseInt(e.target.value, 10);
         setRowsPerPage(value);
         if (onRowsChange) onRowsChange(value);
+        setIsLoading(true);
     };
 
     const handleRowClick = (item) => {

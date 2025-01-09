@@ -4,7 +4,7 @@ import { TextField, NumericField } from "../../components/FieldInput/FieldInput"
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
-import { getSelectedApprovedPlants } from "../../api/controller/plantsController";
+import { getSelectedApprovedPlants } from "../../api/controller/approvedPlantsController";
 
 const Details = ({ onClose, onEdit, readonly = false }) => {
     const { selectedRowData } = useContext(DataIDContext);

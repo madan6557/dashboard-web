@@ -4,12 +4,12 @@ import { NumericField, OptionField, DateField } from "../../components/FieldInpu
 import Image from "../../components/Image/Image";
 import { QRCode, Cross, Save, Trash } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
-import { deleteApprovedPlants, getSelectedApprovedPlants, patchApprovedPlants } from "../../api/controller/plantsController";
+import { deleteApprovedPlants, getSelectedApprovedPlants, patchApprovedPlants } from "../../api/controller/approvedPlantsController";
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 import { renameFile } from "../../utils/renameImage";
 
-const EditDetails = ({ onClose, onDelete, onAction }) => {
+const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
@@ -120,6 +120,7 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
             "Are you sure you want to save the changes?", "confirm",
             async () => {
                 try {
+                    onUpdate();
                     await updateData();
                 } catch (error) {
                     console.error("Error saving data:", error);
@@ -134,6 +135,7 @@ const EditDetails = ({ onClose, onDelete, onAction }) => {
             "Data will be deleted permanently. Are you sure you want to perform this action?", "danger",
             async () => {
                 try {
+                    onUpdate();
                     await deleteApprovedPlants(selectedRowData);
                     onDelete();
                     onAction(`Data ${selectedRowData} deleted succesfully`, 'success');

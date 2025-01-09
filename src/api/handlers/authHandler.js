@@ -1,3 +1,4 @@
+import handleError from '../helper/errorHandler';
 import API from '../service';
 
 /**
@@ -21,8 +22,7 @@ export const login = async (credentials) => {
         return { message }; // Misalnya: { token, user }
 
     } catch (error) {
-        console.error('Error during login:', error);
-        throw error;
+        handleError(error);
     }
 };
 
@@ -35,9 +35,10 @@ export const logout = async () => {
         // await API.post('/auth/logout'); 
         // Hapus token saat logout
         localStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userRole');
     } catch (error) {
-        console.error('Error during logout:', error);
-        throw error;
+        handleError(error);
     }
 };
 
@@ -51,8 +52,7 @@ export const register = async (userData) => {
         const response = await API.post('/user/sign-up', userData); // Endpoint: /auth/register
         return response.data; // Misalnya: { id, name, email }
     } catch (error) {
-        console.error('Error during registration:', error);
-        throw error;
+        handleError(error);
     }
 };
 
@@ -65,7 +65,6 @@ export const getCurrentUser = async () => {
         const response = await API.get('/auth/me'); // Endpoint: /auth/me
         return response.data; // Misalnya: { id, name, email }
     } catch (error) {
-        console.error('Error fetching current user:', error);
-        throw error;
+        handleError(error);
     }
 };

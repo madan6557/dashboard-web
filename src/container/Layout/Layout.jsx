@@ -189,7 +189,7 @@ const Layout = () => {
         removeNotification(id);
     };
 
-    const handleRowClick = () => {
+    const handlePlantTableRowClick = () => {
         setIsDetailsVisible(true); // This will set the row details visibility
         if (isEditDetailsVisible) {
             handleEditDetailsClose();
@@ -204,6 +204,12 @@ const Layout = () => {
     const handleRefreshTable = () => {
         if (tableRef.current) {
             tableRef.current.fetchTableData();  // Memanggil fetchTableData lewat ref
+        }
+    };
+
+    const handleReloadTable = () => {
+        if (tableRef.current) { // Memanggil setIsLoading lewat ref
+            tableRef.current.setIsLoading();  // Memanggil setIsLoading lewat ref
         }
     };
 
@@ -377,6 +383,7 @@ const Layout = () => {
                                     handleSendNotification(message, type);
                                     handleRefreshTable();  // Refresh data after save
                                 }}
+                                onUpdate={handleReloadTable}
                             />
                         </div>
                     )}
@@ -387,8 +394,8 @@ const Layout = () => {
                         <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                         <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
-                        <Route path="/table" element={<ProtectedRoute><Table onRowClick={handleRowClick} ref={tableRef}/></ProtectedRoute>} />
-                        <Route path="/verification" element={<ProtectedRoute><Verification /></ProtectedRoute>} />
+                        <Route path="/table" element={<ProtectedRoute><Table onRowClick={handlePlantTableRowClick} ref={tableRef}/></ProtectedRoute>} />
+                        <Route path="/verification" element={<ProtectedRoute><Verification onRowClick={handlePlantTableRowClick} ref={tableRef}/></ProtectedRoute>} />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
                         <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
                         <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
