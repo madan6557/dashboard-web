@@ -5,10 +5,12 @@ import Image from "../../components/Image/Image";
 import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/approvedPlantsController";
+import { getPlantImage } from "../../api/controller/imageController";
 
 const Details = ({ onClose, onEdit, readonly = false }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const [plantDetails, setPlantDetails] = useState(null);
+    const [plantImage, setPlantImage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchData = async () => {
@@ -16,7 +18,9 @@ const Details = ({ onClose, onEdit, readonly = false }) => {
             setIsLoading(true);
             try {
                 const response = await getSelectedApprovedPlants(selectedRowData, false);
+                const imageURL = await getPlantImage(response.images);
                 setPlantDetails(response);
+                setPlantImage(imageURL);
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {
@@ -99,7 +103,7 @@ const Details = ({ onClose, onEdit, readonly = false }) => {
                     : (
                         <>
                             <div className="image-wrapper">
-                                <Image alt="Plant Image" />
+                                <Image alt="Plant Image" src={plantImage}/>
                             </div>
                             <TextField id="species" title="Species" value={plantDetails.plant} readonly={true} />
                             <TextField id="plantingDate" title="Planting Date" value={plantDetails.plantingDate} readonly={true} />

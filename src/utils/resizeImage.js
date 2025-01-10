@@ -31,8 +31,8 @@ export const resizeImage = (file) => {
                 offsetY = (originalHeight - newHeight) / 2;
             }
 
-            canvas.width = 600;
-            canvas.height = 800;
+            canvas.width = 614;
+            canvas.height = 816;
 
             context.drawImage(
                 img,
@@ -42,8 +42,8 @@ export const resizeImage = (file) => {
                 newHeight,
                 0,
                 0,
-                600,
-                800
+                614,
+                816
             );
 
             canvas.toBlob((blob) => {

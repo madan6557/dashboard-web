@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './Image.css';
 import NoImage from "../../assets/images/sample.jpg";
 import Map from "../../pages/Map/Map";
@@ -14,24 +14,28 @@ import { resizeImage } from "../../utils/resizeImage";
 
 const Image = ({
     alt = "Plant Image",
-    src = NoImage,
+    src = NoImage, // Use NoImage as default
     imageEditable = false,
     onImageUpload,
     onAction
 }) => {
-    const [selected, setSelected] = useState("photograph"); // State untuk menyimpan pilihan
-    const [showUploadForm, setShowUploadForm] = useState(false); // State untuk mengontrol visibilitas form upload gambar
-    const [tempSrc, setTempSrc] = useState(src); // State untuk menyimpan src sementara
-    const [file, setFile] = useState(null); // State untuk menyimpan file yang diunggah
+    const [selected, setSelected] = useState("photograph");
+    const [showUploadForm, setShowUploadForm] = useState(false);
+    const [tempSrc, setTempSrc] = useState(src);
+    const [uploadedFile, setUploadedFile] = useState(null);
+
+    useEffect(() => {
+        setTempSrc(src); // Update tempSrc based on the prop src
+    }, [src]);
 
     const handleFileChange = async (event) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
             try {
                 const resizedBlob = await resizeImage(selectedFile);
-                setFile(resizedBlob); // Menyimpan file yang di-resize
+                setUploadedFile(resizedBlob);
                 const fileURL = URL.createObjectURL(resizedBlob);
-                setTempSrc(fileURL); // Menampilkan gambar sementara
+                setTempSrc(fileURL);
             } catch (error) {
                 console.error('Error processing image:', error);
                 onAction(`Error processing image`, 'failed');
@@ -40,16 +44,16 @@ const Image = ({
     };
 
     const handleUpload = () => {
-        if (file && onImageUpload) {
-            onImageUpload(file); // Mengirimkan file ke parent
-            setFile(null);
+        if (uploadedFile && onImageUpload) {
+            onImageUpload(uploadedFile);
+            setUploadedFile(null);
             setShowUploadForm(false);
         }
     };
 
     const handleCancel = () => {
-        setTempSrc(src); // Mengembalikan ke gambar sebelumnya
-        setFile(null);
+        setTempSrc(src);
+        setUploadedFile(null);
         setShowUploadForm(false);
     };
 
@@ -88,9 +92,8 @@ const Image = ({
                     />
                     <div className="imageUpload-form-button">
                         <ActionButton title="Cancel" type="ghost" onClick={handleCancel} />
-                        <ActionButton title="Upload" type="primary" disabled={!file} onClick={handleUpload} />
+                        <ActionButton title="Upload" type="primary" disabled={!uploadedFile} onClick={handleUpload} />
                     </div>
-
                 </div>
             )}
 

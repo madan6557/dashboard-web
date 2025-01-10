@@ -116,7 +116,7 @@ const Layout = () => {
         handleEditDetailsClose(false);
         fetchDataOptions();
         // eslint-disable-next-line
-    }, []);
+    }, [location.pathname]);
 
     const handleDetailsClose = () => {
         setIsDetailsAnimating(true); // Mulai animasi keluar

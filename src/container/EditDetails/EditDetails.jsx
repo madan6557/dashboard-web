@@ -8,6 +8,7 @@ import { deleteApprovedPlants, getSelectedApprovedPlants, patchApprovedPlants } 
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 import { renameFile } from "../../utils/renameImage";
+import { getPlantImage } from "../../api/controller/imageController";
 
 const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     const { selectedRowData } = useContext(DataIDContext);
@@ -37,7 +38,10 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
             setIsLoading(true);
             try {
                 const response = await getSelectedApprovedPlants(selectedRowData, false);
+                const imageURL = await getPlantImage(response.images);
                 setPlantDetails(response);
+                setPlantImage(imageURL);
+
                 // Initialize fields with fetched data
                 setSpecies(response.id_species);
                 setPlantingDate(response.plantingDate);
@@ -221,7 +225,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 ) : (
                     <>
                         <div className="detail-image">
-                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} />
+                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage}/>
                         </div>
                         <div className="detail-input-wrapper">
                             <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />
