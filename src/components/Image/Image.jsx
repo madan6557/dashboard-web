@@ -32,22 +32,32 @@ const Image = ({
     const handleFileChange = async (event) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
-            if (selectedFile.size > 2 * 1024 * 1024) { // 2MB in bytes
-                setErrorMessage('Image size too large. Max 2MB.');
-                return;
-            }
             try {
                 setErrorMessage(''); // Clear previous error message
+    
+                // Resize the image
                 const resizedBlob = await resizeImage(selectedFile);
-                setUploadedFile(resizedBlob);
-                const fileURL = URL.createObjectURL(resizedBlob);
+    
+                // Check size after resizing
+                if (resizedBlob.size > 2 * 1024 * 1024) { // 2MB in bytes
+                    setErrorMessage('Image size too large after resizing. Max 2MB.');
+                    return;
+                }
+    
+                // Create a new File object to retain original filename
+                const resizedFile = new File([resizedBlob], selectedFile.name, { type: resizedBlob.type });
+    
+                // Set the resized file and temp source
+                setUploadedFile(resizedFile);
+                const fileURL = URL.createObjectURL(resizedFile);
                 setTempSrc(fileURL);
             } catch (error) {
                 console.error('Error processing image:', error);
                 onAction('Error processing image', 'failed');
             }
         }
-    };       
+    };
+         
 
     const handleUpload = () => {
         if (uploadedFile && onImageUpload) {
@@ -60,6 +70,7 @@ const Image = ({
     const handleCancel = () => {
         setTempSrc(src);
         setUploadedFile(null);
+        setErrorMessage(null);
         setShowUploadForm(false);
     };
 

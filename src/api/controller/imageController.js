@@ -19,11 +19,7 @@ export const uploadImage = async (file) => {
     try {
         const formData = new FormData();
         formData.append('images', file); // Menambahkan file ke FormData
-
-        formData.forEach((value, key) => {
-            console.log(`${key}:`, value);
-        });
-
+        
         const response = await addImage(formData);
 
         return response;

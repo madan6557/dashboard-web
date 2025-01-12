@@ -20,7 +20,6 @@ export const fetchImage = async (filename) => {
 
 export const addImage = async (data) => {
     try {
-        console.log(data);
 
         const response = await API.post(`/image/uploads`, data, {
             headers: {

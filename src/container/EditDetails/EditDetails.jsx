@@ -55,8 +55,6 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 setNorthing(response.northing);
                 setElevation(response.elevation);
 
-                console.log(response.images);
-
                 const imageURL = await getPlantImage(response.images);
                 setPlantImage(imageURL);
 
@@ -70,7 +68,6 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
 
     const updateData = async () => {
         const renamedImageFile = plantImage ? renameFile(newPlantImage, selectedRowData) : null;
-        console.log(renamedImageFile.name);
 
         const updatedData = {
             id_species: parseInt(species, 10),
@@ -99,6 +96,10 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
         try {
             await patchApprovedPlants(parseInt(selectedRowData, 10), updatedData)
             if (renamedImageFile) { await uploadImage(renamedImageFile) };
+
+            setPlantImage(null);
+            setPlantDetails(null);
+            
             await fetchData();
 
             setUnsavedChanges(false);
