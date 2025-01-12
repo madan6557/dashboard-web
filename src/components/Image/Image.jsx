@@ -23,6 +23,7 @@ const Image = ({
     const [showUploadForm, setShowUploadForm] = useState(false);
     const [tempSrc, setTempSrc] = useState(src);
     const [uploadedFile, setUploadedFile] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         setTempSrc(src); // Update tempSrc based on the prop src
@@ -31,17 +32,22 @@ const Image = ({
     const handleFileChange = async (event) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
+            if (selectedFile.size > 2 * 1024 * 1024) { // 2MB in bytes
+                setErrorMessage('Image size too large. Max 2MB.');
+                return;
+            }
             try {
+                setErrorMessage(''); // Clear previous error message
                 const resizedBlob = await resizeImage(selectedFile);
                 setUploadedFile(resizedBlob);
                 const fileURL = URL.createObjectURL(resizedBlob);
                 setTempSrc(fileURL);
             } catch (error) {
                 console.error('Error processing image:', error);
-                onAction(`Error processing image`, 'failed');
+                onAction('Error processing image', 'failed');
             }
         }
-    };
+    };       
 
     const handleUpload = () => {
         if (uploadedFile && onImageUpload) {
@@ -91,6 +97,7 @@ const Image = ({
                         onChange={handleFileChange}
                     />
                     <div className="imageUpload-form-button">
+                        {errorMessage && <p className="errorMessage">{errorMessage}</p>}
                         <ActionButton title="Cancel" type="ghost" onClick={handleCancel} />
                         <ActionButton title="Upload" type="primary" disabled={!uploadedFile} onClick={handleUpload} />
                     </div>

@@ -64,7 +64,6 @@ const Layout = () => {
             const response = await getDataOptions();
             setDataOption(response); // Update state with fetched data
             setSiteOption(response.tb_site)
-            console.log(response);
         } catch (error) {
             console.error("Error fetching options:", error);
         }

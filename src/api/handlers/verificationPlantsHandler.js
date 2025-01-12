@@ -1,4 +1,3 @@
-import handleError from '../helper/errorHandler';
 import API from '../service';
 
 // Mendapatkan semua tanaman
@@ -15,7 +14,8 @@ export const fetchPlants = async (config) => {
         const response = await API.get(`/verification/search?keyword=${search}&orderBy=${orderBy}&sortBy=${sort}&site=${site}&page=${page}&limit=${rows}`); // Endpoint: /users
         return response.data; // Data hasil response dari server
     } catch (error) {
-        handleError(error);
+        console.error('Failed to fetch data:', error);
+        throw error;
     }
 };
 
@@ -24,7 +24,8 @@ export const fetchPlantByID = async (id_plant) => {
         const response = await API.get(`/approve/plant/${id_plant}`);
         return response.data;
     } catch (error) {
-        handleError(error);
+        console.error('Failed to fetch data:', error);
+        throw error;
     }
 };
 
@@ -34,7 +35,8 @@ export const updatePlant = async (id_plant, data) => {
         const response = await API.patch(`/approve/${id_plant}`, data);
         return response.message;
     } catch (error) {
-        handleError(error);
+        console.error('Failed to update data:', error);
+        throw error;
     }
 };
 
@@ -44,6 +46,7 @@ export const deletePlant = async (id_plant) => {
         const response = await API.delete(`/approve/${id_plant}`); // Endpoint: /users/:id
         return response.message;
     } catch (error) {
-        handleError(error);
+        console.error('Failed to delete data:', error);
+        throw error;
     }
 };

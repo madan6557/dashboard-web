@@ -6,7 +6,7 @@ const handleError = (error) => {
         if (error.response.status === 403) {
             logout(); // Navigate to /landing on 403 error
         } else {
-            console.error('Error response status:', error.response.status);
+            console.error(`Error response status:${error.response.status}`, error);
             throw error; // Rethrow the error if it's not 403
         }
     } else {

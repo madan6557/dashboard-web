@@ -8,13 +8,15 @@ import { deleteApprovedPlants, getSelectedApprovedPlants, patchApprovedPlants } 
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 import { renameFile } from "../../utils/renameImage";
-import { getPlantImage } from "../../api/controller/imageController";
+import { getPlantImage, uploadImage } from "../../api/controller/imageController";
+import NoImage from "../../assets/images/sample.jpg";
 
 const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
     const [plantImage, setPlantImage] = useState(null);
+    const [newPlantImage, setNewPlantImage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
     const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -38,9 +40,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
             setIsLoading(true);
             try {
                 const response = await getSelectedApprovedPlants(selectedRowData, false);
-                const imageURL = await getPlantImage(response.images);
                 setPlantDetails(response);
-                setPlantImage(imageURL);
 
                 // Initialize fields with fetched data
                 setSpecies(response.id_species);
@@ -54,6 +54,12 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 setEasting(response.easting);
                 setNorthing(response.northing);
                 setElevation(response.elevation);
+
+                console.log(response.images);
+
+                const imageURL = await getPlantImage(response.images);
+                setPlantImage(imageURL);
+
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {
@@ -63,7 +69,8 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     };
 
     const updateData = async () => {
-        const renamedImageFile = plantImage ? renameFile(plantImage, selectedRowData) : null;
+        const renamedImageFile = plantImage ? renameFile(newPlantImage, selectedRowData) : null;
+        console.log(renamedImageFile.name);
 
         const updatedData = {
             id_species: parseInt(species, 10),
@@ -91,8 +98,9 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
         setIsLoading(true);
         try {
             await patchApprovedPlants(parseInt(selectedRowData, 10), updatedData)
-            plantImage ? console.log("Image Uploded") : console.log("Image Undefined");
+            if (renamedImageFile) { await uploadImage(renamedImageFile) };
             await fetchData();
+
             setUnsavedChanges(false);
             onAction(`Data ${selectedRowData} updated successfully`, 'success');
         } catch (error) {
@@ -167,7 +175,9 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     };
 
     const handleImageUpload = (file) => {
-        setPlantImage(file);
+        setNewPlantImage(file);
+        const fileURL = URL.createObjectURL(file);
+        setPlantImage(fileURL);
     };
 
     return (
@@ -225,7 +235,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 ) : (
                     <>
                         <div className="detail-image">
-                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage}/>
+                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} />
                         </div>
                         <div className="detail-input-wrapper">
                             <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />
