@@ -6,7 +6,7 @@ import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/approvedPlantsController";
 import { getPlantImage } from "../../api/controller/imageController";
-import NoImage from "../../assets/images/sample.jpg";
+import NoImage from "../../assets/images//No Image.jpg";
 
 const Details = ({ onClose, onEdit, readonly = false }) => {
     const { selectedRowData } = useContext(DataIDContext);
@@ -33,6 +33,7 @@ const Details = ({ onClose, onEdit, readonly = false }) => {
 
     useEffect(() => {
         fetchData();
+        setPlantImage(null);
         // eslint-disable-next-line
     }, [selectedRowData]);
 

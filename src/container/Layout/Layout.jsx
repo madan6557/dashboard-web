@@ -28,6 +28,7 @@ import { OptionField } from "../../components/FieldInput/FieldInput";
 import { SiteIDContext } from "../../context/SiteIDContext";
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { getDataOptions } from "../../api/controller/optionController";
+import VerificationForm from "../VerificationForm/VerificationForm";
 
 const Layout = () => {
     const location = useLocation();
@@ -35,9 +36,11 @@ const Layout = () => {
     const [sidebarToggle, setSidebarToggle] = useState(true);
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
     const [isDetailsReadonly, setIsDetailsReadonly] = useState(false);
-    const [isEditDetailsVisible, setIsEditDetailsVisible] = useState(false);
     const [isDetailsAnimating, setIsDetailsAnimating] = useState(false); // Status animasi
+    const [isEditDetailsVisible, setIsEditDetailsVisible] = useState(false);
     const [isEditDetailsAnimating, setIsEditDetailsAnimating] = useState(false); // Status animasi
+    const [isVerificationFormVisible, setIsVerificationFormVisible] = useState(false);
+    const [isVerificationFormAnimating, setIsVerificationFormAnimating] = useState(false); // Status animasi
     const [selectedComponent, setSelectedComponent] = useState("Dashboard");
     const [tooltipText, setTooltipText] = useState("");
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -46,8 +49,8 @@ const Layout = () => {
     const [openDropdown, setOpenDropdown] = useState(null); // 'notifications', 'settings', 'profile', or null
     const { setSelectedSite } = useContext(SiteIDContext);
     const { setDataOption } = useContext(DataOptionContext);
-    const [siteOption, setSiteOption] = useState([{text:"", value:""}]);
-    
+    const [siteOption, setSiteOption] = useState([{ text: "", value: "" }]);
+
 
     // Buat ref untuk setiap notifikasi
     const notificationRefs = useRef({});
@@ -114,6 +117,7 @@ const Layout = () => {
         handleDetailsClose();
         handleEditDetailsClose(false);
         fetchDataOptions();
+        setSelectedSite(siteOption[0].value);
         // eslint-disable-next-line
     }, [location.pathname]);
 
@@ -133,6 +137,14 @@ const Layout = () => {
         setTimeout(() => {
             setIsEditDetailsVisible(false); // Hapus elemen setelah animasi selesai
             setIsEditDetailsAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
+    };
+
+    const handleVerificationFormClose = (isDetail = true) => {
+        setIsVerificationFormAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsVerificationFormVisible(false); // Hapus elemen setelah animasi selesai
+            setIsVerificationFormAnimating(false);
         }, 300); // Durasi animasi sesuai CSS
     };
 
@@ -197,6 +209,10 @@ const Layout = () => {
         if (isEditDetailsVisible) {
             handleEditDetailsClose();
         }
+    };
+
+    const handleVerificationTableRowClick = () => {
+        setIsVerificationFormVisible(true); // This will set the row details visibility
     };
 
     const handleSiteChange = (value) => {
@@ -338,7 +354,9 @@ const Layout = () => {
                     <div className="config-wrapper">
                         <div className="site-option">
                             <p>Site</p>
-                            <OptionField optionItem={siteOption}
+                            <OptionField
+                                id="site"
+                                optionItem={siteOption}
                                 onChange={(e) => { handleSiteChange(e.target.value) }}
                             />
                         </div>
@@ -387,6 +405,19 @@ const Layout = () => {
                         </div>
                     )}
 
+                    {isVerificationFormVisible && (
+                        <div 
+                        className={`verificationForm-container ${isVerificationFormAnimating ? "fade-out" : "fade-in"}`}
+                        >
+                            <VerificationForm
+                            onClose={handleVerificationFormClose}
+                                onAction={(message, type) => {
+                                    handleSendNotification(message, type);
+                                    handleRefreshTable();  // Refresh data after save
+                                }} />
+                        </div>
+                    )}
+
                     <Routes>
                         <Route path="/landing" element={null} />
                         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -400,7 +431,7 @@ const Layout = () => {
                         } />
                         <Route path="/verification" element={<ProtectedRoute>
                             <Verification
-                                onRowClick={handlePlantTableRowClick}
+                                onRowClick={handleVerificationTableRowClick}
                                 ref={tableRef} /></ProtectedRoute>}
                         />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />

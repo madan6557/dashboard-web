@@ -9,7 +9,8 @@ import { DataOptionContext } from "../../context/dataOptionContext";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 import { renameFile } from "../../utils/renameImage";
 import { getPlantImage, uploadImage } from "../../api/controller/imageController";
-import NoImage from "../../assets/images/sample.jpg";
+import NoImage from "../../assets/images//No Image.jpg";
+import { dateFormat } from "../../utils/dateFormat";
 
 const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     const { selectedRowData } = useContext(DataIDContext);
@@ -37,6 +38,10 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
 
     const fetchData = async () => {
         if (selectedRowData) {
+            setPlantImage(null);
+            setNewPlantImage(null);
+            setPlantDetails(null);
+
             setIsLoading(true);
             try {
                 const response = await getSelectedApprovedPlants(selectedRowData, false);
@@ -67,8 +72,11 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     };
 
     const updateData = async () => {
-        const renamedImageFile = plantImage ? renameFile(newPlantImage, selectedRowData) : null;
-
+        const renamedImageFile = newPlantImage ? renameFile(newPlantImage, selectedRowData) : null;
+        const formatedDate = dateFormat(plantingDate, 'yyyy-mm-dd hh-mm-ss', '+0');
+        console.log(new Date(plantingDate).toISOString());
+        console.log(new Date(formatedDate).toISOString());
+        console.log(new Date().toISOString());
         const updatedData = {
             id_species: parseInt(species, 10),
             id_activity: parseInt(activity, 10),
@@ -80,7 +88,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
             id_areaStatus: plantDetails.id_areaStatus,
             diameter: parseFloat(diameter),
             height: parseFloat(height),
-            plantingDate: new Date(plantingDate).toISOString(),
+            plantingDate: new Date(formatedDate).toISOString(),
             dateModified: new Date().toISOString(),
             latitude: plantDetails.latitude,
             longitude: plantDetails.longitude,
@@ -97,9 +105,6 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
             await patchApprovedPlants(parseInt(selectedRowData, 10), updatedData)
             if (renamedImageFile) { await uploadImage(renamedImageFile) };
 
-            setPlantImage(null);
-            setPlantDetails(null);
-            
             await fetchData();
 
             setUnsavedChanges(false);
@@ -168,7 +173,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 "There are unsaved changes. Keep countinue?", "confirm",
                 () => {
                     onClose();
-                }
+                }, true
             );
         } else {
             onClose();
@@ -179,6 +184,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
         setNewPlantImage(file);
         const fileURL = URL.createObjectURL(file);
         setPlantImage(fileURL);
+        handleInputChange(); // Menandai perubahan sebagai belum disimpan
     };
 
     return (

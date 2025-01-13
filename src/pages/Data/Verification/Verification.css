@@ -1,7 +1,8 @@
 @import '../../../variable.css';
 
-.table-container{
+.verification-container{
     padding: 5px;
+    position: relative;
 }
 
 .floorButton-container{

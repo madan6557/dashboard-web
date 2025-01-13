@@ -3,3 +3,23 @@
 .table-container{
     padding: 5px;
 }
+
+.exportForm-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 8px;
+    z-index: 5;
+    overflow: hidden;
+    max-height: 500px; /* Atur nilai max-height lebih besar dari tinggi konten */
+    opacity: 1;
+    transition: max-height 0.5s ease;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.exportForm-container.hidden {
+    max-height: 0;
+    pointer-events: none;
+}
+

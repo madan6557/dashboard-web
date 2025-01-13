@@ -82,14 +82,12 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
     };
 
     const handleRowClick = (item) => {
-        if (onRowClick) {
-            onRowClick(); // This will call the passed function from Layout (which sets isDetailsVisible)
-        }
+        onRowClick();
         setSelectedRowData(item.id_plant); // Update selected row data
     };
 
     return (
-        <div className="table-container">
+        <div className="verification-container">
             <div className="floorButton-container">
                 {/* FloorButton dengan kondisi selected */}
                 <FloorButton
@@ -109,19 +107,19 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
                 />
             </div>
             <CardTable
-                    tableHead={tableHead}
-                    tableItems={tableItems}
-                    orderOptions={orderOptions}
-                    totalPages={totalPages} // Assuming total items is 100 for this example
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                    onOrderChange={handleOrderChange}
-                    onRowsChange={handleRowsChange}
-                    onSortChange={handleSortChange}
-                    onSearchChange={handleSearchChange}
-                    onRowClick={handleRowClick}
-                    onLoading={isLoading}
-                />
+                tableHead={tableHead}
+                tableItems={tableItems}
+                orderOptions={orderOptions}
+                totalPages={totalPages} // Assuming total items is 100 for this example
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+                onOrderChange={handleOrderChange}
+                onRowsChange={handleRowsChange}
+                onSortChange={handleSortChange}
+                onSearchChange={handleSearchChange}
+                onRowClick={handleRowClick}
+                onLoading={isLoading}
+            />
         </div>
     );
 });

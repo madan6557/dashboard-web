@@ -21,7 +21,8 @@ const CardTable = ({
     onSortChange,
     onSearchChange,
     onRowClick,
-    onLoading, 
+    onLoading,
+    onExport
 }) => {
     const [pageNumber, setPageNumber] = useState(currentPage);
     const [order, setOrder] = useState(orderOptions[0].value);
@@ -71,7 +72,7 @@ const CardTable = ({
     const handleChangePage = (value) => {
         if (value >= 1 && value <= totalPages) {
             setPageNumber(value);
-        setIsLoading(true);
+            setIsLoading(true);
             if (onPageChange) onPageChange(value);
         }
         setIsLoading(true);
@@ -104,6 +105,7 @@ const CardTable = ({
                     <Magnifier />
                 </div>
                 <input
+                    id="search-bar"
                     className="search-bar"
                     type="search"
                     placeholder="Search..."
@@ -117,6 +119,7 @@ const CardTable = ({
                         icon={<Print />}
                         type="confirm"
                         disabled={false}
+                        onClick={onExport}
                     />
                 </div>
 

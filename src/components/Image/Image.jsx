@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './Image.css';
-import NoImage from "../../assets/images/sample.jpg";
+import NoImage from "../../assets/images//No Image.jpg";
 import Map from "../../pages/Map/Map";
 import {
     MarkerOutline,

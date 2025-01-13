@@ -84,6 +84,27 @@
     animation: fadeOutSlideRight 0.3s forwards;
 }
 
+.verificationForm-container {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+    width: 100%;
+    height: calc(100%);
+    border-radius: 6px;
+    box-sizing: border-box;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    box-sizing: border-box;
+}
+
+.verificationForm-container.fade-in {
+    animation: fadeInSlideRight 0.3s forwards;
+}
+
+.verificationForm-container.fade-out {
+    animation: fadeOutSlideRight 0.3s forwards;
+}
+
 @keyframes fadeInSlideRight {
     0% {
         opacity: 0;

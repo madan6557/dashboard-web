@@ -140,14 +140,14 @@ const DateField = ({
     onChange = () => {}
 }) => {
     const [dateValue, setDateValue] = useState('');
-    const [timeValue, setTimeValue] = useState('');
+    const [timeValue, setTimeValue] = useState('00:00'); // Only HH:mm, no seconds
 
     useEffect(() => {
         if (value) {
             if (value.includes(' ')) {
                 const [date, time] = value.split(' ');
                 setDateValue(date); // yyyy-MM-dd
-                setTimeValue(time); // HH:mm:ss
+                setTimeValue(time.substring(0, 5)); // HH:mm (remove seconds)
             } else {
                 setDateValue(value); // yyyy-MM-dd
             }
@@ -167,8 +167,9 @@ const DateField = ({
 
     const handleTimeChange = (e) => {
         if (e && e.target) {
-            const newTime = e.target.value; // HH:mm:ss
+            const newTime = e.target.value; // HH:mm
             setTimeValue(newTime);
+
             // Make sure newTime and dateValue are valid before calling onChange
             if (onChange && newTime && dateValue !== undefined) {
                 onChange({ target: { value: `${dateValue} ${newTime}`.trim() } });
@@ -203,5 +204,6 @@ const DateField = ({
         </div>
     );
 };
+
 
 export { TextField, NumericField, OptionField, DateField };

@@ -10,17 +10,17 @@ export const searchVerificationPlants = async (config) => {
     // Define the desired columns
     const desiredColumns = ['id_plant', 'plant', 'plantingDate', 'activity', 'location', 'status', 'username', 'dateModified'];
 
-    // Filter the data to only include the desired columns and format plantingDate
+    // Filter the data to only include the desired columns and format plantingDate and dateModified
     const filteredData = data.map(item => {
         let filteredItem = {};
         desiredColumns.forEach(column => {
             if (item.hasOwnProperty(column)) {
-                filteredItem[column] = column === 'plantingDate'
-                    ? dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss', '+0') // Format plantingDate
-                    : item[column];
-                filteredItem[column] = column === 'dateModified'
-                    ? dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss', '+0') // Format plantingDate
-                    : item[column];
+                if (column === 'plantingDate' || column === 'dateModified') {
+                    // Format plantingDate and dateModified
+                    filteredItem[column] = dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss', '+0');
+                } else {
+                    filteredItem[column] = item[column];
+                }
             }
         });
         return filteredItem;
