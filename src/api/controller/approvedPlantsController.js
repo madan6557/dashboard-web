@@ -1,5 +1,6 @@
 import { fetchPlants, fetchPlantByID, updatePlant, deletePlant } from "../handlers/approvePlantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
+import { base64ToBlobUrl } from "../../utils/base64ToBlobUrl";
 
 export const searchApprovedPlants = async (config) => {
     const response = await fetchPlants(config);
@@ -31,15 +32,18 @@ export const searchApprovedPlants = async (config) => {
 };
 
 export const getSelectedApprovedPlants = async (id_plant, isEditable = false) => {
-    const response = await fetchPlantByID(id_plant);
+    const { data, imageBase64 } = await fetchPlantByID(id_plant);
 
-    if (response.data && response.data.plantingDate) {
-        const formattedDate = dateFormat(response.data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
-
-        response.data.plantingDate = formattedDate;
+    if (data && data.plantingDate) {
+        const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
+        data.plantingDate = formattedDate;
     }
 
-    return response.data;
+    console.log(imageBase64);
+
+    const imageBlob = await base64ToBlobUrl(imageBase64);
+
+    return { data, imageBlob };
 }
 
 export const patchApprovedPlants = async (id_plant, data) => {

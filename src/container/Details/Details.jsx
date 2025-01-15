@@ -5,7 +5,6 @@ import Image from "../../components/Image/Image";
 import { QRCode, Cross, PencileAltOutline } from "../../components/Icons/Icon";
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { getSelectedApprovedPlants } from "../../api/controller/approvedPlantsController";
-import { getPlantImage } from "../../api/controller/imageController";
 import NoImage from "../../assets/images//No Image.jpg";
 
 const Details = ({ onClose, onEdit, readonly = false }) => {
@@ -18,11 +17,9 @@ const Details = ({ onClose, onEdit, readonly = false }) => {
         if (selectedRowData) {
             setIsLoading(true);
             try {
-                const response = await getSelectedApprovedPlants(selectedRowData, false);
-                setPlantDetails(response);
-
-                const imageURL = await getPlantImage(response.images);
-                setPlantImage(imageURL);
+                const {data, imageBlob} = await getSelectedApprovedPlants(selectedRowData, false);
+                setPlantDetails(data);
+                setPlantImage(imageBlob);
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {

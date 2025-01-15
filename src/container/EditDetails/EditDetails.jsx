@@ -44,24 +44,23 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
 
             setIsLoading(true);
             try {
-                const response = await getSelectedApprovedPlants(selectedRowData, false);
-                setPlantDetails(response);
-
+                const { data, imageBlob } = await getSelectedApprovedPlants(selectedRowData, false);
+                setPlantDetails(data);
+                
                 // Initialize fields with fetched data
-                setSpecies(response.id_species);
-                setPlantingDate(response.plantingDate);
-                setActivity(response.id_activity);
-                setSkppkh(response.id_sk);
-                setHeight(response.height);
-                setDiameter(response.diameter);
-                setStatus(response.id_status);
-                setPlot(response.id_rehabilitationPlot);
-                setEasting(response.easting);
-                setNorthing(response.northing);
-                setElevation(response.elevation);
-
-                const imageURL = await getPlantImage(response.images);
-                setPlantImage(imageURL);
+                setSpecies(data.id_species);
+                setPlantingDate(data.plantingDate);
+                setActivity(data.id_activity);
+                setSkppkh(data.id_sk);
+                setHeight(data.height);
+                setDiameter(data.diameter);
+                setStatus(data.id_status);
+                setPlot(data.id_rehabilitationPlot);
+                setEasting(data.easting);
+                setNorthing(data.northing);
+                setElevation(data.elevation);
+                
+                setPlantImage(imageBlob);
 
             } catch (error) {
                 console.error("Error fetching plants:", error);
