@@ -1,6 +1,7 @@
 .map-wrapper {
-    position: relative; /* Menjaga peta di dalam kontainer */
+    /* Menjaga peta di dalam kontainer */
     height: 100%; /* Membuat container mengambil tinggi penuh layar */
+    width: 100%;
     display: flex; /* Untuk mendukung tata letak fleksibel */
 }
 

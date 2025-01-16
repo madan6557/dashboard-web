@@ -195,7 +195,13 @@ const CardTable = ({
                     onChange={(e) => setPageNumber(e.target.value)}
                     onBlur={(e) => {
                         let value = parseInt(e.target.value, 10);
-                        if (!isNaN(value)) handleChangePage(value);
+                        if (!isNaN(value) && value !== pageNumber) handleChangePage(value);
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            let value = parseInt(e.target.value, 10);
+                            if (!isNaN(value) && value !== pageNumber) handleChangePage(value);
+                        }
                     }}
                 />
                 <p className="totalPage">of <span id="totalPages">{totalPages}</span></p>

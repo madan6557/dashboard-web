@@ -8,6 +8,7 @@ import Image from "../../components/Image/Image";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import { compareSelectedVerificationPlants } from "../../api/controller/verificationPlantsController";
 import { getPlantImage } from "../../api/controller/imageController";
+import { useConfirmation } from "../../context/ActionConfirmationContext";
 
 const VerificationForm = ({ onClose, onAction }) => {
     const { selectedRowData } = useContext(DataIDContext);
@@ -16,6 +17,10 @@ const VerificationForm = ({ onClose, onAction }) => {
     const [verificationPlantImage, setVerificationPlantImage] = useState(null);
     const [approvePlantImage, setApprovePlantImage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCommentVisible, setIsCommentVisible] = useState(false);
+    const [isCommentAnimating, setIsCommentAnimating] = useState(false);
+    const requestConfirmation = useConfirmation();
+    const [comment, setComment] = useState('');
 
     const fetchData = async () => {
         if (selectedRowData) {
@@ -41,6 +46,55 @@ const VerificationForm = ({ onClose, onAction }) => {
         setApprovePlantImage(null);
         // eslint-disable-next-line
     }, [selectedRowData]);
+
+    const handleRejectClick = () => {
+        setIsCommentVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsCommentAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsCommentVisible(false);
+            setIsCommentAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
+    };
+
+    const handleConfirm = () => {
+        requestConfirmation(
+            "Are you sure you want to reject this data?",
+            "danger",
+            async () => {
+                try {
+                    // Add your rejection logic here
+                    console.log('Data rejected');
+                    setIsCommentVisible(false);
+                } catch (error) {
+                    console.error("Error rejecting data:", error);
+                    // Handle error notification here if needed
+                }
+            }
+        );
+    };
+
+    const handleApprove = () => {
+        requestConfirmation(
+            "Are you sure you want to approve this data?",
+            "confirm",
+            async () => {
+                try {
+                    // Add your approval logic here
+                    console.log('Data approved');
+                } catch (error) {
+                    console.error("Error approving data:", error);
+                    // Handle error notification here if needed
+                }
+            }
+        );
+    };
+
+    const handleCommentChange = (event) => {
+        setComment(event.target.value);
+    };
 
     const renderShimmer = () => (
         <div className="shimmer-fields">
@@ -85,7 +139,7 @@ const VerificationForm = ({ onClose, onAction }) => {
             return (
                 <>
                     <p className="verificationForm-form-title">Previous Data</p>
-                    <p className="verificationForm-form-date">Data Not Found</p>
+                    <p className="verificationForm-form-date">Not Found</p>
                     <div className="verificationForm-image-wrapper">
                         <Image alt="Plant Image" src={NoImage} />
                     </div>
@@ -125,15 +179,6 @@ const VerificationForm = ({ onClose, onAction }) => {
         );
     };
 
-
-    const handleReject = (id_verification) => {
-        console.log(`data ${id_verification} rejected`);
-    };
-
-    const handleApprove = (id_verification) => {
-        console.log(`data ${id_verification} approved`);
-    };
-
     return (
         <div className="verificationForm-wrapper">
             <div className="verificationForm-header-wrapper">
@@ -159,16 +204,27 @@ const VerificationForm = ({ onClose, onAction }) => {
                     </div>
                 </div>
                 <div className="verificationForm-footer-button-wrapper">
-                    <div className="verification-comment-container">
-                        <AreaField
-                            placeholder="Enter the reason for rejection..."
-                            title="Comment"
-                            rows={10}
-                            value="test . .  ."
-                        />
-                    </div>
+                    {isCommentVisible && (
+                        <div className={`verification-comment-container ${isCommentAnimating ? "fade-out" : "fade-in"}`}>
+                            <AreaField
+                                placeholder="Enter the reason for rejection..."
+                                title="Comment"
+                                rows={10}
+                                value={comment}
+                                onChange={handleCommentChange}
+                            />
+                            <div className="verificationForm-footer-button-wrapper">
+                                <div className="verificationForm-footer-button">
+                                    <ActionButton title="Cancel" type="ghost" onClick={handleCancel} />
+                                </div>
+                                <div className="verificationForm-footer-button">
+                                    <ActionButton title="Confirm" type="confirm" onClick={handleConfirm} disabled={!comment.trim()}/>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="verificationForm-footer-button">
-                        <ActionButton title="Reject" type="danger" onClick={handleReject} />
+                        <ActionButton title="Reject" type="danger" onClick={handleRejectClick} />
                     </div>
                     <div className="verificationForm-footer-button">
                         <ActionButton title="Approve" type="confirm" onClick={handleApprove} />

@@ -40,7 +40,7 @@ export const compareSelectedVerificationPlants = async (id_verification) => {
     const { verification } = response.data;
     const approve  = response.data.approve ? response.data.approve : null;
 
-    if (verification && approve) {
+    if (verification) {
         verification.plantingDate = dateFormat(verification.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
         verification.dateModified = dateFormat(verification.dateModified, 'yyyy-mm-dd hh-mm-ss', '+8')
         if (approve) {

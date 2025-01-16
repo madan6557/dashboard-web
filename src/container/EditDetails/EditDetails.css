@@ -106,7 +106,7 @@
 .detail-input-wrapper {
     position: relative;
     right: -5px;
-    width: 55%;
+    min-width: 200px;
     height: max-content;
     padding: 0px 10px;
     display: flex;
@@ -120,15 +120,10 @@
     box-sizing: border-box;
 }
 
-.detail-input-wrapper>* {
-    flex: 0 1 calc(50% - 10px);
-    /* Set lebar elemen 50% dikurangi margin */
-}
-
-
-.detail-image {
+.editDetail-image {
     position: relative;
-    max-width: 816px;
+    max-height: 816px;
+    max-width: 614px;
     aspect-ratio: 3 / 4;
     overflow: hidden;
 }

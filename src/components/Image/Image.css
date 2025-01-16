@@ -7,7 +7,7 @@
     position: relative;
     border-radius: 6px;
     overflow: hidden;
-    min-height: 100px;
+    min-width: 200px;
     aspect-ratio: 3 / 4;
 }
 

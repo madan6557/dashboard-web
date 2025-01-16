@@ -136,43 +136,23 @@ const DateField = ({
     title = "Input",
     readonly = false,
     value = "",
-    placeholder = "Date",
+    placeholder = "Select date and time",
     onChange = () => {}
 }) => {
-    const [dateValue, setDateValue] = useState('');
-    const [timeValue, setTimeValue] = useState('00:00'); // Only HH:mm, no seconds
+    const [dateTimeValue, setDateTimeValue] = useState('');
 
     useEffect(() => {
         if (value) {
-            if (value.includes(' ')) {
-                const [date, time] = value.split(' ');
-                setDateValue(date); // yyyy-MM-dd
-                setTimeValue(time.substring(0, 5)); // HH:mm (remove seconds)
-            } else {
-                setDateValue(value); // yyyy-MM-dd
-            }
+            setDateTimeValue(value); // Expecting value in format yyyy-MM-ddTHH:mm:ss
         }
     }, [value]);
 
-    const handleDateChange = (e) => {
+    const handleDateTimeChange = (e) => {
         if (e && e.target) {
-            const newDate = e.target.value; // yyyy-MM-dd
-            setDateValue(newDate);
-            // Make sure newDate and timeValue are valid before calling onChange
-            if (onChange && newDate && timeValue !== undefined) {
-                onChange({ target: { value: `${newDate} ${timeValue}`.trim() } });
-            }
-        }
-    };
-
-    const handleTimeChange = (e) => {
-        if (e && e.target) {
-            const newTime = e.target.value; // HH:mm
-            setTimeValue(newTime);
-
-            // Make sure newTime and dateValue are valid before calling onChange
-            if (onChange && newTime && dateValue !== undefined) {
-                onChange({ target: { value: `${dateValue} ${newTime}`.trim() } });
+            const newDateTime = e.target.value; // yyyy-MM-ddTHH:mm:ss
+            setDateTimeValue(newDateTime);
+            if (onChange) {
+                onChange({ target: { value: newDateTime } });
             }
         }
     };
@@ -180,27 +160,15 @@ const DateField = ({
     return (
         <div className="input-wrapper">
             {title && <p className="title">{title}</p>}
-            <div className="date-time-container">
-                <input
-                    id={`${id}-date`}
-                    className="input-value"
-                    type="date"
-                    placeholder={placeholder}
-                    value={dateValue}
-                    readOnly={readonly}
-                    onChange={readonly ? undefined : handleDateChange}
-                />
-                {timeValue && (
-                    <input
-                        id={`${id}-time`}
-                        className="input-value"
-                        type="time"
-                        value={timeValue}
-                        readOnly={readonly}
-                        onChange={readonly ? undefined : handleTimeChange}
-                    />
-                )}
-            </div>
+            <input
+                id={id}
+                className="input-value"
+                type="datetime-local"
+                placeholder={placeholder}
+                value={dateTimeValue}
+                readOnly={readonly}
+                onChange={readonly ? undefined : handleDateTimeChange}
+            />
         </div>
     );
 };
@@ -229,16 +197,17 @@ const AreaField = ({
     };
 
     return (
-        <div className="input-wrapper">
+        <div className="areaField-wrapper">
             {title && <p className="title">{title}</p>}
             <textarea
                 id={id}
-                className="input-value"
+                className="areaField-input-value"
                 placeholder={placeholder}
                 value={textValue}
                 readOnly={readonly}
                 rows={rows}
                 onChange={readonly ? undefined : handleChange}
+                style={{ resize: "none", textAlign: "justify" }} // Inline styles to prevent resizing and justify text
             />
         </div>
     );

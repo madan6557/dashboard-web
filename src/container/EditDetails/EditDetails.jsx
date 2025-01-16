@@ -240,7 +240,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                     </div>
                 ) : (
                     <>
-                        <div className="detail-image">
+                        <div className="editDetail-image">
                             <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} />
                         </div>
                         <div className="detail-input-wrapper">

@@ -102,7 +102,7 @@ const Details = ({ onClose, onEdit, readonly = false }) => {
                     renderShimmer()
                     : (
                         <>
-                            <div className="image-wrapper">
+                            <div className="detail-image-wrapper">
                                 <Image alt="Plant Image" src={plantImage ? plantImage : NoImage} />
                             </div>
                             <TextField id="species" title="Species" value={plantDetails.plant} readonly={true} />

@@ -7,7 +7,7 @@
 
 .floorButton-container{
     display: flex;
-    background-color: var(--gray-50);
+    background-color: var(--primary-white);
     align-items: end;
     border-radius: 6px;
     margin-bottom: 5px;

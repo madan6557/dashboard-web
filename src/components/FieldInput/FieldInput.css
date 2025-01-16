@@ -17,7 +17,7 @@
     border: 1px solid var(--gray-600);
     border-radius: 6px;
     padding-left: 5px;
-    padding-right: 30px; /* Add padding to the right for the suffix */
+    padding-right: 5px; /* Add padding to the right for the suffix */
     box-sizing: border-box;
     width: 100%;
 }
@@ -57,4 +57,33 @@
 /* Hide spinner in input[type="number"] for Firefox */
 .no-spinner[type="number"] {
     -moz-appearance: textfield;
+}
+
+.areaField-wrapper {
+    width: 100%; /* Ensure the wrapper takes full width */
+}
+
+.areaField-input-value {
+    width: 100%; 
+    height: auto; 
+    resize: none;
+    font-family: inherit;
+    overflow: hidden; 
+    overflow-y: scroll; 
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Scrollbar */
+.areaField-input-value::-webkit-scrollbar {
+    width: 8px;
+}
+
+.areaField-input-value::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 10px;
+}
+
+.areaField-input-value::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-500);
 }
