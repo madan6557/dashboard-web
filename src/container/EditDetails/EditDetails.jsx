@@ -8,7 +8,7 @@ import { deleteApprovedPlants, getSelectedApprovedPlants, patchApprovedPlants } 
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 import { renameFile } from "../../utils/renameImage";
-import { getPlantImage, uploadImage } from "../../api/controller/imageController";
+import { uploadImage } from "../../api/controller/imageController";
 import NoImage from "../../assets/images//No Image.jpg";
 import { dateFormat } from "../../utils/dateFormat";
 

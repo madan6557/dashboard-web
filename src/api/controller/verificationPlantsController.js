@@ -1,4 +1,4 @@
-import { fetchPlants, fetchPlantByID, updatePlant, deletePlant } from "../handlers/verificationPlantsHandler";
+import { fetchPlants, comparePlantByID, updatePlantVerification } from "../handlers/verificationPlantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
 
 export const searchVerificationPlants = async (config) => {
@@ -8,7 +8,8 @@ export const searchVerificationPlants = async (config) => {
     const { data, totalPages, currentPage } = response;
 
     // Define the desired columns
-    const desiredColumns = ['id_plant', 'plant', 'plantingDate', 'activity', 'location', 'status', 'username', 'dateModified'];
+    const desiredColumns = ['id_verification', 'id_plant', 'plant', 'activity', 'location', 'username', 'dateModified', 'action'];
+
 
     // Filter the data to only include the desired columns and format plantingDate and dateModified
     const filteredData = data.map(item => {
@@ -33,24 +34,25 @@ export const searchVerificationPlants = async (config) => {
     };
 };
 
-export const getSelectedVerificationPlants = async (id_plant, isEditable = false) => {
-    const response = await fetchPlantByID(id_plant);
+export const compareSelectedVerificationPlants = async (id_verification) => {
+    const response = await comparePlantByID(id_verification);
 
-    if (response.data && response.data.plantingDate) {
-        const formattedDate = dateFormat(response.data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+0')
+    const { verification } = response.data;
+    const approve  = response.data.approve ? response.data.approve : null;
 
-        response.data.plantingDate = formattedDate;
+    if (verification && approve) {
+        verification.plantingDate = dateFormat(verification.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
+        verification.dateModified = dateFormat(verification.dateModified, 'yyyy-mm-dd hh-mm-ss', '+8')
+        if (approve) {
+            approve.plantingDate = dateFormat(approve.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
+            approve.dateModified = dateFormat(approve.dateModified, 'yyyy-mm-dd hh-mm-ss', '+8')
+        }
     }
 
-    return response.data;
+    return { verification, approve };
 }
 
-export const approvePlants = async (id_plant, data) => {
-    const response = await updatePlant(id_plant, data);
-    return response;
-}
-
-export const rejectPlants = async (id_plant) => {
-    const response = await deletePlant(id_plant);
+export const verifyPlant = async (id_verification, data) => {
+    const response = await updatePlantVerification(id_verification, data);
     return response;
 }

@@ -4,8 +4,8 @@ import handleError from "../helper/errorHandler";
 export const exportPlantData = async (config) => {
     const { site } = config;
     try {
-        const fileBlob = await fetchApproveData(site, config);
-        return null;
+        const response = await fetchApproveData(site, config);
+        return response;
     } catch (error) {
         handleError(error);
         return null;

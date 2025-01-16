@@ -7,7 +7,7 @@ import { SiteIDContext } from "../../../context/SiteIDContext";
 import { searchVerificationPlants } from "../../../api/controller/verificationPlantsController";
 
 const Verification = forwardRef(({ onRowClick }, ref) => {
-    const [tableHead] = useState(["ID", "Species", "Planting Date", "Activities", "Location", "Status", "Uploader", "Upload Date"]);
+    const [tableHead] = useState(["ID","Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
     const [orderOptions] = useState([
         { text: "Modified Date", value: "dateModified" },
         { text: "ID", value: "id_plant" },
@@ -32,15 +32,16 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
     const [selected, setSelected] = useState("Unverified");
     const fetchTableData = async () => {
         setIsLoading(true);
-        var plantSite = "jbg";
         const config = {
             page: currentPage,
             rows: rowsPerPage,
             orderBy: orderBy,
             sort: sortOrder,
             search: searchTerm,
-            site: selectedSite || plantSite
+            site: parseInt(selectedSite)
         };
+
+        console.log(config);
 
         try {
             const response = await searchVerificationPlants(config);
@@ -48,16 +49,23 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
             setTotalPages(response.totalPages);
         } catch (error) {
             console.error("Error fetching plants:", error);
+        }finally {
+            setIsLoading(false);
         }
     };
 
     // Expose fetchTableData to the parent component
     useImperativeHandle(ref, () => ({
         fetchTableData,
+        setIsLoading: () => {
+            setIsLoading({ value: true, timestamp: Date.now() });
+        },
     }));
 
     useEffect(() => {
-        fetchTableData();
+        if(selectedSite){
+            fetchTableData();
+        }
         // eslint-disable-next-line
     }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite]);
 
@@ -83,7 +91,7 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
 
     const handleRowClick = (item) => {
         onRowClick();
-        setSelectedRowData(item.id_plant); // Update selected row data
+        setSelectedRowData(item.id_verification); // Update selected row data
     };
 
     return (

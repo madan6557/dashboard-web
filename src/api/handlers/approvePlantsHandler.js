@@ -11,7 +11,7 @@ export const fetchPlants = async (config) => {
         site
     } = config;
     try {
-        const response = await API.get(`/approve/search?keyword=${search}&orderBy=${orderBy}&sortBy=${sort}&site=${site}&page=${page}&limit=${rows}`); // Endpoint: /users
+        const response = await API.get(`/approve/search?keyword=${search}&orderBy=${orderBy}&sortBy=${sort}&id_site=${site}&page=${page}&limit=${rows}`); // Endpoint: /users
         return response.data; // Data hasil response dari server
     } catch (error) {
         console.error('Failed to fetch data:', error);

@@ -31,15 +31,16 @@ const Table = forwardRef(({ onRowClick }, ref) => {
 
     const fetchTableData = async () => {
         setIsLoading(true);
-        var plantSite = "jbg";
         const config = {
             page: currentPage,
             rows: rowsPerPage,
             orderBy: orderBy,
             sort: sortOrder,
             search: searchTerm,
-            site: selectedSite || plantSite
+            site: parseInt(selectedSite)
         };
+
+        console.log(config);
 
         try {
             const response = await searchApprovedPlants(config);
@@ -60,7 +61,9 @@ const Table = forwardRef(({ onRowClick }, ref) => {
     }));
 
     useEffect(() => {
-        fetchTableData();
+        if(selectedSite){
+            fetchTableData();
+        }
         // eslint-disable-next-line
     }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite]);
 

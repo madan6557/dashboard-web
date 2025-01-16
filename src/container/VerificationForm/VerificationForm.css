@@ -118,6 +118,7 @@
 
 .verificationForm-footer-button-wrapper {
     display: flex;
+    position: relative;
     margin-top: 20px;
     margin-left: auto;
     margin: 20px 10px 50px auto;
@@ -132,4 +133,8 @@
 
 .verificationForm-form-date {
     margin-bottom: 10px;
+}
+
+.verification-comment-container{
+    position: absolute;
 }

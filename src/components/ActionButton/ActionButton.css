@@ -3,8 +3,10 @@
 .actionButton-wrapper {
     display: flex;
     align-items: center;
+    justify-content: center;
     border-radius: 6px;
     height: 35px;
+    width: 80px;
     overflow: hidden;
     padding: 0px 5px;
 }

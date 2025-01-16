@@ -11,7 +11,7 @@ export const fetchPlants = async (config) => {
         site
     } = config;
     try {
-        const response = await API.get(`/verification/search?keyword=${search}&orderBy=${orderBy}&sortBy=${sort}&site=${site}&page=${page}&limit=${rows}`); // Endpoint: /users
+        const response = await API.get(`/verification/search?keyword=${search}&orderBy=${orderBy}&sortBy=${sort}&id_site=${site}&page=${page}&limit=${rows}`); // Endpoint: /users
         return response.data; // Data hasil response dari server
     } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -19,9 +19,10 @@ export const fetchPlants = async (config) => {
     }
 };
 
-export const fetchPlantByID = async (id_plant) => {
+export const comparePlantByID = async (id_verification) => {
     try {
-        const response = await API.get(`/approve/plant/${id_plant}`);
+        const response = await API.get(`/verification/${id_verification}`);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -30,9 +31,9 @@ export const fetchPlantByID = async (id_plant) => {
 };
 
 // Update data tanaman berdasarkan ID
-export const updatePlant = async (id_plant, data) => {
+export const updatePlantVerification = async (id_verification, data) => {
     try {
-        const response = await API.patch(`/approve/${id_plant}`, data);
+        const response = await API.patch(`/verification/${id_verification}`, data);
         return response.message;
     } catch (error) {
         console.error('Failed to update data:', error);
@@ -40,13 +41,3 @@ export const updatePlant = async (id_plant, data) => {
     }
 };
 
-// Menghapus tanaman berdasarkan ID
-export const deletePlant = async (id_plant) => {
-    try {
-        const response = await API.delete(`/approve/${id_plant}`); // Endpoint: /users/:id
-        return response.message;
-    } catch (error) {
-        console.error('Failed to delete data:', error);
-        throw error;
-    }
-};

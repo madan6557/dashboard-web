@@ -205,5 +205,43 @@ const DateField = ({
     );
 };
 
+const AreaField = ({
+    id = "",
+    placeholder = "Enter text...",
+    title = "Input",
+    readonly = false,
+    value = "",
+    rows = 5, // Default number of rows
+    onChange = () => {}
+}) => {
+    const [textValue, setTextValue] = useState(value);
 
-export { TextField, NumericField, OptionField, DateField };
+    useEffect(() => {
+        setTextValue(value); // Update text value when prop changes
+    }, [value]);
+
+    const handleChange = (e) => {
+        if (e && e.target) {
+            const newValue = e.target.value;
+            setTextValue(newValue); // Update local state
+            if (onChange) onChange({ target: { value: newValue } }); // Trigger onChange prop with formatted event
+        }
+    };
+
+    return (
+        <div className="input-wrapper">
+            {title && <p className="title">{title}</p>}
+            <textarea
+                id={id}
+                className="input-value"
+                placeholder={placeholder}
+                value={textValue}
+                readOnly={readonly}
+                rows={rows}
+                onChange={readonly ? undefined : handleChange}
+            />
+        </div>
+    );
+};
+
+export { TextField, NumericField, OptionField, DateField, AreaField };

@@ -14,7 +14,7 @@ export const getDataOptions = async () => {
 
         // Process each tb_ array into the desired format
         const dataOption = {
-            tb_site: formatOptions(response.tb_site, 'site', 'site'),
+            tb_site: formatOptions(response.tb_site, 'site', 'id_site'),
             tb_species: formatOptions(response.tb_species, 'plant', 'id_species'),
             tb_activity: formatOptions(response.tb_activity, 'activity', 'id_activity'),
             tb_location: formatOptions(response.tb_location, 'location', 'id_location'),

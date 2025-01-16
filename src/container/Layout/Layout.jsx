@@ -47,7 +47,7 @@ const Layout = () => {
     const [isNotificationDropdownOpen, setisNotificationDropdownOpen] = useState(false);
     const [notificationUpdateCount, setNotificationUpdateCount] = useState(0);
     const [openDropdown, setOpenDropdown] = useState(null); // 'notifications', 'settings', 'profile', or null
-    const { setSelectedSite } = useContext(SiteIDContext);
+    const { selectedSite, setSelectedSite } = useContext(SiteIDContext);
     const { setDataOption } = useContext(DataOptionContext);
     const [siteOption, setSiteOption] = useState([{ text: "", value: "" }]);
 
@@ -67,6 +67,7 @@ const Layout = () => {
             const response = await getDataOptions();
             setDataOption(response); // Update state with fetched data
             setSiteOption(response.tb_site)
+            setSelectedSite(selectedSite || response.tb_site[0].value);
         } catch (error) {
             console.error("Error fetching options:", error);
         }
@@ -116,8 +117,8 @@ const Layout = () => {
         }
         handleDetailsClose();
         handleEditDetailsClose(false);
+        handleVerificationFormClose();
         fetchDataOptions();
-        setSelectedSite(siteOption[0].value);
         // eslint-disable-next-line
     }, [location.pathname]);
 
@@ -140,7 +141,7 @@ const Layout = () => {
         }, 300); // Durasi animasi sesuai CSS
     };
 
-    const handleVerificationFormClose = (isDetail = true) => {
+    const handleVerificationFormClose = () => {
         setIsVerificationFormAnimating(true); // Mulai animasi keluar
         setTimeout(() => {
             setIsVerificationFormVisible(false); // Hapus elemen setelah animasi selesai
@@ -406,11 +407,11 @@ const Layout = () => {
                     )}
 
                     {isVerificationFormVisible && (
-                        <div 
-                        className={`verificationForm-container ${isVerificationFormAnimating ? "fade-out" : "fade-in"}`}
+                        <div
+                            className={`verificationForm-container ${isVerificationFormAnimating ? "fade-out" : "fade-in"}`}
                         >
                             <VerificationForm
-                            onClose={handleVerificationFormClose}
+                                onClose={handleVerificationFormClose}
                                 onAction={(message, type) => {
                                     handleSendNotification(message, type);
                                     handleRefreshTable();  // Refresh data after save

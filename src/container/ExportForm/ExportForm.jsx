@@ -30,8 +30,8 @@ const ExportForm = ({ onClose }) => {
     
         try {
             const response = await exportPlantData(config);
-            const blob = new Blob([response], { type: 'application/zip' });
-            const url = window.URL.createObjectURL(blob);
+            // const blob = new Blob([response], { type: 'application/zip' });
+            const url = window.URL.createObjectURL(response);
             setDownloadUrl(url); // Store the URL for download
     
             setIsDownloadReady(true); // Show download button after export is complete
