@@ -33,6 +33,7 @@ import VerificationForm from "../VerificationForm/VerificationForm";
 const Layout = () => {
     const location = useLocation();
     const { notifications, addNotification, removeNotification } = useNotification();
+    const [notificationPopup, setNotificationPopup] = useState([]);
     const [sidebarToggle, setSidebarToggle] = useState(true);
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
     const [isDetailsReadonly, setIsDetailsReadonly] = useState(false);
@@ -41,6 +42,8 @@ const Layout = () => {
     const [isEditDetailsAnimating, setIsEditDetailsAnimating] = useState(false); // Status animasi
     const [isVerificationFormVisible, setIsVerificationFormVisible] = useState(false);
     const [isVerificationFormAnimating, setIsVerificationFormAnimating] = useState(false); // Status animasi
+    const [isNotificationPopUpVisible, setIsNotificationPopUpVisible] = useState(false);
+    const [isNotificationPopUpAnimating, setIsNotificationPopUpAnimating] = useState(false);
     const [selectedComponent, setSelectedComponent] = useState("Dashboard");
     const [tooltipText, setTooltipText] = useState("");
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -61,6 +64,7 @@ const Layout = () => {
     const notificationDropdownRef = useRef(null);
     const settingsDropdownRef = useRef(null);
     const profileDropdownRef = useRef(null);
+    const timeoutRef = useRef(null);
 
     const fetchDataOptions = async () => {
         try {
@@ -121,6 +125,30 @@ const Layout = () => {
         fetchDataOptions();
         // eslint-disable-next-line
     }, [location.pathname]);
+
+    useEffect(() => {
+        if (notifications.length > 0) {
+            const newNotification = notifications.slice(-1)[0]; // Ambil notifikasi terbaru
+            setNotificationPopup((prev) => [...prev, newNotification]);
+        }
+    
+        setIsNotificationPopUpVisible(true);
+    
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+    
+        timeoutRef.current = setTimeout(() => {
+            setIsNotificationPopUpAnimating(true); // Mulai animasi keluar
+            setTimeout(() => {
+                setIsNotificationPopUpVisible(false); // Hapus elemen setelah animasi selesai
+                setIsNotificationPopUpAnimating(false);
+                setNotificationPopup([]); // Kosongkan popup setelah selesai animasi
+            }, 300); // Durasi animasi sesuai CSS
+        }, 3000); // Tampilkan notifikasi selama 3 detik
+    
+        // eslint-disable-next-line
+    }, [notifications]);
 
     const handleDetailsClose = () => {
         setIsDetailsAnimating(true); // Mulai animasi keluar
@@ -248,43 +276,44 @@ const Layout = () => {
                 </div>
             )}
 
-            <div className="popup-notification">
-                <TransitionGroup component={null}>
-                    {!isNotificationDropdownOpen && notificationUpdateCount > 0 && notifications.slice(
-                        notificationUpdateCount === 1 ? -1 : -2
-                    ).map((notif, index, array) => {
-                        const isLast = index === array.length - 1;
-                        const isMiddle = index === array.length - 2;
+            {isNotificationPopUpVisible && (
+                <div className={`popup-notification ${isNotificationPopUpAnimating ? "fade-out" : "fade-in"}`}>
+                    <TransitionGroup component={null}>
+                        {!isNotificationDropdownOpen && notificationUpdateCount > 0 && notificationPopup.slice(
+                            notificationUpdateCount === 1 ? -1 : -2
+                        ).map((notif, index, array) => {
+                            const isLast = index === array.length - 1;
+                            const isMiddle = index === array.length - 2;
 
-                        return (
-                            <CSSTransition
-                                key={notif.id}
-                                timeout={300}
-                                classNames={{
-                                    enter: "notification-enter",
-                                    exit: "notification-exit",
-                                }}
-                                nodeRef={notificationRefs.current[notif.id]} // Berikan nodeRef ke CSSTransition
-                            >
-                                <div
-                                    ref={notificationRefs.current[notif.id]} // Tambahkan ref di elemen DOM
-                                    className={`${isMiddle ? "notification-slide-up" : ""} ${isLast ? "notification-enter" : ""}`}
+                            return (
+                                <CSSTransition
+                                    key={notif.id}
+                                    timeout={300}
+                                    classNames={{
+                                        enter: "notification-enter",
+                                        exit: "notification-exit",
+                                    }}
+                                    nodeRef={notificationRefs.current[notif.id]} // Berikan nodeRef ke CSSTransition
                                 >
-                                    <Notification
-                                        id={notif.id}
-                                        message={notif.message}
-                                        type={notif.type}
-                                        time={notif.time}
-                                        isPopup={true}
-                                        onClose={() => handleCloseNotification(notif.id, true)}
-                                    />
-                                </div>
-                            </CSSTransition>
-                        );
-                    })}
-                </TransitionGroup>
-            </div>
-
+                                    <div
+                                        ref={notificationRefs.current[notif.id]} // Tambahkan ref di elemen DOM
+                                        className={`${isMiddle ? "notification-slide-up" : ""} ${isLast ? "notification-enter" : ""}`}
+                                    >
+                                        <Notification
+                                            id={notif.id}
+                                            message={notif.message}
+                                            type={notif.type}
+                                            time={notif.time}
+                                            isPopup={true}
+                                            onClose={() => handleCloseNotification(notif.id, true)}
+                                        />
+                                    </div>
+                                </CSSTransition>
+                            );
+                        })}
+                    </TransitionGroup>
+                </div>
+            )}
             {/* Dropdown Notification */}
             {openDropdown === 'notifications' && (
                 <div ref={notificationDropdownRef} className="notification-dropdown">

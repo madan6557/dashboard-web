@@ -5,7 +5,27 @@
     background-color: var(--gray-50);
     border-radius: 8px;
     padding: 5px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-wrapper.success{
+    background-color: var(--green-50);
+}
+
+.notification-wrapper.caution{
+    background-color: var(--orange-50);
+}
+
+.notification-wrapper.error{
+    background-color: var(--red-50);
+}
+
+.notification-wrapper.failed{
+    background-color: var(--red-50);
+}
+
+.notification-wrapper.info{
+    background-color: var(--blue-50);
 }
 
 .notification-wrapper p {

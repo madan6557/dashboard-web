@@ -24,7 +24,7 @@ const Notification = ({ id, message, type, time, isPopup = false, onClose = null
     const IconComponent = iconMap[type] || NoIcon;
 
     return (
-        <div className="notification-wrapper">
+        <div className={`notification-wrapper ${type}`}>
             <div className={`icon ${type}`}>
                 <IconComponent />
             </div>

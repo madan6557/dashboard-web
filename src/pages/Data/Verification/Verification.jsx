@@ -41,8 +41,6 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
             site: parseInt(selectedSite)
         };
 
-        console.log(config);
-
         try {
             const response = await searchVerificationPlants(config);
             setTableItems(response.data);

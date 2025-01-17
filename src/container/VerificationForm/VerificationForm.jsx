@@ -9,6 +9,7 @@ import ActionButton from "../../components/ActionButton/ActionButton";
 import { compareSelectedVerificationPlants, verifyPlant } from "../../api/controller/verificationPlantsController";
 import { getPlantImage } from "../../api/controller/imageController";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
+import { dateFormat } from "../../utils/dateFormat";
 
 const VerificationForm = ({ onClose, onAction }) => {
     const { selectedRowData } = useContext(DataIDContext);
@@ -45,14 +46,16 @@ const VerificationForm = ({ onClose, onAction }) => {
     const rejectData = async () => {
         if (selectedRowData) {
             setIsLoading(true);
+            const formatedDateModified = dateFormat(new Date(), 'yyyy-mm-dd hh-mm-ss', '+0');
+            console.log(formatedDateModified);
             const data = {
-                date_modified: new Date().toISOString(),
+                date_modified: new Date(formatedDateModified).toISOString(),
                 id_action: 3,
                 comment: comment
             };
             try {
                 await verifyPlant(selectedRowData, data);
-                onAction(`Data ${selectedRowData} rejected successfully`, 'success');
+                onAction(`Data ${verificationPlantDetails.id_plant} rejected successfully`, 'success');
             } catch (error) {
                 console.error("Error fetching plants:", error);
                 onAction(`Failed to reject. Please try again.`, 'failed');
@@ -65,13 +68,15 @@ const VerificationForm = ({ onClose, onAction }) => {
     const approveData = async () => {
         if (selectedRowData) {
             setIsLoading(true);
+            const formatedDateModified = dateFormat(new Date(), 'yyyy-mm-dd hh-mm-ss', '+0');
+            console.log(formatedDateModified);
             const data = {
-                date_modified: new Date().toISOString(),
+                date_modified: new Date(formatedDateModified).toISOString(),
                 id_action: 2,
             };
             try {
                 await verifyPlant(selectedRowData, data);
-                onAction(`Data ${selectedRowData} approved successfully`, 'success');
+                onAction(`Data ${verificationPlantDetails.id_plant} approved successfully`, 'success');
             } catch (error) {
                 onAction(`Failed to approve. Please try again.`, 'failed');
             } finally {

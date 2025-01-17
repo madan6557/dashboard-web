@@ -302,6 +302,14 @@
     z-index: 20;
 }
 
+.popup-notification.fade-in {
+    animation: fadeInSlideRight 0.3s forwards;
+}
+
+.popup-notification.fade-out {
+    animation: fadeOutSlideRight 0.3s forwards;
+}
+
 /* Animasi Fade In + Slide Up */
 @keyframes fadeInSlideUp {
     0% {
@@ -374,7 +382,7 @@
 }
 
 .notification-dropdown {
-    background-color: var(--gray-200);
+    background-color: var(--gray-50);
     border-radius: 6px;
     position: absolute;
     z-index: 2;
@@ -466,9 +474,14 @@
 .clear-button p {
     font-size: 0.9rem;
     margin: 0px;
+    color: var(--gray-600);
 }
 
 .clear-button:hover {
     color: var(--gray-900);
     cursor: pointer;
+}
+
+.clear-button:hover p{
+    color: var(--gray-900);
 }

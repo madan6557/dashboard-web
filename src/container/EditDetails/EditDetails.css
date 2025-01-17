@@ -122,8 +122,7 @@
 
 .editDetail-image {
     position: relative;
-    max-height: 816px;
-    max-width: 614px;
+    max-width: 412px;
     aspect-ratio: 3 / 4;
     overflow: hidden;
 }
