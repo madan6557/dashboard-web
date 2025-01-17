@@ -39,8 +39,6 @@ export const getSelectedApprovedPlants = async (id_plant, isEditable = false) =>
         data.plantingDate = formattedDate;
     }
 
-    console.log(imageBase64);
-
     const imageBlob = await base64ToBlobUrl(imageBase64);
 
     return { data, imageBlob };

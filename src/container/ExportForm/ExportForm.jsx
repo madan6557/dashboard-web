@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import './ExportForm.css';
 import { OptionField } from "../../components/FieldInput/FieldInput";
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { SiteIDContext } from "../../context/SiteIDContext";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import { exportPlantData } from "../../api/controller/exportController";
+import { Cross } from "../../components/Icons/Icon";
 
 const ExportForm = ({ onClose }) => {
     const { dataOption } = useContext(DataOptionContext);
@@ -15,30 +16,74 @@ const ExportForm = ({ onClose }) => {
     const [isExporting, setIsExporting] = useState(false);
     const [selectedYear, setSelectedYear] = useState('');
     const [includeWatermark, setIncludeWatermark] = useState(false);
-    const [isDownloadReady, setIsDownloadReady] = useState(false); // State to manage download button visibility
-    const [downloadUrl, setDownloadUrl] = useState(null); // Store the download URL for the file
+    const [isDownloadReady, setIsDownloadReady] = useState(false);
+    const [downloadUrl, setDownloadUrl] = useState(null);
+    const [progress, setProgress] = useState(0); // State for progress
+    const abortControllerRef = useRef(null);
+    const wsRef = useRef(null);
+
+    const cleanupDownloadUrl = () => {
+        if (downloadUrl) {
+            window.URL.revokeObjectURL(downloadUrl);
+            setDownloadUrl(null);
+        }
+    };
 
     const fetchData = async () => {
         setIsExporting(true);
-        setIsDownloadReady(false); // Hide download button when starting a new export
-    
+        setIsDownloadReady(false);
+
+        cleanupDownloadUrl();
+
+        abortControllerRef.current = new AbortController();
+        const signal = abortControllerRef.current.signal;
+
         const config = {
             year: selectedYear,
             watermark: includeWatermark,
-            site: selectedSite,
+            id_site: parseInt(selectedSite),
         };
-    
+
         try {
-            const response = await exportPlantData(config);
-            // const blob = new Blob([response], { type: 'application/zip' });
+            const response = await exportPlantData(config, signal);
             const url = window.URL.createObjectURL(response);
-            setDownloadUrl(url); // Store the URL for download
-    
-            setIsDownloadReady(true); // Show download button after export is complete
+            setDownloadUrl(url);
+            setIsDownloadReady(true);
         } catch (error) {
-            console.error("Error exporting plants:", error);
+            if (error.name === 'AbortError') {
+                console.log('Export aborted');
+            } else {
+                console.error("Error exporting plants:", error);
+            }
         } finally {
             setIsExporting(false);
+        }
+    };
+
+    const handleExport = () => {
+        fetchData();
+    };
+
+    const handleCancelExport = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        if (wsRef.current) {
+            wsRef.current.send("cancel");
+        }
+        setIsExporting(false);
+    };
+
+    const handleDownload = () => {
+        if (downloadUrl) {
+            const selectedOption = siteOptions.find(option => option.value === selectedSite);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = downloadUrl;
+            a.download = `export_${selectedOption.text}_${selectedYear}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(downloadUrl);
         }
     };
 
@@ -54,14 +99,35 @@ const ExportForm = ({ onClose }) => {
             years.push({ text: year.toString(), value: year.toString() });
         }
         setYearOptions(years);
+        // eslint-disable-next-line
     }, [dataOption]);
 
     useEffect(() => {
         if (siteOptions && siteOptions.length > 0) {
-            setSelectedSite(siteOptions[0].value); // Set to the first site's value
+            setSelectedSite(siteOptions[0].value);
         }
         // eslint-disable-next-line
     }, [siteOptions]);
+
+    useEffect(() => {
+        wsRef.current = new WebSocket('ws://your-server-url');
+        wsRef.current.onopen = () => console.log('WebSocket connection opened');
+        wsRef.current.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === 'progress') {
+                setProgress(message.progress);
+            }
+        };
+        wsRef.current.onclose = () => console.log('WebSocket connection closed');
+
+        return () => {
+            cleanupDownloadUrl();
+            if (wsRef.current) {
+                wsRef.current.close();
+            }
+        };
+        // eslint-disable-next-line
+    }, []);
 
     const handleCheckboxChange = (event) => {
         setIncludeWatermark(event.target.checked);
@@ -72,38 +138,27 @@ const ExportForm = ({ onClose }) => {
     };
 
     const handleSiteChange = (event) => {
-        const newSite = event.target.value;
-        setSelectedSite(newSite); // Update the selected site in the context
-    };
-
-    const handleExport = () => {
-        fetchData();
-    };
-
-    const handleDownload = () => {
-        if (downloadUrl) {
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = downloadUrl;
-            a.download = `export_${selectedSite}_${selectedYear}.zip`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(downloadUrl); // Clean up the object URL after download
-        }
+        setSelectedSite(event.target.value);
     };
 
     return (
         <div className="exportForm-wrapper">
+            <div className="exportForm-close-button" onClick={() => {
+                cleanupDownloadUrl();
+                onClose();
+            }}>
+                <Cross />
+            </div>
             <div className="exportForm-header-wrapper">
                 <p className="exportForm-title">Export</p>
             </div>
 
             <div className="exportForm-option-wrapper">
-                <OptionField title="Year" value={selectedYear} optionItem={yearOptions} onChange={handleYearChange} />
+                <OptionField title="Planted Year" value={selectedYear} optionItem={yearOptions} onChange={handleYearChange} />
                 <OptionField
                     title="Site"
                     value={selectedSite}
-                    optionItem={siteOptions || [{ text: "Site", value: "" }] }
+                    optionItem={siteOptions || [{ text: "Site", value: "" }]}
                     onChange={handleSiteChange}
                 />
             </div>
@@ -119,7 +174,9 @@ const ExportForm = ({ onClose }) => {
 
             <div className="exportform-button-wrapper">
                 {isExporting ? (
-                    <div className="progress-bar">Processing...</div>
+                    <div className="progress-bar">
+                        Processing... {progress}%
+                    </div>
                 ) : (
                     <>
                         {isDownloadReady && (
@@ -130,8 +187,8 @@ const ExportForm = ({ onClose }) => {
             </div>
 
             <div className="exportform-button-wrapper">
-                <ActionButton title="Cancel" type="ghost" onClick={onClose} />
-                <ActionButton title="Export" type="confirm" onClick={handleExport} />
+                <ActionButton title="Cancel" type="ghost" onClick={handleCancelExport} />
+                <ActionButton title="Export" type="confirm" onClick={handleExport} disabled={isExporting} />
             </div>
         </div>
     );

@@ -40,8 +40,6 @@ const Table = forwardRef(({ onRowClick }, ref) => {
             site: parseInt(selectedSite)
         };
 
-        console.log(config);
-
         try {
             const response = await searchApprovedPlants(config);
             setTableItems(response.data);

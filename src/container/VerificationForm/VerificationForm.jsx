@@ -6,7 +6,7 @@ import { DataIDContext } from "../../context/SelectedIDContext";
 import NoImage from "../../assets/images//No Image.jpg";
 import Image from "../../components/Image/Image";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import { compareSelectedVerificationPlants } from "../../api/controller/verificationPlantsController";
+import { compareSelectedVerificationPlants, verifyPlant } from "../../api/controller/verificationPlantsController";
 import { getPlantImage } from "../../api/controller/imageController";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 
@@ -28,10 +28,12 @@ const VerificationForm = ({ onClose, onAction }) => {
             try {
                 const { verification, approve } = await compareSelectedVerificationPlants(selectedRowData, false);
                 setVerificationPlantDetails(verification);
-                setApprovePlantDetails(approve);
-
                 setVerificationPlantImage(await getPlantImage(verification.images));
-                setApprovePlantImage(await getPlantImage(approve.images));
+
+                if (approve) {
+                    setApprovePlantDetails(approve);
+                    setApprovePlantImage(await getPlantImage(approve.images));
+                }
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {
@@ -39,6 +41,45 @@ const VerificationForm = ({ onClose, onAction }) => {
             }
         }
     };
+
+    const rejectData = async () => {
+        if (selectedRowData) {
+            setIsLoading(true);
+            const data = {
+                date_modified: new Date().toISOString(),
+                id_action: 3,
+                comment: comment
+            };
+            try {
+                await verifyPlant(selectedRowData, data);
+                onAction(`Data ${selectedRowData} rejected successfully`, 'success');
+            } catch (error) {
+                console.error("Error fetching plants:", error);
+                onAction(`Failed to reject. Please try again.`, 'failed');
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
+    const approveData = async () => {
+        if (selectedRowData) {
+            setIsLoading(true);
+            const data = {
+                date_modified: new Date().toISOString(),
+                id_action: 2,
+            };
+            try {
+                await verifyPlant(selectedRowData, data);
+                onAction(`Data ${selectedRowData} approved successfully`, 'success');
+            } catch (error) {
+                onAction(`Failed to approve. Please try again.`, 'failed');
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
 
     useEffect(() => {
         fetchData();
@@ -52,6 +93,7 @@ const VerificationForm = ({ onClose, onAction }) => {
     };
 
     const handleCancel = () => {
+        setComment("");
         setIsCommentAnimating(true); // Mulai animasi keluar
         setTimeout(() => {
             setIsCommentVisible(false);
@@ -66,8 +108,9 @@ const VerificationForm = ({ onClose, onAction }) => {
             async () => {
                 try {
                     // Add your rejection logic here
-                    console.log('Data rejected');
+                    await rejectData();
                     setIsCommentVisible(false);
+                    onClose();
                 } catch (error) {
                     console.error("Error rejecting data:", error);
                     // Handle error notification here if needed
@@ -82,8 +125,8 @@ const VerificationForm = ({ onClose, onAction }) => {
             "confirm",
             async () => {
                 try {
-                    // Add your approval logic here
-                    console.log('Data approved');
+                    await approveData();
+                    onClose();
                 } catch (error) {
                     console.error("Error approving data:", error);
                     // Handle error notification here if needed
@@ -218,7 +261,7 @@ const VerificationForm = ({ onClose, onAction }) => {
                                     <ActionButton title="Cancel" type="ghost" onClick={handleCancel} />
                                 </div>
                                 <div className="verificationForm-footer-button">
-                                    <ActionButton title="Confirm" type="confirm" onClick={handleConfirm} disabled={!comment.trim()}/>
+                                    <ActionButton title="Confirm" type="confirm" onClick={handleConfirm} disabled={!comment.trim()} />
                                 </div>
                             </div>
                         </div>

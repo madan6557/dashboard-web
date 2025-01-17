@@ -68,9 +68,11 @@
     height: auto; 
     resize: none;
     font-family: inherit;
+    text-align: justify;
     overflow: hidden; 
     overflow-y: scroll; 
     border-radius: 6px;
+    padding: 5px;
     box-sizing: border-box;
 }
 

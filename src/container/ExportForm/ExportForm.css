@@ -18,21 +18,38 @@
     margin-bottom: 20px;
 }
 
-.exportForm-title{
+.exportForm-title {
     font-size: 1.3rem;
 }
 
-.exportForm-option-wrapper{
+.exportForm-option-wrapper {
     display: flex;
     width: 400px;
     gap: 10px;
 }
 
-.watermarkCheckbox{
+.watermarkCheckbox {
     margin-bottom: 20px;
 }
 
-.exportform-button-wrapper{
+.exportform-button-wrapper {
     display: flex;
     gap: 40px;
+}
+
+.exportForm-close-button {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    height: fit-content;
+    padding: 5px;
+    right: 5px;
+    top: 5px;
+    color: var(--gray-900);
+    border-radius: 6px;
+}
+
+.exportForm-close-button:hover {
+    background-color: var(--blue-200);
+    cursor: pointer;
 }
