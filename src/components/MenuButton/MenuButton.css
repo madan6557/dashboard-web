@@ -58,11 +58,11 @@
     color: var(--gray-900);
 }
 
-.selected {
+.button-wrapper.selected {
     background-color: var(--blue-900);
 }
 
-.selected * {
+.button-wrapper.selected * {
     color: var(--gray-50);
 }
 

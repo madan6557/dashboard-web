@@ -8,7 +8,7 @@ const FloorButton = ({
 }) => {
     return (
         <div className="floorButton-wrapper" onClick={onClick}>
-            <p className="title">{title}</p>
+            <p className={`title ${isSelected ? "selected" : ""}`}>{title}</p>
             <div className={`floor ${isSelected ? "selected" : ""}`}></div>
         </div>
     )

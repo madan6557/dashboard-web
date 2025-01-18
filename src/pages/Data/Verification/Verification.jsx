@@ -5,9 +5,11 @@ import FloorButton from "../../../components/FloorButton/FloorButton"
 import { DataIDContext } from "../../../context/SelectedIDContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
 import { searchVerificationPlants } from "../../../api/controller/verificationPlantsController";
+import { searchDraftPlants } from "../../../api/controller/draftPlantsController";
+import { searchRejectedPlants } from "../../../api/controller/rejectedPlantsController";
 
 const Verification = forwardRef(({ onRowClick }, ref) => {
-    const [tableHead] = useState(["ID","Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
+    const [tableHead, setTableHead] = useState(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
     const [orderOptions] = useState([
         { text: "Modified Date", value: "dateModified" },
         { text: "ID", value: "id_plant" },
@@ -29,7 +31,8 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
     const [isLoading, setIsLoading] = useState(false);
 
     // Tambahkan state untuk menyimpan FloorButton yang sedang dipilih
-    const [selected, setSelected] = useState("Unverified");
+    const [selectedTab, setSelectedTab] = useState("Unverified");
+
     const fetchTableData = async () => {
         setIsLoading(true);
         const config = {
@@ -42,12 +45,27 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
         };
 
         try {
-            const response = await searchVerificationPlants(config);
-            setTableItems(response.data);
-            setTotalPages(response.totalPages);
+            let response;
+            if (selectedTab === "Unverified") {
+                setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
+                response = await searchVerificationPlants(config);
+                setTableItems(response.data);
+                setTotalPages(response.totalPages);
+            } else if (selectedTab === "Rejected") {
+                setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Modified At", "Verification"]);
+                response = await searchRejectedPlants(config);
+                setTableItems(response.data);
+                setTotalPages(response.totalPages);
+            } else if (selectedTab === "Draft") {
+                setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Modified At", "Progress"]);
+                response = await searchDraftPlants(config);
+                setTableItems(response.data);
+                setTotalPages(response.totalPages);
+            }
+
         } catch (error) {
             console.error("Error fetching plants:", error);
-        }finally {
+        } finally {
             setIsLoading(false);
         }
     };
@@ -61,11 +79,11 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
     }));
 
     useEffect(() => {
-        if(selectedSite){
+        if (selectedSite) {
             fetchTableData();
         }
         // eslint-disable-next-line
-    }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite]);
+    }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite, selectedTab]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -88,8 +106,14 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
     };
 
     const handleRowClick = (item) => {
-        onRowClick();
-        setSelectedRowData(item.id_verification); // Update selected row data
+        if (selectedTab === "Unverified") {
+            setSelectedRowData(item.id_verification);
+        } else if (selectedTab === "Rejected") {
+            setSelectedRowData(item.id_reject);
+        } else if (selectedTab === "Draft") {
+            setSelectedRowData(item.id_draft);
+        }
+        onRowClick(selectedTab);
     };
 
     return (
@@ -98,18 +122,18 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
                 {/* FloorButton dengan kondisi selected */}
                 <FloorButton
                     title="Unverified"
-                    isSelected={selected === "Unverified"}
-                    onClick={() => setSelected("Unverified")}
+                    isSelected={selectedTab === "Unverified"}
+                    onClick={() => setSelectedTab("Unverified")}
                 />
                 <FloorButton
                     title="Rejected"
-                    isSelected={selected === "Rejected"}
-                    onClick={() => setSelected("Rejected")}
+                    isSelected={selectedTab === "Rejected"}
+                    onClick={() => setSelectedTab("Rejected")}
                 />
                 <FloorButton
                     title="Draft"
-                    isSelected={selected === "Draft"}
-                    onClick={() => setSelected("Draft")}
+                    isSelected={selectedTab === "Draft"}
+                    onClick={() => setSelectedTab("Draft")}
                 />
             </div>
             <CardTable

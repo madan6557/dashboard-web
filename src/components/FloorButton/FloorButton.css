@@ -7,8 +7,20 @@
     min-width: 80px;
 }
 
+.floorButton-wrapper:hover .title{
+    color: var(--gray-900);
+}
+
+.floorButton-wrapper .title{
+    color: var(--gray-500);
+}
+
+.floorButton-wrapper .title.selected{
+    color: var(--gray-900);
+}
+
 .floor{
-    background-color: transparent;
+    background-color: var(--gray-400);
     height: 5px;
     width: 100%;
     border-top-left-radius: 8px;
@@ -21,10 +33,11 @@
 }
 
 .floorButton-wrapper:hover .floor{
-    background-color: var(--blue-200);
+    background-color: var(--blue-500);
 }
 
-.selected{
+.floor.selected{
+    color: var(--gray-900);
     background-color: var(--blue-900);
 }
 

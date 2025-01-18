@@ -53,6 +53,7 @@ const Layout = () => {
     const { selectedSite, setSelectedSite } = useContext(SiteIDContext);
     const { setDataOption } = useContext(DataOptionContext);
     const [siteOption, setSiteOption] = useState([{ text: "", value: "" }]);
+    const [selectedTab, setSelectedTab] = useState(null);
 
 
     // Buat ref untuk setiap notifikasi
@@ -131,13 +132,13 @@ const Layout = () => {
             const newNotification = notifications.slice(-1)[0]; // Ambil notifikasi terbaru
             setNotificationPopup((prev) => [...prev, newNotification]);
         }
-    
+
         setIsNotificationPopUpVisible(true);
-    
+
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-    
+
         timeoutRef.current = setTimeout(() => {
             setIsNotificationPopUpAnimating(true); // Mulai animasi keluar
             setTimeout(() => {
@@ -146,7 +147,7 @@ const Layout = () => {
                 setNotificationPopup([]); // Kosongkan popup setelah selesai animasi
             }, 300); // Durasi animasi sesuai CSS
         }, 3000); // Tampilkan notifikasi selama 3 detik
-    
+
         // eslint-disable-next-line
     }, [notifications]);
 
@@ -184,12 +185,10 @@ const Layout = () => {
             setIsEditDetailsAnimating(false);
         }, 300); // Durasi animasi sesuai CSS
     };
-
     // Method untuk toggle sidebar
     const handleSidebarToggle = () => {
         setSidebarToggle(!sidebarToggle);
     };
-
     // Method to update selected component in the state
     const handleMenuSelect = (selectedTitle) => {
         setSelectedComponent(selectedTitle);
@@ -210,7 +209,6 @@ const Layout = () => {
     const handleMenuLeave = () => {
         setTooltipText(""); // Clear tooltip when mouse leaves
     };
-
     // Dropdown toggle handlers
     const handleDropdownClick = (dropdownName) => {
         if (dropdownName === 'notifications' && notifications.length === 0) {
@@ -233,15 +231,23 @@ const Layout = () => {
         removeNotification(id);
     };
 
-    const handlePlantTableRowClick = () => {
+    const handlePlantTableRowClick = (selectedTab) => {
+        if(selectedTab){
+            setSelectedTab(selectedTab);
+        }
         setIsDetailsVisible(true); // This will set the row details visibility
         if (isEditDetailsVisible) {
             handleEditDetailsClose();
         }
     };
 
-    const handleVerificationTableRowClick = () => {
-        setIsVerificationFormVisible(true); // This will set the row details visibility
+    const handleVerificationTableRowClick = (selectedTab) => {
+        if (selectedTab !== "Unverified") {
+            setSelectedTab(selectedTab);
+            setIsDetailsVisible(true);
+        } else {
+            setIsVerificationFormVisible(true);
+        }
     };
 
     const handleSiteChange = (value) => {
@@ -369,6 +375,7 @@ const Layout = () => {
                             onClose={handleDetailsClose}
                             onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
                             readonly={isDetailsReadonly}
+                            onTab={selectedTab || null}
                         />
                     </div>
                 )}
@@ -419,6 +426,7 @@ const Layout = () => {
                 </div>
 
                 <div className="content-wrapper">
+
                     {isEditDetailsVisible && (
                         <div
                             className={`editDetails-container ${isEditDetailsAnimating ? "fade-out" : "fade-in"}`}
@@ -466,7 +474,7 @@ const Layout = () => {
                         />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
                         <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
-                        <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+                        <Route path="/history" element={<ProtectedRoute><History onRowClick={handlePlantTableRowClick} /></ProtectedRoute>} />
                         <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
                     </Routes>
                 </div>

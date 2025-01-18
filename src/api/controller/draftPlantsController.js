@@ -4,25 +4,45 @@ import { dateFormat } from "../../utils/dateFormat";
 export const searchDraftPlants = async (config) => {
     const response = await fetchDraftPlants(config);
 
-    // Destructure the response to get data, totalPages, and currentPage
     const { data, totalPages, currentPage } = response;
 
-    // Define the desired columns
-    const desiredColumns = ['id_verification', 'id_plant', 'plant', 'activity', 'location', 'username', 'dateModified'];
+    const desiredProgressColumns = [
+        'plant', 
+        'plantingDate', 
+        'activity',
+        'skppkh', 
+        'height', 
+        'diameter', 
+        'status', 
+        'plot',
+        'easting',
+        'northing',
+        'elevation',
+        'images'
+    ];
 
-    // Filter the data to only include the desired columns and format plantingDate
+    const desiredColumns = ['id_draft', 'id_plant', 'plant', 'activity', 'location', 'username', 'dateModified'];
+
     const filteredData = data.map(item => {
         let filteredItem = {};
+
         desiredColumns.forEach(column => {
             if (item.hasOwnProperty(column)) {
                 if (column === 'plantingDate' || column === 'dateModified') {
-                    // Format plantingDate and dateModified
                     filteredItem[column] = dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss', '+0');
                 } else {
                     filteredItem[column] = item[column];
                 }
             }
         });
+
+        // Calculate progress percentage and format it as 00.00%
+        const filledColumns = desiredProgressColumns.filter(column => item[column] !== null && item[column] !== '').length;
+        const progressPercentage = ((filledColumns / desiredProgressColumns.length) * 100).toFixed(2) + '%';
+        
+        // Add the progress property
+        filteredItem.progress = progressPercentage;
+
         return filteredItem;
     });
 
@@ -33,8 +53,8 @@ export const searchDraftPlants = async (config) => {
     };
 };
 
-export const getSelectedDraftPlants = async (id_reject) => {
-    const { data } = await fetchDraftPlantByID(id_reject);
+export const getSelectedDraftPlants = async (id_draft) => {
+    const { data } = await fetchDraftPlantByID(id_draft);
 
     if (data && data.plantingDate) {
         const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')

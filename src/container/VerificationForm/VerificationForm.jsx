@@ -255,6 +255,7 @@ const VerificationForm = ({ onClose, onAction }) => {
                     {isCommentVisible && (
                         <div className={`verification-comment-container ${isCommentAnimating ? "fade-out" : "fade-in"}`}>
                             <AreaField
+                                id="comment"
                                 placeholder="Enter the reason for rejection..."
                                 title="Comment"
                                 rows={10}

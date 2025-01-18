@@ -46,7 +46,7 @@ img {
     background-color: var(--blue-200);
 }
 
-.selected{
+.viewport-button.selected{
     background-color: var(--blue-900);
     color: var(--gray-50);
 }

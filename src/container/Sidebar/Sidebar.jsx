@@ -182,7 +182,6 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
     useEffect(() => {
         if (selectedMenu.length > 0) {
             onMenuSelect(menuHeader); // Mengirim menu pertama yang terpilih
-            console.log(menuHeader);
         }
         // eslint-disable-next-line
     }, [selectedMenu]); // Memanggil onMenuSelect hanya setelah selectedMenu berubah 

@@ -8,7 +8,7 @@ export const searchRejectedPlants = async (config) => {
     const { data, totalPages, currentPage } = response;
 
     // Define the desired columns
-    const desiredColumns = ['id_verification', 'id_plant', 'plant', 'activity', 'location', 'username', 'dateModified'];
+    const desiredColumns = ['id_reject', 'id_plant', 'plant', 'activity', 'location', 'username', 'dateModified', 'action'];
 
     // Filter the data to only include the desired columns and format plantingDate
     const filteredData = data.map(item => {
@@ -17,7 +17,7 @@ export const searchRejectedPlants = async (config) => {
             if (item.hasOwnProperty(column)) {
                 if (column === 'plantingDate' || column === 'dateModified') {
                     // Format plantingDate and dateModified
-                    filteredItem[column] = dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss', '+0');
+                    filteredItem[column] = dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss', '-8');
                 } else {
                     filteredItem[column] = item[column];
                 }

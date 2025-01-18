@@ -35,18 +35,18 @@ const CardTable = ({
         setIsLoading(onLoading);
     }, [onLoading]);
 
-    // Debounce search term: Only trigger search after no typing for 500ms
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             if (onSearchChange) {
-                onSearchChange(searchTerm); // Trigger search when searchTerm changes
+                onSearchChange(searchTerm);
             }
-        }, 500); // 500ms debounce delay
+        }, 500);
 
         return () => {
-            clearTimeout(timeoutId); // Cleanup the previous timeout on rerender or input change
-        };// eslint-disable-next-line
-    }, [searchTerm]); // only watch `searchTerm` for change    
+            clearTimeout(timeoutId);
+        };
+        // eslint-disable-next-line
+    }, [searchTerm]);
 
     useEffect(() => {
         if (totalPages < pageNumber) {
@@ -56,9 +56,8 @@ const CardTable = ({
         // eslint-disable-next-line
     }, [tableItems]);
 
-    // Handle search input change
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value); // Update the searchTerm state
+        setSearchTerm(e.target.value);
         setIsLoading(true);
     };
 
@@ -110,25 +109,25 @@ const CardTable = ({
                     type="search"
                     placeholder="Search..."
                     value={searchTerm}
-                    onChange={handleSearchChange} // Only search when this input changes
+                    onChange={handleSearchChange}
                 />
-
-                <div className="export-button">
-                    <ActionButton
-                        title="Export"
-                        icon={<Print />}
-                        type="confirm"
-                        disabled={false}
-                        onClick={onExport}
-                    />
-                </div>
-
+                {onExport && (
+                    <div className="export-button">
+                        <ActionButton
+                            title="Export"
+                            icon={<Print />}
+                            type="confirm"
+                            disabled={false}
+                            onClick={onExport}
+                        />
+                    </div>
+                )}
                 <select
                     className="cardTable-dropdown"
                     name="rows"
                     id="numberOfRows"
                     value={rowsPerPage}
-                    onChange={handleRowsChange} // Only update rows per page
+                    onChange={handleRowsChange}
                 >
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -140,7 +139,7 @@ const CardTable = ({
                     name="orderBy"
                     id="orderBy"
                     value={order}
-                    onChange={handleOrderChange} // Only change ordering
+                    onChange={handleOrderChange}
                 >
                     {orderOptions.map((option, index) => (
                         <option key={index} value={option.value}>
