@@ -1,9 +1,9 @@
-import { fetchPlants, fetchPlantByID, updatePlant, deletePlant } from "../handlers/approvePlantsHandler";
+import { fetchApprovedPlants, fetchApprovedPlantByID, updateApprovedPlant, deleteApprovedPlant } from "../handlers/approvePlantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
 import { base64ToBlobUrl } from "../../utils/base64ToBlobUrl";
 
 export const searchApprovedPlants = async (config) => {
-    const response = await fetchPlants(config);
+    const response = await fetchApprovedPlants(config);
 
     // Destructure the response to get data, totalPages, and currentPage
     const { data, totalPages, currentPage } = response;
@@ -31,8 +31,8 @@ export const searchApprovedPlants = async (config) => {
     };
 };
 
-export const getSelectedApprovedPlants = async (id_plant, isEditable = false) => {
-    const { data, imageBase64 } = await fetchPlantByID(id_plant);
+export const getSelectedApprovedPlants = async (id_plant) => {
+    const { data, imageBase64 } = await fetchApprovedPlantByID(id_plant);
 
     if (data && data.plantingDate) {
         const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
@@ -45,11 +45,11 @@ export const getSelectedApprovedPlants = async (id_plant, isEditable = false) =>
 }
 
 export const patchApprovedPlants = async (id_plant, data) => {
-    const response = await updatePlant(id_plant, data);
+    const response = await updateApprovedPlant(id_plant, data);
     return response;
 }
 
 export const deleteApprovedPlants = async (id_plant) => {
-    const response = await deletePlant(id_plant);
+    const response = await deleteApprovedPlant(id_plant);
     return response;
 }

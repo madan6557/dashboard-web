@@ -1,7 +1,7 @@
 import API from '../service';
 
 // Mendapatkan semua tanaman
-export const fetchPlants = async (config) => {
+export const fetchApprovedPlants = async (config) => {
     const {
         page,
         rows,
@@ -19,7 +19,7 @@ export const fetchPlants = async (config) => {
     }
 };
 
-export const fetchPlantByID = async (id_plant) => {
+export const fetchApprovedPlantByID = async (id_plant) => {
     try {
         const response = await API.get(`/approve/plant/${id_plant}`);
         return response.data;
@@ -30,7 +30,7 @@ export const fetchPlantByID = async (id_plant) => {
 };
 
 // Update data tanaman berdasarkan ID
-export const updatePlant = async (id_plant, data) => {
+export const updateApprovedPlant = async (id_plant, data) => {
     try {
         const response = await API.patch(`/approve/${id_plant}`, data);
         return response.message;
@@ -41,7 +41,7 @@ export const updatePlant = async (id_plant, data) => {
 };
 
 // Menghapus tanaman berdasarkan ID
-export const deletePlant = async (id_plant) => {
+export const deleteApprovedPlant = async (id_plant) => {
     try {
         const response = await API.delete(`/approve/${id_plant}`); // Endpoint: /users/:id
         return response.message;

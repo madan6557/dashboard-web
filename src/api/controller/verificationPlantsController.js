@@ -1,8 +1,8 @@
-import { fetchPlants, comparePlantByID, updatePlantVerification } from "../handlers/verificationPlantsHandler";
+import { fetchUnverifiedPlants, compareUnverifiedPlantByID, updatePlantVerification } from "../handlers/verificationPlantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
 
 export const searchVerificationPlants = async (config) => {
-    const response = await fetchPlants(config);
+    const response = await fetchUnverifiedPlants(config);
 
     // Destructure the response to get data, totalPages, and currentPage
     const { data, totalPages, currentPage } = response;
@@ -35,7 +35,7 @@ export const searchVerificationPlants = async (config) => {
 };
 
 export const compareSelectedVerificationPlants = async (id_verification) => {
-    const response = await comparePlantByID(id_verification);
+    const response = await compareUnverifiedPlantByID(id_verification);
 
     const { verification } = response.data;
     const approve  = response.data.approve ? response.data.approve : null;

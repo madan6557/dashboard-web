@@ -1,7 +1,7 @@
 import API from '../service';
 
 // Mendapatkan semua tanaman
-export const fetchPlants = async (config) => {
+export const fetchUnverifiedPlants = async (config) => {
     const {
         page,
         rows,
@@ -19,7 +19,7 @@ export const fetchPlants = async (config) => {
     }
 };
 
-export const comparePlantByID = async (id_verification) => {
+export const compareUnverifiedPlantByID = async (id_verification) => {
     try {
         const response = await API.get(`/verification/${id_verification}`);
         console.log(response.data);
@@ -29,7 +29,6 @@ export const comparePlantByID = async (id_verification) => {
         throw error;
     }
 };
-
 // Update data tanaman berdasarkan ID
 export const updatePlantVerification = async (id_verification, data) => {
     try {
