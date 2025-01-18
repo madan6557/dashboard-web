@@ -1,38 +1,98 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import "./GenerateQRCode.css";
 import ActionButton from "../../../components/ActionButton/ActionButton";
-import QRSample from "../../../assets/images/QR_Sample.png"
+import QRSample from "../../../assets/images/QR_Sample.png";
+import { DataOptionContext } from "../../../context/dataOptionContext";
+import { SiteIDContext } from "../../../context/SiteIDContext";
+import { OptionField } from '../../../components/FieldInput/FieldInput';
 
 const GenerateQRCode = () => {
+    const { dataOption } = useContext(DataOptionContext);
+    const { selectedSite } = useContext(SiteIDContext);
+    const [siteOption, setSiteOption] = useState([{ text: "", value: "" }]);
+    const [site, setSite] = useState("");
+    const [startID, setStartID] = useState(0);
+    const [endID, setEndId] = useState(0);
+    const [amount, setAmount] = useState(1);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [showDownload, setShowDownload] = useState(false);
+
+    useEffect(() => {
+        if (selectedSite) {
+            setSite(selectedSite);
+            setSiteOption(dataOption.tb_site);
+            setStartID(0);
+        }
+        // eslint-disable-next-line
+    }, [selectedSite]);
+
+    const handleSiteChange = (value) => {
+        setSite(value);
+    };
+
+    const handleAmountChange = (value) => {
+        let validAmount = Math.max(1, parseInt(value, 10)); // Ensure the minimum value is 1
+        setAmount(validAmount);
+        setEndId(validAmount === 1 ? startID : startID + validAmount);
+    };
+
+    const handleGenerate = () => {
+        setIsGenerating(true);
+        setShowDownload(false); // Hide download button during generation
+        console.log("Generating . . .");
+        // Simulate generation process
+        setTimeout(() => {
+            setIsGenerating(false);
+            setShowDownload(true); // Show download button after generation
+            console.log("Generation complete.");
+        }, 2000); // Simulated delay
+    };
+
+    const handleAbort = () => {
+        setIsGenerating(false);
+        console.log("Canceling process . . .");
+    };
+
+    const handleDownload = () => {
+        console.log("Downloading QR codes...");
+        // Implement the download logic here
+    };
+
     return (
         <div className="generateQR-container">
             <div className="qrGenerator-container">
-                <p className="container-title" >QR Generator</p>
+                <p className="container-title">QR Generator</p>
                 <div className="qrGenerator-wrapper">
                     <div className="qr-image-container">
                         <img src={QRSample} alt="qr" />
                     </div>
                     <div className="qr-input-wrapper">
                         <div className="qr-counter">
-                            <p>Start from <span><strong>22400001</strong></span> to <span><strong>22400001</strong></span></p>
+                            <p>Start from <span><strong>{startID}</strong></span> to <span><strong>{endID}</strong></span></p>
                         </div>
                         <div className="qr-input-container">
-                            <p>Site</p>
-                            <select className="site-dropdown" name="site" id="site" >
-                                <option value="2">JBG</option>
-                                <option value="1">Rehab Das</option>
-                            </select>
+                            <OptionField id="site" title="Site" value={site} optionItem={siteOption} onChange={(e) => { handleSiteChange(e.target.value) }} />
                         </div>
                         <div className="qr-input-container">
-                            <p>Amount</p>
-                            <input type="number" className="qr-number-value" defaultValue={1}/>
+                            <p className='title'>Amount</p>
+                            <input
+                                id='amount'
+                                type="number"
+                                className="qr-number-value"
+                                value={amount}
+                                min="1"
+                                onChange={(e) => { handleAmountChange(e.target.value); }}
+                            />
+                        </div>
+                        <div className='generating-progress-bar'>
+                            {isGenerating && <div>Processing . . .</div>}
+                            {showDownload && <ActionButton title="Download" type="primary" onClick={handleDownload} />}
                         </div>
                         <div className="qr-button-container">
-                            <ActionButton title="Cancel" type="ghost"/>
-                            <ActionButton title="Generate" type="confirm"/>
+                            <ActionButton title="Cancel" type="ghost" onClick={handleAbort} />
+                            <ActionButton title="Generate" type="confirm" onClick={handleGenerate} disabled={isGenerating} />
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

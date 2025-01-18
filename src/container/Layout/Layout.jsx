@@ -234,6 +234,8 @@ const Layout = () => {
     const handlePlantTableRowClick = (selectedTab) => {
         if(selectedTab){
             setSelectedTab(selectedTab);
+        }else{
+            setSelectedTab(null);
         }
         setIsDetailsVisible(true); // This will set the row details visibility
         if (isEditDetailsVisible) {

@@ -16,13 +16,15 @@ const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isCommentVisible, setIsCommentVisible] = useState(false);
     const [plantID, setPlantID] = useState(null);
+    const [isHasMap, setIsHasMap] = useState(false);
 
     const fetchData = async () => {
         if (selectedRowData) {
             setIsLoading(true);
-            console.log(selectedRowData);
             try {
                 if (onTab) {
+                    console.log(onTab);
+                    setIsHasMap(false);
                     let data;
                     if (onTab === "Rejected") {
                         setIsCommentVisible(true);
@@ -36,6 +38,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
                     setPlantDetails(data);
                     setPlantID(data.id_plant);
                 } else {
+                    setIsHasMap(true);
                     setIsCommentVisible(false);
                     const { data, imageBlob } = await getSelectedApprovedPlants(selectedRowData);
                     setPlantImage(imageBlob);
@@ -57,43 +60,43 @@ const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
     }, [selectedRowData]);
 
     const renderShimmer = () => (
-        <div className="shimmer-fields">
-            <div className="shimmer-image"></div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+        <div className="details-shimmer-fields">
+            <div className="details-shimmer-image"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
+            <div className="details-shimmer-field">
+                <div className="details-shimmer-title"></div>
+                <div className="details-shimmer-input"></div>
             </div>
         </div>
     );
@@ -125,7 +128,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
                     : (
                         <>
                             <div className="detail-image-wrapper">
-                                <Image alt="Plant Image" src={plantImage ? plantImage : NoImage} />
+                                <Image alt="Plant Image" src={plantImage ? plantImage : NoImage} hasMap={isHasMap}/>
                             </div>
                             {isCommentVisible && (
                                 <AreaField id="comment" title="Comment" value={plantDetails.comment || ""} readonly={true} placeholder="Comment" />

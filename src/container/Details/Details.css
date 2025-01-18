@@ -108,38 +108,62 @@
     background: var(--blue-500);
 }
 
-.shimmer-wrapper {
+.details-shimmer-wrapper {
     display: flex;
     flex-direction: column;
     width: 100%; /* Sesuaikan dengan lebar detail */
 }
 
-.shimmer-image {
+.details-shimmer-image {
     width: 300px;
     height: 400px;
-    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite linear;
-    border-radius: 6px; /* Tambahkan border-radius untuk konsistensi */
+    background-color: var(--gray-300);
+    position: relative;
+    border-radius: 6px;
     margin-bottom: 15px;
+    overflow: hidden;
 }
 
-.shimmer-field {
+.details-shimmer-image::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent 0%, var(--gray-50) 50%, transparent 100%);
+    animation: shimmer 1.5s infinite;
+}
+
+.details-shimmer-field {
     width: 100%;
     height: 40px;
-    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite linear;
-    border-radius: 4px; /* Tambahkan border-radius untuk konsistensi */
+    background-color: var(--gray-300);
+    position: relative;
+    border-radius: 4px;
     margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.details-shimmer-field::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent 0%, var(--gray-50) 50%, transparent 100%);
+    animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {
     0% {
-        background-position: -200% 0;
+        left: -100%;
     }
     100% {
-        background-position: 200% 0;
+        left: 100%;
     }
 }
 

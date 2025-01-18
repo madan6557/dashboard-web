@@ -1,8 +1,8 @@
 import API from '../service';
 
-export const generateQRCode = async (site, config) => {
+export const generateQRCode = async (data) => {
     try {
-        const response = await API.post(`/generate`, config, {
+        const response = await API.post(`/generate`, data, {
             responseType: 'blob'
         });
         console.log(response);
@@ -13,9 +13,9 @@ export const generateQRCode = async (site, config) => {
     }
 };
 
-export const fetchQRCode = async (site, config) => {
+export const fetchQRCode = async (value) => {
     try {
-        const response = await API.post(`/selected`, config, {
+        const response = await API.post(`/selected`, value, {
             responseType: 'blob'
         });
         console.log(response);

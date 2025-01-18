@@ -17,7 +17,8 @@ const Image = ({
     src = NoImage, // Use NoImage as default
     imageEditable = false,
     onImageUpload,
-    onAction
+    onAction,
+    hasMap = false
 }) => {
     const [selected, setSelected] = useState("photograph");
     const [showUploadForm, setShowUploadForm] = useState(false);
@@ -34,19 +35,19 @@ const Image = ({
         if (selectedFile) {
             try {
                 setErrorMessage(''); // Clear previous error message
-    
+
                 // Resize the image
                 const resizedBlob = await resizeImage(selectedFile);
-    
+
                 // Check size after resizing
                 if (resizedBlob.size > 2 * 1024 * 1024) { // 2MB in bytes
                     setErrorMessage('Image size too large after resizing. Max 2MB.');
                     return;
                 }
-    
+
                 // Create a new File object to retain original filename
                 const resizedFile = new File([resizedBlob], selectedFile.name, { type: resizedBlob.type });
-    
+
                 // Set the resized file and temp source
                 setUploadedFile(resizedFile);
                 const fileURL = URL.createObjectURL(resizedFile);
@@ -57,7 +58,7 @@ const Image = ({
             }
         }
     };
-         
+
 
     const handleUpload = () => {
         if (uploadedFile && onImageUpload) {
@@ -76,20 +77,22 @@ const Image = ({
 
     return (
         <div className="image-wrapper">
-            <div className="viewport-toggle">
-                <div
-                    className={`viewport-button ${selected === "photograph" ? "selected" : ""}`}
-                    onClick={() => setSelected("photograph")}
-                >
-                    {selected === "photograph" ? <PhotographSolid /> : <PhotographOutline />}
+            {hasMap && (
+                <div className="viewport-toggle">
+                    <div
+                        className={`viewport-button ${selected === "photograph" ? "selected" : ""}`}
+                        onClick={() => setSelected("photograph")}
+                    >
+                        {selected === "photograph" ? <PhotographSolid /> : <PhotographOutline />}
+                    </div>
+                    <div
+                        className={`viewport-button ${selected === "marker" ? "selected" : ""}`}
+                        onClick={() => setSelected("marker")}
+                    >
+                        {selected === "marker" ? <MarkerSolid /> : <MarkerOutline />}
+                    </div>
                 </div>
-                <div
-                    className={`viewport-button ${selected === "marker" ? "selected" : ""}`}
-                    onClick={() => setSelected("marker")}
-                >
-                    {selected === "marker" ? <MarkerSolid /> : <MarkerOutline />}
-                </div>
-            </div>
+            )}
 
             {selected === "photograph" && imageEditable && (
                 <div

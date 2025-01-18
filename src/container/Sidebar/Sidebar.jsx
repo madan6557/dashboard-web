@@ -124,16 +124,16 @@ const menuConfig = [
         showDividerTitle: true,
         dividerTitle: "Other",
     },
-    {
-        title: "Help",
-        icon: <MarkOutline />,
-        selectedIcon: <MarkSolid />,
-        route: "/help",
-        hasDropdown: false,
-        showDividerLine: false,
-        showDividerTitle: false,
-        dividerTitle: "",
-    },
+    // {
+    //     title: "Help",
+    //     icon: <MarkOutline />,
+    //     selectedIcon: <MarkSolid />,
+    //     route: "/help",
+    //     hasDropdown: false,
+    //     showDividerLine: false,
+    //     showDividerTitle: false,
+    //     dividerTitle: "",
+    // },
 ];
 
 const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, sidebarToggle }) => {

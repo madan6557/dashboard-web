@@ -230,13 +230,13 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
             </div>
             <div className="detail-form-wrapper">
                 {isLoading ? (
-                    <div className="shimmer-wrapper">
-                        <div className="shimmer-image"></div>
-                        <div className="shimmer-fields">
+                    <div className="editDetails-shimmer-wrapper">
+                        <div className="editDetails-shimmer-image"></div>
+                        <div className="editDetails-shimmer-fields">
                             {Array.from({ length: 11 }).map((_, index) => (
-                                <div key={index} className="shimmer-placeholder">
-                                    <div className="shimmer-line-title"></div>
-                                    <div className="shimmer-line-input"></div>
+                                <div key={index} className="editDetails-shimmer-placeholder">
+                                    <div className="editDetails-shimmer-line-title"></div>
+                                    <div className="editDetails-shimmer-line-input"></div>
                                 </div>
                             ))}
                         </div>
@@ -244,7 +244,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 ) : (
                     <>
                         <div className="editDetail-image">
-                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} />
+                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} hasMap={true}/>
                         </div>
                         <div className="detail-input-wrapper">
                             <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />
