@@ -13,7 +13,7 @@ const CardTable = ({
         ["Location", "location"],
         ["Status", "status"]
     ],
-    totalPages = 999,
+    totalPages,
     currentPage = 1,
     onPageChange,
     onOrderChange,
@@ -100,56 +100,67 @@ const CardTable = ({
     return (
         <div className="cardTable-wrapper">
             <div className="cardTable-header">
-                <div className="icon">
-                    <Magnifier />
-                </div>
-                <input
-                    id="search-bar"
-                    className="search-bar"
-                    type="search"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-                {onExport && (
-                    <div className="export-button">
-                        <ActionButton
-                            title="Export"
-                            icon={<Print />}
-                            type="confirm"
-                            disabled={false}
-                            onClick={onExport}
+                {onSearchChange && (
+                    <div className="searchbar-container">
+                        <div className="icon">
+                            <Magnifier />
+                        </div>
+                        <input
+                            id="search-bar"
+                            className="search-bar"
+                            type="search"
+                            placeholder="Search..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
                         />
                     </div>
                 )}
-                <select
-                    className="cardTable-dropdown"
-                    name="rows"
-                    id="numberOfRows"
-                    value={rowsPerPage}
-                    onChange={handleRowsChange}
-                >
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-                <select
-                    className="cardTable-dropdown"
-                    name="orderBy"
-                    id="orderBy"
-                    value={order}
-                    onChange={handleOrderChange}
-                >
-                    {orderOptions.map((option, index) => (
-                        <option key={index} value={option.value}>
-                            {option.text}
-                        </option>
-                    ))}
-                </select>
-
-                <div className="icon" id="sortBy" onClick={handleSortToggle}>
-                    {sortOrder === 'asc' ? <Ascending /> : <Descending />}
+                <div className="cardTable-option-container">
+                    {onExport && (
+                        <div className="export-button">
+                            <ActionButton
+                                title="Export"
+                                icon={<Print />}
+                                type="confirm"
+                                disabled={false}
+                                onClick={onExport}
+                            />
+                        </div>
+                    )}
+                    {onRowsChange && (
+                        <select
+                            className="cardTable-dropdown"
+                            name="rows"
+                            id="numberOfRows"
+                            value={rowsPerPage}
+                            onChange={handleRowsChange}
+                        >
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    )}
+                    {onOrderChange && (
+                        <select
+                            className="cardTable-dropdown"
+                            name="orderBy"
+                            id="orderBy"
+                            value={order}
+                            onChange={handleOrderChange}
+                        >
+                            {orderOptions.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                    {option.text}
+                                </option>
+                            ))}
+                        </select>
+                    )}
+                    {onSortChange && (
+                        <div className="icon" id="sortBy" onClick={handleSortToggle}>
+                            {sortOrder === 'asc' ? <Ascending /> : <Descending />}
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="cardTable-outline">
@@ -183,31 +194,33 @@ const CardTable = ({
                 </table>
             </div>
 
-            <div className="pagination">
-                <div className="chevron left" onClick={() => handleChangePage(pageNumber - 1)}>
-                    <Chevron />
-                </div>
-                <input
-                    type="text"
-                    id="pageNumber"
-                    value={pageNumber}
-                    onChange={(e) => setPageNumber(e.target.value)}
-                    onBlur={(e) => {
-                        let value = parseInt(e.target.value, 10);
-                        if (!isNaN(value) && value !== pageNumber) handleChangePage(value);
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+            {onPageChange && (
+                <div className="pagination">
+                    <div className="chevron left" onClick={() => handleChangePage(pageNumber - 1)}>
+                        <Chevron />
+                    </div>
+                    <input
+                        type="text"
+                        id="pageNumber"
+                        value={pageNumber}
+                        onChange={(e) => setPageNumber(e.target.value)}
+                        onBlur={(e) => {
                             let value = parseInt(e.target.value, 10);
                             if (!isNaN(value) && value !== pageNumber) handleChangePage(value);
-                        }
-                    }}
-                />
-                <p className="totalPage">of <span id="totalPages">{totalPages}</span></p>
-                <div className="chevron right" onClick={() => handleChangePage(pageNumber + 1)}>
-                    <Chevron />
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                let value = parseInt(e.target.value, 10);
+                                if (!isNaN(value) && value !== pageNumber) handleChangePage(value);
+                            }
+                        }}
+                    />
+                    <p className="totalPage">of <span id="totalPages">{totalPages}</span></p>
+                    <div className="chevron right" onClick={() => handleChangePage(pageNumber + 1)}>
+                        <Chevron />
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

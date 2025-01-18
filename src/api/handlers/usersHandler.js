@@ -1,9 +1,27 @@
 import API from '../service';
 
 // Mendapatkan semua pengguna
-export const fetchUsers = async () => {
+export const fetchAllUsers = async (config) => {
+  const {
+    page,
+    rows,
+    orderBy,
+    sort,
+    search
+  } = config;
   try {
-    const response = await API.get(`/user/?keyword=&orderBy=uuid&sortBy=ASC&page=${page}&limit=${rows}`); // Endpoint: /users
+    const response = await API.get(`/user/?keyword=${search}&orderBy=${orderBy}&sortBy=${sort}&page=${page}&limit=${rows}`);
+    return response.data; // Data hasil response dari server
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error; // Oper kesalahan ke pemanggil fungsi
+  }
+};
+
+// Mendapatkan semua pengguna
+export const fetchUserByID = async (uuid) => {
+  try {
+    const response = await API.get(`/user/${uuid}`);
     return response.data; // Data hasil response dari server
   } catch (error) {
     console.error('Error fetching users:', error);

@@ -54,7 +54,7 @@ const menuConfig = [
         selectedIcon: <ChartSolid />,
         submenu: [
             { title: "Analytics", route: "/analytics" },
-            { title: "Evaluation", route: "/evaluation" },
+            { title: "Evaluation", route: null },
         ],
         hasDropdown: true,
         showDividerLine: false,
@@ -151,33 +151,36 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
         const { pathname } = location;
         const newSelectedMenu = [];
         const newOpenDropdowns = [];
-    
+
         if (pathname === "/") {
             newSelectedMenu.push("Dashboard");
         } else {
             menuConfig.forEach(menu => {
                 if (pathname === menu.route) {
                     newSelectedMenu.push(menu.title);
+                    setMenuHeader(menu.title);
                 }
-    
+
                 if (menu.hasDropdown) {
                     menu.submenu.forEach(submenu => {
                         if (pathname === submenu.route) {
                             newOpenDropdowns.push(menu.title);
                             newSelectedMenu.push(menu.title);
                             setSelectedSubmenu(submenu.title);
+                            setMenuHeader(submenu.title);
                         }
                     });
+                } else {
                 }
             });
         }
-    
+
         // Update state
-        setMenuHeader(newSelectedMenu);
         setSelectedMenu(newSelectedMenu);
         setOpenDropdowns(newOpenDropdowns);
+        // eslint-disable-next-line
     }, [location]);
-    
+
     // UseEffect untuk memanggil onMenuSelect setelah state diupdate
     useEffect(() => {
         if (selectedMenu.length > 0) {
@@ -207,11 +210,11 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
         setSelectedMenu(prevSelectedMenu => {
             const newSelectedMenu = [...prevSelectedMenu];
             const newOpenDropdowns = [...openDropdowns];
-    
+
             if (hasDropdown) {
                 const isOpen = newOpenDropdowns.includes(title);
                 const isSelected = newSelectedMenu.includes(title);
-    
+
                 if (isOpen) {
                     // Jika dropdown terbuka, tutup dan hapus dari selectedMenu & openDropdowns
                     const updatedSelectedMenu = newSelectedMenu.filter(item => item !== title);
@@ -228,7 +231,7 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
                     return newSelectedMenu;
                 }
             }
-    
+
             // Jika menu tidak memiliki dropdown
             if (!hasDropdown) {
                 // Hapus semua menu tanpa dropdown dari selectedMenu
@@ -240,10 +243,10 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
                 setSelectedSubmenu(null); // Reset submenu
                 return updatedSelectedMenu;
             }
-    
+
             return newSelectedMenu;
         });
-    
+
         // Delay the onMenuSelect state update in useEffect
         if (!hasDropdown) {
             setSelectedSubmenu(null); // Hapus submenu jika menu tanpa dropdown diklik
@@ -252,14 +255,14 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
 
     const handleSubmenuClick = (submenuTitle, submenuRoute) => {
         setSelectedSubmenu(submenuTitle);
-    
+
         // Filter selected menu only for dropdown items
         setSelectedMenu(prevSelectedMenu => {
-            return prevSelectedMenu.filter(menu => 
+            return prevSelectedMenu.filter(menu =>
                 menuConfig.find(m => m.title === menu)?.hasDropdown // Keep only dropdown menus
             ).concat(submenuTitle); // Add submenu to selectedMenu
         });
-    
+
         if (submenuRoute) {
             setMenuHeader(submenuTitle);
             onMenuSelect(menuHeader); // Notify parent component with submenu
