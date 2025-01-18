@@ -145,6 +145,7 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
     const [openDropdowns, setOpenDropdowns] = useState([]);
     const [isMinimize, setIsMinimize] = useState(false);
     const [rotation, setRotation] = useState(90);
+    const [menuHeader, setMenuHeader] = useState(null);
 
     const updateSelectedMenuAndDropdowns = useCallback(() => {
         const { pathname } = location;
@@ -172,6 +173,7 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
         }
     
         // Update state
+        setMenuHeader(newSelectedMenu);
         setSelectedMenu(newSelectedMenu);
         setOpenDropdowns(newOpenDropdowns);
     }, [location]);
@@ -179,9 +181,11 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
     // UseEffect untuk memanggil onMenuSelect setelah state diupdate
     useEffect(() => {
         if (selectedMenu.length > 0) {
-            onMenuSelect(selectedMenu[0]); // Mengirim menu pertama yang terpilih
+            onMenuSelect(menuHeader); // Mengirim menu pertama yang terpilih
+            console.log(menuHeader);
         }
-    }, [selectedMenu, onMenuSelect]); // Memanggil onMenuSelect hanya setelah selectedMenu berubah 
+        // eslint-disable-next-line
+    }, [selectedMenu]); // Memanggil onMenuSelect hanya setelah selectedMenu berubah 
 
     useEffect(() => {
         // Check if the page is loaded via a refresh
@@ -233,6 +237,7 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
                     openDropdowns.includes(item) // Pertahankan hanya menu dengan dropdown
                 );
                 updatedSelectedMenu.push(title); // Tambahkan menu baru
+                setMenuHeader(title);
                 setSelectedSubmenu(null); // Reset submenu
                 return updatedSelectedMenu;
             }
@@ -257,7 +262,8 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
         });
     
         if (submenuRoute) {
-            onMenuSelect(submenuTitle); // Notify parent component with submenu
+            setMenuHeader(submenuTitle);
+            onMenuSelect(menuHeader); // Notify parent component with submenu
         } else {
             onSendNotification("This page is still under development!", "info");
         }
