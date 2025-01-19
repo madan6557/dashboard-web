@@ -5,7 +5,7 @@ import { DataIDContext } from "../../../context/SelectedIDContext";
 import { getAllUsers } from "../../../api/controller/userController";
 
 const Account = forwardRef(({ onRowClick }, ref) => {
-    const [tableHead] = useState(["ID", "Email", "Username", "Role", "Status"]);
+    const [tableHead] = useState(["Email", "Username", "Role", "Status"]);
     const [orderOptions] = useState([
         { text: "Role", value: "role" },
         { text: "ID", value: "uuid" },

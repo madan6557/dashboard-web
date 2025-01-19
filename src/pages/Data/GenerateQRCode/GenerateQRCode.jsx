@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import "./GenerateQRCode.css";
 import ActionButton from "../../../components/ActionButton/ActionButton";
-import QRSample from "../../../assets/images/2401870.png";
+import QRSample from "../../../assets/images/QR_Sample.png";
 import { DataOptionContext } from "../../../context/dataOptionContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
 import { OptionField } from '../../../components/FieldInput/FieldInput';
+import { requestQRCode } from '../../../api/controller/qrCodeController';
 
 const GenerateQRCode = () => {
     const { dataOption } = useContext(DataOptionContext);
@@ -16,14 +17,39 @@ const GenerateQRCode = () => {
     const [amount, setAmount] = useState(1);
     const [isGenerating, setIsGenerating] = useState(false);
     const [showDownload, setShowDownload] = useState(false);
+    const [downloadUrl, setDownloadUrl] = useState("");
+
+    const handleGenerateQRCode = async () => {
+        try {
+            setIsGenerating(true);
+            setShowDownload(false);
+            setDownloadUrl(""); // Clear previous download URL
+
+            const data = { 
+                id_site: site,
+                generate: parseInt(amount)
+            };
+            const response = await requestQRCode(data);
+
+            if (response) {
+                const blob = new Blob([response], { type: 'application/zip' });
+                const url = window.URL.createObjectURL(blob);
+                setDownloadUrl(url);
+                setShowDownload(true);
+            }
+        } catch (error) {
+            console.error("Error fetching QR code:", error);
+        } finally {
+            setIsGenerating(false);
+        }
+    };
 
     useEffect(() => {
         if (selectedSite) {
             setSite(selectedSite);
             setSiteOption(dataOption.tb_site);
             setStartID(0);
-        }
-        // eslint-disable-next-line
+        }// eslint-disable-next-line
     }, [selectedSite]);
 
     const handleSiteChange = (value) => {
@@ -31,31 +57,35 @@ const GenerateQRCode = () => {
     };
 
     const handleAmountChange = (value) => {
-        let validAmount = Math.max(1, parseInt(value, 10)); // Ensure the minimum value is 1
+        let validAmount = Math.max(1, parseInt(value, 10));
         setAmount(validAmount);
         setEndId(validAmount === 1 ? startID : startID + validAmount);
     };
 
     const handleGenerate = () => {
-        setIsGenerating(true);
-        setShowDownload(false); // Hide download button during generation
-        console.log("Generating . . .");
-        // Simulate generation process
-        setTimeout(() => {
-            setIsGenerating(false);
-            setShowDownload(true); // Show download button after generation
-            console.log("Generation complete.");
-        }, 2000); // Simulated delay
+        handleGenerateQRCode();
     };
 
     const handleAbort = () => {
         setIsGenerating(false);
-        console.log("Canceling process . . .");
+        setShowDownload(false);
+        if (downloadUrl) {
+            window.URL.revokeObjectURL(downloadUrl);
+            setDownloadUrl(""); // Clear the download URL
+        }
     };
 
     const handleDownload = () => {
-        console.log("Downloading QR codes...");
-        // Implement the download logic here
+        if (downloadUrl) {
+            const selectedSiteText = siteOption.find(option => option.value === site)?.text || "QR_Code"; // Get the text from siteOption
+            const fileName = `${selectedSiteText}_QR_Code.zip`; // Dynamic file name based on siteOption
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
     };
 
     return (

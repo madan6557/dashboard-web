@@ -7,7 +7,7 @@ export const getAllUsers = async (config) => {
     const { data, totalPages, currentPage } = response;
 
     // Define the desired columns
-    const desiredColumns = ['uuid', 'email', 'username', 'role'];
+    const desiredColumns = ['email', 'username', 'role'];
 
     // Filter the data to only include the desired columns and add the status column
     const filteredData = data.map(item => {

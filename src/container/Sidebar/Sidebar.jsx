@@ -53,7 +53,7 @@ const menuConfig = [
         icon: <ChartOutline />,
         selectedIcon: <ChartSolid />,
         submenu: [
-            { title: "Analytics", route: "/analytics" },
+            { title: "Analytics", route: null },
             { title: "Evaluation", route: null },
         ],
         hasDropdown: true,
