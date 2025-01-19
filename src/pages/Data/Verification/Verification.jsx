@@ -35,13 +35,17 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
 
     const fetchTableData = async () => {
         setIsLoading(true);
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         const config = {
             page: currentPage,
             rows: rowsPerPage,
             orderBy: orderBy,
             sort: sortOrder,
             search: searchTerm,
-            site: parseInt(selectedSite)
+            site: parseInt(selectedSite),
+            signal // Tambahkan signal ke konfigurasi
         };
 
         try {
@@ -49,25 +53,30 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
             if (selectedTab === "Unverified") {
                 setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
                 response = await searchVerificationPlants(config);
-                setTableItems(response.data);
-                setTotalPages(response.totalPages);
             } else if (selectedTab === "Rejected") {
                 setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Modified At", "Verification"]);
                 response = await searchRejectedPlants(config);
-                setTableItems(response.data);
-                setTotalPages(response.totalPages);
             } else if (selectedTab === "Draft") {
                 setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Modified At", "Progress"]);
                 response = await searchDraftPlants(config);
+            }
+
+            if (!signal.aborted) {
                 setTableItems(response.data);
                 setTotalPages(response.totalPages);
             }
 
         } catch (error) {
-            console.error("Error fetching plants:", error);
+            if (error.name !== 'AbortError') {
+                console.error("Error fetching plants:", error);
+            }
         } finally {
-            setIsLoading(false);
+            if (!signal.aborted) {
+                setIsLoading(false);
+            }
         }
+
+        return controller;
     };
 
     // Expose fetchTableData to the parent component
@@ -79,11 +88,22 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
     }));
 
     useEffect(() => {
-        if (selectedSite) {
-            fetchTableData();
-        }
+        let controller;
+
+        const fetchAndSetData = async () => {
+            controller = await fetchTableData();
+        };
+
+        fetchAndSetData();
+
+        return () => {
+            if (controller) {
+                controller.abort(); // Batalkan permintaan sebelumnya jika ada
+            }
+        };
         // eslint-disable-next-line
     }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite, selectedTab]);
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);

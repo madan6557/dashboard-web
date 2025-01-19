@@ -1,24 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import './QRDownloadForm.css';
 import ActionButton from "../../components/ActionButton/ActionButton";
 import { getQRCode } from "../../api/controller/qrCodeController";
 
-const QRDownloadForm = ({ onClose, id }) => {
-    const [qrCode, setQrCode] = useState(null);
+const QRDownloadForm = ({ onBlur, plantID = "2400000" }) => {
     const [downloadUrl, setDownloadUrl] = useState(null);
+    const formRef = useRef(null);
 
     const fetchQRCode = async () => {
-        const response = await getQRCode(id);
-        setQrCode(response);
-        const blob = new Blob([response], { type: 'image/png' }); // Assuming it's a PNG
-        const url = window.URL.createObjectURL(blob);
-        setDownloadUrl(url);
+        try {
+            console.log(plantID);
+            const data = { generate: toString(plantID) };
+            const response = await getQRCode(data);
+
+            if (response) {
+                const blob = new Blob([response], { type: 'image/png' });
+                const url = window.URL.createObjectURL(blob);
+                setDownloadUrl(url);
+            }
+        } catch (error) {
+            console.error("Error fetching QR code:", error);
+        }
     };
 
     useEffect(() => {
-        fetchQRCode();
-        return cleanupDownloadUrl; // Cleanup on component unmount
-        // eslint-disable-next-line
+        if (plantID) {
+            fetchQRCode();
+        }// eslint-disable-next-line
+    }, [plantID]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (formRef.current && !formRef.current.contains(event.target)) {
+                handleBlur();
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };// eslint-disable-next-line
     }, []);
 
     const cleanupDownloadUrl = () => {
@@ -29,30 +50,29 @@ const QRDownloadForm = ({ onClose, id }) => {
     };
 
     const handleDownload = () => {
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = `QRCode_${id}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (downloadUrl) {
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `QRCode_${plantID}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     };
 
-    const handleClose = () => {
+    const handleBlur = () => {
         cleanupDownloadUrl();
-        onClose();
+        onBlur();
     };
 
     return (
-        <div className="qrDownloadForm-wrapper">
-            <div className="detail-close-button" onClick={handleClose}>
-                <Cross />
-            </div>
-            {qrCode ? (
+        <div className="qrDownloadForm-wrapper" ref={formRef}>
+            {downloadUrl ? (
                 <img className="QrCode-image" src={downloadUrl} alt="QrCode" />
             ) : (
                 <div className="shimmer shimmer-wrapper"></div>
             )}
-            <ActionButton title="Download" type="primary" onClick={handleDownload} disabled={!qrCode} />
+            <ActionButton title="Download" type="primary" onClick={handleDownload} disabled={!downloadUrl} />
         </div>
     );
 };

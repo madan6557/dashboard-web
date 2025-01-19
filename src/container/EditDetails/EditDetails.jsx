@@ -12,7 +12,7 @@ import { uploadImage } from "../../api/controller/imageController";
 import NoImage from "../../assets/images//No Image.jpg";
 import { dateFormat } from "../../utils/dateFormat";
 
-const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
+const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const { dataOption } = useContext(DataOptionContext);
     const [plantDetails, setPlantDetails] = useState(null);
@@ -24,6 +24,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
     const requestConfirmation = useConfirmation();
 
     // State for each field
+    const [plantID, setPlantID] = useState(null);
     const [species, setSpecies] = useState('');
     const [plantingDate, setPlantingDate] = useState('');
     const [activity, setActivity] = useState('');
@@ -46,8 +47,9 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
             try {
                 const { data, imageBlob } = await getSelectedApprovedPlants(selectedRowData, false);
                 setPlantDetails(data);
-                
+
                 // Initialize fields with fetched data
+                setPlantID(data.id_plant);
                 setSpecies(data.id_species);
                 setPlantingDate(data.plantingDate);
                 setActivity(data.id_activity);
@@ -59,7 +61,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 setEasting(data.easting);
                 setNorthing(data.northing);
                 setElevation(data.elevation);
-                
+
                 setPlantImage(imageBlob);
 
             } catch (error) {
@@ -74,11 +76,11 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
         const renamedImageFile = newPlantImage ? renameFile(newPlantImage, selectedRowData) : null;
         const formatedPlantingDate = dateFormat(plantingDate, 'yyyy-mm-dd hh-mm-ss', '+0');
         const formatedDateModified = dateFormat(new Date(), 'yyyy-mm-dd hh-mm-ss', '+0');
-        console.log("plantingDate "+new Date(plantingDate).toISOString());
-        console.log("formatedPlantingDate "+new Date(formatedPlantingDate).toISOString());
-        console.log("last dateModified"+new Date().toISOString());
-        console.log("dateModified"+new Date().toISOString());
-        console.log("formatedDateModified"+new Date(formatedDateModified).toISOString());
+        console.log("plantingDate " + new Date(plantingDate).toISOString());
+        console.log("formatedPlantingDate " + new Date(formatedPlantingDate).toISOString());
+        console.log("last dateModified" + new Date().toISOString());
+        console.log("dateModified" + new Date().toISOString());
+        console.log("formatedDateModified" + new Date(formatedDateModified).toISOString());
         const updatedData = {
             id_species: parseInt(species, 10),
             id_activity: parseInt(activity, 10),
@@ -189,14 +191,18 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
         handleInputChange(); // Menandai perubahan sebagai belum disimpan
     };
 
+    const handleGetQR = () => {
+        getQR(plantID)
+    };
+
     return (
         <div className="edit-details-wrapper">
             <div className="edit-details-header-wrapper">
-                <div className="qrCode">
+                <div className="qrCode" onClick={handleGetQR}>
                     <div className="icon">
                         <QRCode />
                     </div>
-                    <p className="value">{selectedRowData}</p>
+                    <p className="value">{plantID}</p>
                 </div>
                 <div
                     className="detail-delete-button"
@@ -244,7 +250,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate }) => {
                 ) : (
                     <>
                         <div className="editDetail-image">
-                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} hasMap={true}/>
+                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} hasMap={true} />
                         </div>
                         <div className="detail-input-wrapper">
                             <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />

@@ -9,7 +9,7 @@ import NoImage from "../../assets/images//No Image.jpg";
 import { getSelectedDraftPlants } from "../../api/controller/draftPlantsController";
 import { getSelectedRejectedPlants } from "../../api/controller/rejectedPlantsController";
 
-const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
+const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const [plantDetails, setPlantDetails] = useState(null);
     const [plantImage, setPlantImage] = useState(null);
@@ -29,10 +29,10 @@ const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
                     if (onTab === "Rejected") {
                         setIsCommentVisible(true);
                         data = await getSelectedRejectedPlants(selectedRowData);
-                    }else if (onTab === "Draft"){
+                    } else if (onTab === "Draft") {
                         setIsCommentVisible(false);
                         data = await getSelectedDraftPlants(selectedRowData);
-                    }else{
+                    } else {
                         data = null;
                     }
                     setPlantDetails(data);
@@ -101,10 +101,14 @@ const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
         </div>
     );
 
+    const handleGetQR = () => {
+        getQR(plantID)
+    };
+
     return (
         <div className="details-wrapper">
             <div className="details-header-wrapper">
-                <div className="qrCode">
+                <div className="qrCode" onClick={handleGetQR}>
                     <div className="icon">
                         <QRCode />
                     </div>
@@ -128,7 +132,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab}) => {
                     : (
                         <>
                             <div className="detail-image-wrapper">
-                                <Image alt="Plant Image" src={plantImage ? plantImage : NoImage} hasMap={isHasMap}/>
+                                <Image alt="Plant Image" src={plantImage ? plantImage : NoImage} hasMap={isHasMap} />
                             </div>
                             {isCommentVisible && (
                                 <AreaField id="comment" title="Comment" value={plantDetails.comment || ""} readonly={true} placeholder="Comment" />

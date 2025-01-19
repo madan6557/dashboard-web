@@ -11,7 +11,7 @@ import { getPlantImage } from "../../api/controller/imageController";
 import { useConfirmation } from "../../context/ActionConfirmationContext";
 import { dateFormat } from "../../utils/dateFormat";
 
-const VerificationForm = ({ onClose, onAction }) => {
+const VerificationForm = ({ onClose, onAction, getQR }) => {
     const { selectedRowData } = useContext(DataIDContext);
     const [verificationPlantDetails, setVerificationPlantDetails] = useState(null);
     const [approvePlantDetails, setApprovePlantDetails] = useState(null);
@@ -144,23 +144,6 @@ const VerificationForm = ({ onClose, onAction }) => {
         setComment(event.target.value);
     };
 
-    const renderShimmer = () => (
-        <div className="shimmer-fields">
-            <div className="shimmer-image"></div>
-            <div className="shimmer-field">
-                <div className="shimmer-title"></div>
-                <div className="shimmer-input"></div>
-            </div>
-            {/* Repeat the shimmer structure for all fields */}
-            {Array(9).fill().map((_, index) => (
-                <div key={index} className="shimmer-field">
-                    <div className="shimmer-title"></div>
-                    <div className="shimmer-input"></div>
-                </div>
-            ))}
-        </div>
-    );
-
     const renderPlantDetails = () => (
         <>
             <p className="verificationForm-form-title">Current Data</p>
@@ -227,10 +210,28 @@ const VerificationForm = ({ onClose, onAction }) => {
         );
     };
 
+    const handleGetQR = () => {
+        getQR(verificationPlantDetails.id_plant)
+    };
+
+    const renderShimmer = () => (
+        <div className="verificationForm-shimmer-wrapper">
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+            <div className="verificationForm-shimmer-line"></div>
+        </div>
+    );    
+
     return (
         <div className="verificationForm-wrapper">
             <div className="verificationForm-header-wrapper">
-                <div className="verificationForm-qrCode">
+                <div className="verificationForm-qrCode" onClick={handleGetQR}>
                     <div className="icon">
                         <QRCode />
                     </div>

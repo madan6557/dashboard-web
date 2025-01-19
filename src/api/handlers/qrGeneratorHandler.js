@@ -2,7 +2,7 @@ import API from '../service';
 
 export const generateQRCode = async (data) => {
     try {
-        const response = await API.post(`/generate`, data, {
+        const response = await API.post(`/qr/generate`, data, {
             responseType: 'blob'
         });
         console.log(response);
@@ -13,12 +13,12 @@ export const generateQRCode = async (data) => {
     }
 };
 
-export const fetchQRCode = async (value) => {
+export const fetchQRCode = async (data) => {
     try {
-        const response = await API.post(`/selected`, value, {
+        const response = await API.post(`/qr/selected`, data, {
             responseType: 'blob'
         });
-        console.log(response);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to export data:', error);
@@ -28,10 +28,10 @@ export const fetchQRCode = async (value) => {
 
 export const checkQRCode = async (site, config) => {
     try {
-        const response = await API.post(`/check`, config, {
+        const response = await API.post(`/qr/check`, config, {
             responseType: 'blob'
         });
-        console.log(response);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to export data:', error);

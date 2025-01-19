@@ -161,3 +161,43 @@
 .verification-comment-container.fade-out {
     animation: fadeOutSlideRight 0.3s forwards;
 }
+
+.verificationForm-shimmer-wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Sesuaikan dengan lebar detail */
+}
+
+/* Perbaikan shimmer effect */
+.verificationForm-shimmer-line {
+    width: 100%;
+    height: 35px;
+    background-color: var(--gray-300); /* Base solid color */
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    display: block; /* Pastikan elemen block */
+}
+
+.verificationForm-shimmer-line::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent 0%, var(--gray-50) 50%, transparent 100%);
+    animation: shimmer 1.5s infinite;
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}

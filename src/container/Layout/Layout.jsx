@@ -29,6 +29,7 @@ import { SiteIDContext } from "../../context/SiteIDContext";
 import { DataOptionContext } from "../../context/dataOptionContext";
 import { getDataOptions } from "../../api/controller/optionController";
 import VerificationForm from "../VerificationForm/VerificationForm";
+import QRDownloadForm from "../QRDownloadForm/QRDownloadForm";
 
 const Layout = () => {
     const location = useLocation();
@@ -40,6 +41,8 @@ const Layout = () => {
     const [isDetailsAnimating, setIsDetailsAnimating] = useState(false); // Status animasi
     const [isEditDetailsVisible, setIsEditDetailsVisible] = useState(false);
     const [isEditDetailsAnimating, setIsEditDetailsAnimating] = useState(false); // Status animasi
+    const [isQRDownloadFormVisible, setIsQRDownloadFormVisible] = useState(false);
+    const [isQRDownloadFormAnimating, setIsQRDownloadFormAnimating] = useState(false); // Status animasi
     const [isVerificationFormVisible, setIsVerificationFormVisible] = useState(false);
     const [isVerificationFormAnimating, setIsVerificationFormAnimating] = useState(false); // Status animasi
     const [isNotificationPopUpVisible, setIsNotificationPopUpVisible] = useState(false);
@@ -54,6 +57,7 @@ const Layout = () => {
     const { setDataOption } = useContext(DataOptionContext);
     const [siteOption, setSiteOption] = useState([{ text: "", value: "" }]);
     const [selectedTab, setSelectedTab] = useState(null);
+    const [plantID, setPlantID] = useState(null);
 
 
     // Buat ref untuk setiap notifikasi
@@ -178,6 +182,19 @@ const Layout = () => {
         }, 300); // Durasi animasi sesuai CSS
     };
 
+    const handleQRDownloadFormClose = () => {
+        setIsQRDownloadFormAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsQRDownloadFormVisible(false); // Hapus elemen setelah animasi selesai
+            setIsQRDownloadFormAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
+    };
+
+    const handleOpenQRDownloadForm = (plantID) => {
+        setPlantID(plantID);
+        setIsQRDownloadFormVisible(true);
+    }
+
     const handleEditDetailsDelete = () => {
         setIsEditDetailsAnimating(true); // Mulai animasi keluar
         setTimeout(() => {
@@ -232,9 +249,9 @@ const Layout = () => {
     };
 
     const handlePlantTableRowClick = (selectedTab) => {
-        if(selectedTab){
+        if (selectedTab) {
             setSelectedTab(selectedTab);
-        }else{
+        } else {
             setSelectedTab(null);
         }
         setIsDetailsVisible(true); // This will set the row details visibility
@@ -378,7 +395,13 @@ const Layout = () => {
                             onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
                             readonly={isDetailsReadonly}
                             onTab={selectedTab || null}
+                            getQR={handleOpenQRDownloadForm}
                         />
+                    </div>
+                )}
+                {isQRDownloadFormVisible && (
+                    <div className={`qrDownloadForm-container ${isQRDownloadFormAnimating ? "fade-out" : "fade-in"}`}>
+                        <QRDownloadForm plantID={plantID} onBlur={handleQRDownloadFormClose} />
                     </div>
                 )}
 
@@ -441,6 +464,7 @@ const Layout = () => {
                                     handleRefreshTable();  // Refresh data after save
                                 }}
                                 onUpdate={handleReloadTable}
+                                getQR={handleOpenQRDownloadForm}
                             />
                         </div>
                     )}
@@ -454,7 +478,9 @@ const Layout = () => {
                                 onAction={(message, type) => {
                                     handleSendNotification(message, type);
                                     handleRefreshTable();  // Refresh data after save
-                                }} />
+                                }}
+                                getQR={handleOpenQRDownloadForm} 
+                                />
                         </div>
                     )}
 
