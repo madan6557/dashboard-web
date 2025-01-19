@@ -27,10 +27,14 @@
     border: 1px solid var(--gray-500);
     border-radius: 6px;
     overflow: hidden;
-    width: 100%;
-    min-width: 200px;
-    max-width: 300px;
-    aspect-ratio: 4 / 5;
+    width: 300px;
+    height: 337.5px;
+}
+
+.qr-image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .qrGenerator-wrapper {

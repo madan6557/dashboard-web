@@ -9,12 +9,13 @@ const QRDownloadForm = ({ onBlur, plantID = "2400000" }) => {
 
     const fetchQRCode = async () => {
         try {
-            console.log(plantID);
-            const data = { generate: toString(plantID) };
+            const data = { generate: [plantID] };
+            console.log(data);
+
             const response = await getQRCode(data);
 
             if (response) {
-                const blob = new Blob([response], { type: 'image/png' });
+                const blob = new Blob([response], { type: 'application/zip' });
                 const url = window.URL.createObjectURL(blob);
                 setDownloadUrl(url);
             }
@@ -53,7 +54,7 @@ const QRDownloadForm = ({ onBlur, plantID = "2400000" }) => {
         if (downloadUrl) {
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = `QRCode_${plantID}.png`;
+            link.download = `QRCode_${plantID}.zip`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

@@ -386,24 +386,8 @@ const Layout = () => {
 
             <div className="content-container">
 
-                {isDetailsVisible && (
-                    <div
-                        className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
-                    >
-                        <Details
-                            onClose={handleDetailsClose}
-                            onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
-                            readonly={isDetailsReadonly}
-                            onTab={selectedTab || null}
-                            getQR={handleOpenQRDownloadForm}
-                        />
-                    </div>
-                )}
-                {isQRDownloadFormVisible && (
-                    <div className={`qrDownloadForm-container ${isQRDownloadFormAnimating ? "fade-out" : "fade-in"}`}>
-                        <QRDownloadForm plantID={plantID} onBlur={handleQRDownloadFormClose} />
-                    </div>
-                )}
+                
+
 
                 <div className="header-container">
                     <div
@@ -451,6 +435,25 @@ const Layout = () => {
                 </div>
 
                 <div className="content-wrapper">
+                {isDetailsVisible && (
+                    <div
+                        className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
+                    >
+                        <Details
+                            onClose={handleDetailsClose}
+                            onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
+                            readonly={isDetailsReadonly}
+                            onTab={selectedTab || null}
+                            getQR={handleOpenQRDownloadForm}
+                        />
+                    </div>
+                )}
+                
+                    {isQRDownloadFormVisible && (
+                        <div className={`qrDownloadForm-container ${isQRDownloadFormAnimating ? "fade-out" : "fade-in"}`}>
+                            <QRDownloadForm plantID={plantID} onBlur={handleQRDownloadFormClose} />
+                        </div>
+                    )}
 
                     {isEditDetailsVisible && (
                         <div
@@ -479,8 +482,8 @@ const Layout = () => {
                                     handleSendNotification(message, type);
                                     handleRefreshTable();  // Refresh data after save
                                 }}
-                                getQR={handleOpenQRDownloadForm} 
-                                />
+                                getQR={handleOpenQRDownloadForm}
+                            />
                         </div>
                     )}
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import "./GenerateQRCode.css";
 import ActionButton from "../../../components/ActionButton/ActionButton";
-import QRSample from "../../../assets/images/QR_Sample.png";
+import QRSample from "../../../assets/images/2401870.png";
 import { DataOptionContext } from "../../../context/dataOptionContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
 import { OptionField } from '../../../components/FieldInput/FieldInput';

@@ -65,14 +65,16 @@ const ExportForm = ({ onClose }) => {
     };
 
     const handleCancelExport = () => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
+        if (isExporting) {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                wsRef.current.send("cancel");
+            }
+            setIsExporting(false);
         }
-        if (wsRef.current) {
-            wsRef.current.send("cancel");
-        }
-        setIsExporting(false);
-    };
+    };    
 
     const handleDownload = () => {
         if (downloadUrl) {
@@ -119,7 +121,7 @@ const ExportForm = ({ onClose }) => {
             }
         };
         wsRef.current.onclose = () => console.log('WebSocket connection closed');
-
+    
         return () => {
             cleanupDownloadUrl();
             if (wsRef.current) {
@@ -128,6 +130,7 @@ const ExportForm = ({ onClose }) => {
         };
         // eslint-disable-next-line
     }, []);
+    
 
     const handleCheckboxChange = (event) => {
         setIncludeWatermark(event.target.checked);

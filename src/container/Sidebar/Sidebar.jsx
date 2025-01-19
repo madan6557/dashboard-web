@@ -68,7 +68,7 @@ const menuConfig = [
         submenu: [
             { title: "Table", route: "/table" },
             { title: "Verification", route: "/verification" },
-            { title: "Generate QR Code", route: "/generate" },
+            { title: "QR Code", route: "/generate" },
         ],
         hasDropdown: true,
         showDividerLine: true,
