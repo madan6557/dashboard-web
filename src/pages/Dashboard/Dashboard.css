@@ -1,3 +1,139 @@
-.dashboard-container{
+@import '../../variable.css';
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
     padding: 5px;
+    gap: 5px;
+}
+
+.dashboard-graphic-report-container {
+    background-color: var(--primary-white);
+    width: auto;
+    height: 120px;
+    border-radius: 6px;
+}
+
+.dashboard-map-container {
+    background-color: var(--primary-white);
+    width: auto;
+    height: 250px;
+    border-radius: 6px;
+}
+
+.dashboard-data-container {
+    display: grid;
+    grid-template-columns: 3fr 7fr;
+    gap: 5px;
+    width: auto;
+    border-radius: 6px;
+}
+
+.dashboard-plant-summary,
+.dashboard-table-container {
+    background-color: var(--primary-white);
+    height: 300px;
+    border-radius: 6px;
+}
+
+.dashboard-plant-summary {
+    padding: 20px;
+}
+
+.dashboard-plant-summary .title {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+}
+
+.dashboard-plant-summary .plant-total {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 5px 10px;
+}
+
+.dashboard-plant-summary .chart-bar {
+    width: 100%;
+    height: 10px;
+    display: flex;
+    gap: 3px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.plant-healthy {
+    background-color: var(--primary-green);
+    height: 100%;
+}
+
+.plant-sick {
+    background-color: var(--primary-orange);
+    height: 100%;
+}
+
+.plant-dead {
+    background-color: var(--gray-500);
+    height: 100%;
+}
+
+.legend-container {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chart-legend {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    border-radius: 8px;
+}
+
+.chart-legend .value-container{
+    display: flex;
+    width: 100%;
+}
+
+.value-container .value-title, .value-number, .value-percentage{
+    font-size: 1.2rem;
+}
+
+.value-container .value-title {
+    display: flex; /* Gunakan flex untuk mengatur tata letak */
+    align-items: center; /* Pastikan semua elemen sejajar secara vertikal */
+    width: 70px; /* Ambil seluruh lebar container */
+}
+
+.value-title span {
+    margin-left: auto; /* Dorong tanda ':' ke kanan */
+    text-align: right; /* Pastikan tanda ':' tetap rata kanan */
+}
+
+.value-container .value-number{
+    margin-left: 10px;
+}
+
+.value-container .value-percentage{
+    margin-left: auto;
+}
+
+.chart-legend .value-chart-container{
+    background-color: var(--gray-200);
+}
+
+.value-chart-container .value-scale{
+    background-color: var(--primary-green);
+}
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+    .dashboard-data-container {
+        grid-template-columns: 1fr;
+        /* Stacks the containers in a column */
+        grid-template-rows: auto;
+        /* Automatic row height */
+    }
 }

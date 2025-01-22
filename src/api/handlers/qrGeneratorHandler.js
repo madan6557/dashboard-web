@@ -5,7 +5,6 @@ export const generateQRCode = async (data) => {
         const response = await API.post(`/qr/generate`, data, {
             responseType: 'blob'
         });
-        console.log(response);
         return response.data;
     } catch (error) {
         console.error('Failed to export data:', error);
@@ -18,7 +17,6 @@ export const fetchQRCode = async (data) => {
         const response = await API.post(`/qr/selected`, data, {
             responseType: 'blob'
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to export data:', error);
