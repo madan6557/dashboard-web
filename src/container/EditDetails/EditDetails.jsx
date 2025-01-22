@@ -10,7 +10,6 @@ import { useConfirmation } from "../../context/ActionConfirmationContext";
 import { renameFile } from "../../utils/renameImage";
 import { uploadImage } from "../../api/controller/imageController";
 import NoImage from "../../assets/images//No Image.jpg";
-import { dateFormat } from "../../utils/dateFormat";
 
 const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
     const { selectedRowData } = useContext(DataIDContext);
@@ -74,13 +73,6 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
 
     const updateData = async () => {
         const renamedImageFile = newPlantImage ? renameFile(newPlantImage, selectedRowData) : null;
-        const formatedPlantingDate = dateFormat(plantingDate, 'yyyy-mm-dd hh-mm-ss', '+0');
-        const formatedDateModified = dateFormat(new Date(), 'yyyy-mm-dd hh-mm-ss', '+0');
-        console.log("plantingDate " + new Date(plantingDate).toISOString());
-        console.log("formatedPlantingDate " + new Date(formatedPlantingDate).toISOString());
-        console.log("last dateModified" + new Date().toISOString());
-        console.log("dateModified" + new Date().toISOString());
-        console.log("formatedDateModified" + new Date(formatedDateModified).toISOString());
         const updatedData = {
             id_species: parseInt(species, 10),
             id_activity: parseInt(activity, 10),
@@ -92,8 +84,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
             id_areaStatus: plantDetails.id_areaStatus,
             diameter: parseFloat(diameter),
             height: parseFloat(height),
-            plantingDate: new Date(formatedPlantingDate).toISOString(),
-            dateModified: new Date(formatedDateModified).toISOString(),
+            plantingDate: new Date(plantingDate).toISOString(),
             latitude: plantDetails.latitude,
             longitude: plantDetails.longitude,
             elevation: String(elevation),

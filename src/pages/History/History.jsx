@@ -3,7 +3,7 @@ import './History.css';
 import CardTable from "../../components/CardTable/CardTable"
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { SiteIDContext } from "../../context/SiteIDContext";
-import { searchVerificationPlants } from "../../api/controller/verificationPlantsController";
+import { searchPlantsHistory } from "../../api/controller/verificationPlantsController";
 
 const History = forwardRef(({ onRowClick }, ref) => {
     const [tableHead] = useState(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
@@ -39,7 +39,7 @@ const History = forwardRef(({ onRowClick }, ref) => {
         };
 
         try {
-            const response = await searchVerificationPlants(config);
+            const response = await searchPlantsHistory(config);
             setTableItems(response.data);
             setTotalPages(response.totalPages);
 

@@ -8,6 +8,7 @@ import { getSelectedApprovedPlants } from "../../api/controller/approvedPlantsCo
 import NoImage from "../../assets/images//No Image.jpg";
 import { getSelectedDraftPlants } from "../../api/controller/draftPlantsController";
 import { getSelectedRejectedPlants } from "../../api/controller/rejectedPlantsController";
+import { getSelectedPlantHistoryById } from "../../api/controller/verificationPlantsController";
 
 const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
     const { selectedRowData } = useContext(DataIDContext);
@@ -26,17 +27,30 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                     console.log(onTab);
                     setIsHasMap(false);
                     let data;
+                    let imageBlob;
+
                     if (onTab === "Rejected") {
                         setIsCommentVisible(true);
                         data = await getSelectedRejectedPlants(selectedRowData);
                     } else if (onTab === "Draft") {
                         setIsCommentVisible(false);
                         data = await getSelectedDraftPlants(selectedRowData);
+                    } else if (onTab === "History") {
+                        setIsCommentVisible(false);
+                        const response = await getSelectedPlantHistoryById(selectedRowData);
+                        data = response.data;
+                        imageBlob = response.imageBlob;
                     } else {
                         data = null;
                     }
+
+                    console.log(data);
                     setPlantDetails(data);
                     setPlantID(data.id_plant);
+                    if(imageBlob){
+                        setPlantImage(imageBlob);
+                    }
+                    setPlantImage(imageBlob);
                 } else {
                     setIsHasMap(true);
                     setIsCommentVisible(false);

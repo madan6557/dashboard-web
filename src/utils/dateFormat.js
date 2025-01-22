@@ -1,25 +1,25 @@
-export const dateFormat = (date, type = 'yyyy-mm-dd', gmt = '+8') => {
+export const dateFormat = (date, type = 'yyyy-mm-dd') => {
     const pad = (n) => n.toString().padStart(2, '0');
 
-    // Create a date object from the input
-    const localDate = new Date(date);
+    // Pastikan date adalah instance dari Date
+    if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
 
-    // Calculate GMT offset in minutes
-    const gmtOffsetMinutes = parseInt(gmt) * 60;
+    // Periksa validitas date setelah konversi
+    if (isNaN(date)) {
+        throw new TypeError('Invalid date value');
+    }
 
-    // Adjust the date object to the desired GMT
-    const utcDate = new Date(localDate.getTime() + (localDate.getTimezoneOffset() * 60000)); // Convert to UTC
-    utcDate.setMinutes(utcDate.getMinutes() + gmtOffsetMinutes); // Adjust by the GMT offset
-
-    const year = utcDate.getUTCFullYear();
-    const month = pad(utcDate.getUTCMonth() + 1); // Months are zero-based
-    const day = pad(utcDate.getUTCDate());
-    const hours = pad(utcDate.getUTCHours());
-    const minutes = pad(utcDate.getUTCMinutes());
-    const seconds = pad(utcDate.getUTCSeconds());
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1); // Months are zero-based
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
 
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const dayName = dayNames[utcDate.getUTCDay()];
+    const dayName = dayNames[date.getDay()];
 
     switch (type) {
         case 'dd-mm-yyyy':

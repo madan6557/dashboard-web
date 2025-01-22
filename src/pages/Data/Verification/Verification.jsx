@@ -4,7 +4,7 @@ import CardTable from "../../../components/CardTable/CardTable"
 import FloorButton from "../../../components/FloorButton/FloorButton"
 import { DataIDContext } from "../../../context/SelectedIDContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
-import { searchVerificationPlants } from "../../../api/controller/verificationPlantsController";
+import { searchUnverifedPlants} from "../../../api/controller/verificationPlantsController";
 import { searchDraftPlants } from "../../../api/controller/draftPlantsController";
 import { searchRejectedPlants } from "../../../api/controller/rejectedPlantsController";
 
@@ -12,7 +12,7 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
     const [tableHead, setTableHead] = useState(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
     const [orderOptions] = useState([
         { text: "Modified Date", value: "dateModified" },
-        { text: "ID", value: "id_plant" },
+        { text: "Plant ID", value: "id_plant" },
         { text: "Species", value: "plant" },
         { text: "Planting Date", value: "plantingDate" },
         { text: "Location", value: "location" },
@@ -52,7 +52,7 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
             let response;
             if (selectedTab === "Unverified") {
                 setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
-                response = await searchVerificationPlants(config);
+                response = await searchUnverifedPlants(config);
             } else if (selectedTab === "Rejected") {
                 setTableHead(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Modified At", "Verification"]);
                 response = await searchRejectedPlants(config);

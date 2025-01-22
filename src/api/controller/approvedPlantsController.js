@@ -17,7 +17,7 @@ export const searchApprovedPlants = async (config) => {
         desiredColumns.forEach(column => {
             if (item.hasOwnProperty(column)) {
                 filteredItem[column] = column === 'plantingDate'
-                    ? dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss', '+8') // Format plantingDate
+                    ? dateFormat(item[column], 'dd-mm-yyyy hh-mm-ss') // Format plantingDate
                     : item[column];
             }
         });
@@ -35,7 +35,7 @@ export const getSelectedApprovedPlants = async (id_plant) => {
     const { data, imageBase64 } = await fetchApprovedPlantByID(id_plant);
 
     if (data && data.plantingDate) {
-        const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
+        const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss')
         data.plantingDate = formattedDate;
     }
 

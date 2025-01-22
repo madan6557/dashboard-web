@@ -7,7 +7,7 @@ import { SiteIDContext } from "../../../context/SiteIDContext";
 import ExportForm from '../../../container/ExportForm/ExportForm';
 
 const Table = forwardRef(({ onRowClick }, ref) => {
-    const [tableHead] = useState(["ID", "Species", "Planting Date", "Activities", "Location", "Status"]);
+    const [tableHead] = useState(["Plant ID", "Species", "Planting Date", "Activities", "Location", "Status"]);
     const [orderOptions] = useState([
         { text: "Modified Date", value: "dateModified" },
         { text: "ID", value: "id_plant" },
