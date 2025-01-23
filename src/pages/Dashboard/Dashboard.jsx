@@ -66,7 +66,7 @@ const Dashboard = () => {
                         </div>
                         <div className="chart-legend" id="plant-healthy">
                             <div className="value-container">
-                                <p className="value-title">Dead <span>:</span></p>
+                                <p className="value-title">Withered <span>:</span></p>
                                 <p className="value-number">200,000</p>
                                 <p className="value-percentage">{deadWidth}%</p>
                             </div>

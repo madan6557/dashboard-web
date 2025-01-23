@@ -8,7 +8,7 @@ const TextField = ({
     readonly = false,
     type = "text",
     value = "",
-    onChange = () => {}
+    onChange = () => { }
 }) => {
     const [inputValue, setInputValue] = useState(value);
 
@@ -47,7 +47,7 @@ const NumericField = ({
     readonly = false,
     suffix = "",
     value = "",
-    onChange = () => {}
+    onChange = () => { }
 }) => {
     const [inputValue, setInputValue] = useState(value);
 
@@ -90,7 +90,7 @@ const OptionField = ({
     readonly = false,
     value = "",
     optionItem = [],
-    onChange = () => {}
+    onChange = () => { }
 }) => {
     const [selectedValue, setSelectedValue] = useState(value);
     const [options, setOptions] = useState(optionItem);
@@ -137,7 +137,7 @@ const DateField = ({
     readonly = false,
     value = "",
     placeholder = "Select date and time",
-    onChange = () => {}
+    onChange = () => { }
 }) => {
     const [dateTimeValue, setDateTimeValue] = useState('');
 
@@ -180,7 +180,7 @@ const AreaField = ({
     readonly = false,
     value = "",
     rows = 5, // Default number of rows
-    onChange = () => {}
+    onChange = () => { }
 }) => {
     const [textValue, setTextValue] = useState(value);
 
@@ -213,4 +213,168 @@ const AreaField = ({
     );
 };
 
-export { TextField, NumericField, OptionField, DateField, AreaField };
+const PasswordField = ({
+    id = "",
+    placeholder = "Enter password",
+    title = "Password",
+    readonly = false,
+    value = "",
+    onChange = () => { },
+    onValidationChange = () => { } // New callback for validation status
+}) => {
+    const [password, setPassword] = useState(value);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        setPassword(value); // Update password value when prop changes
+    }, [value]);
+
+    const handleChange = (e) => {
+        if (e && e.target) {
+            const newPassword = e.target.value;
+            setPassword(newPassword); // Update local state
+
+            // Validate password length
+            if (newPassword.length >= 8) {
+                setError(""); // Clear error if valid
+                onValidationChange(true); // Notify parent that input is valid
+            } else {
+                setError("At least 8 characters."); // Set error message
+                onValidationChange(false); // Notify parent that input is invalid
+            }
+
+            if (onChange) {
+                onChange({ target: { value: newPassword } }); // Trigger onChange prop with formatted event
+            }
+        }
+    };
+
+    return (
+        <div className="input-wrapper">
+            {title && <p className="title">{title}</p>}
+            <input
+                id={id}
+                className="input-value"
+                type="password"
+                placeholder={placeholder}
+                value={password}
+                readOnly={readonly}
+                onChange={readonly ? undefined : handleChange}
+            />
+            {error && <p className="error-message">{error}</p>} {/* Display error if any */}
+        </div>
+    );
+};
+
+const EmailField = ({
+    id = "",
+    placeholder = "Enter email",
+    title = "Email",
+    readonly = false,
+    value = "",
+    onChange = () => { },
+    onValidationChange = () => { } // New callback for validation status
+}) => {
+    const [email, setEmail] = useState(value);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        setEmail(value); // Update email value when prop changes
+    }, [value]);
+
+    const handleChange = (e) => {
+        if (e && e.target) {
+            const newEmail = e.target.value;
+            setEmail(newEmail); // Update local state
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+            if (emailRegex.test(newEmail) || newEmail === "") {
+                setError(""); // Clear error if valid
+                onValidationChange(true); // Notify parent that input is valid
+            } else {
+                setError("Invalid email format."); // Set error message
+                onValidationChange(false); // Notify parent that input is invalid
+            }
+
+            if (onChange) {
+                onChange({ target: { value: newEmail } }); // Trigger onChange prop with formatted event
+            }
+        }
+    };
+
+    return (
+        <div className="input-wrapper">
+            {title && <p className="title">{title}</p>}
+            <input
+                id={id}
+                className="input-value"
+                type="email"
+                placeholder={placeholder}
+                value={email}
+                readOnly={readonly}
+                onChange={readonly ? undefined : handleChange}
+            />
+            {error && <p className="error-message">{error}</p>} {/* Display error if any */}
+        </div>
+    );
+};
+
+const UsernameField = ({
+    id = "",
+    placeholder = "Enter username",
+    title = "Username",
+    readonly = false,
+    value = "",
+    onChange = () => { },
+    onValidationChange = () => { } // Callback for validation status
+}) => {
+    const [username, setUsername] = useState(value);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        setUsername(value); // Update username value when prop changes
+    }, [value]);
+
+    const handleChange = (e) => {
+        if (e && e.target) {
+            const newUsername = e.target.value.replace(/\s/g, ""); // Remove spaces
+            setUsername(newUsername); // Update local state
+
+            // Validate username length
+            if (newUsername.length >= 3 && newUsername.length <= 15) {
+                setError(""); // Clear error if valid
+                onValidationChange(true); // Notify parent that input is valid
+            } else if (newUsername.length < 3) {
+                setError("At least 3 characters long."); // Set error for short username
+                onValidationChange(false); // Notify parent that input is invalid
+            } else if (newUsername.length > 15) {
+                setError("Must not exceed 15 characters."); // Set error for long username
+                onValidationChange(false); // Notify parent that input is invalid
+            }
+
+            if (onChange) {
+                onChange({ target: { value: newUsername } }); // Trigger onChange prop with formatted event
+            }
+        }
+    };
+
+    return (
+        <div className="input-wrapper">
+            {title && <p className="title">{title}</p>}
+            <input
+                id={id}
+                className="input-value"
+                type="text"
+                placeholder={placeholder}
+                value={username}
+                readOnly={readonly}
+                onChange={readonly ? undefined : handleChange}
+            />
+            {error && <p className="error-message">{error}</p>} {/* Display error if any */}
+        </div>
+    );
+};
+
+export { TextField, NumericField, OptionField, DateField, AreaField, PasswordField, EmailField, UsernameField };
+

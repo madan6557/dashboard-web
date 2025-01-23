@@ -6,9 +6,9 @@
     justify-content: center;
     border-radius: 6px;
     height: 35px;
-    width: 80px;
+    min-width: 80px;
     overflow: hidden;
-    padding: 0px 5px;
+    padding: 0px 10px;
 }
 
 .actionButton-wrapper .icon{

@@ -1,0 +1,48 @@
+@import '../../variable.css';
+
+.userDetails-wrapper{
+    position: relative;
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--primary-white);
+    border-radius: 8px;
+    padding: 30px;
+    gap: 10px;
+}
+
+.form-title{
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.userDetails-header-wrapper{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.userDetails-header-button{
+    display: flex;
+    margin-left: auto;
+}
+
+.userDetails-form-wrapper{
+    position: relative;
+    right: -5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-right: 10px;
+    gap: 10px;
+}
+
+.userDetail-button-container{
+    margin-top: 30px;
+    margin-left: auto;
+}

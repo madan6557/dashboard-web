@@ -14,8 +14,8 @@ import {
     ChartSolid,
     DBOutline,
     DBSolid,
-    UserOutline,
-    UserSolid,
+    UserMultiOutline,
+    UserMultiSolid,
     CogOutline,
     CogSolid,
     ClockOutline,
@@ -77,8 +77,8 @@ const menuConfig = [
     },
     {
         title: "Users",
-        icon: <UserOutline />,
-        selectedIcon: <UserSolid />,
+        icon: <UserMultiOutline />,
+        selectedIcon: <UserMultiSolid />,
         submenu: [
             { title: "Account", route: "/account" },
             { title: "Logs", route: null },

@@ -89,3 +89,7 @@
 .areaField-input-value::-webkit-scrollbar-thumb:hover {
     background: var(--blue-500);
 }
+
+.error-message{
+    color: var(--primary-red);
+}

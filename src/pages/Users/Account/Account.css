@@ -1,5 +1,42 @@
 @import '../../../variable.css';
 
-.account-container{
+.account-container {
+    display: flex;
+    flex-direction: column;
     padding: 5px;
+    gap: 5px;
+}
+
+.account-form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 8px;
+    z-index: 5;
+    overflow: hidden;
+    max-height: 500px;
+    /* Atur nilai max-height lebih besar dari tinggi konten */
+    opacity: 1;
+    transition: max-height 0.5s ease;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    width: 300px;
+}
+
+.account-form-container.fade-in {
+    animation: fadeIn 0.3s forwards;
+}
+
+.account-form-container.fade-out {
+    animation: fadeOut 0.3s forwards;
+}
+
+.account-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: var(--primary-white);
+    border-radius: 6px;
+    padding: 10px;
+
 }

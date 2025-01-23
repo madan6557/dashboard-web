@@ -3,8 +3,10 @@ import './Account.css';
 import CardTable from "../../../components/CardTable/CardTable"
 import { DataIDContext } from "../../../context/SelectedIDContext";
 import { getAllUsers } from "../../../api/controller/userController";
+import UserDetails from "../../../container/UserDetails/UserDetails";
+import ActionButton from "../../../components/ActionButton/ActionButton";
 
-const Account = forwardRef(({ onRowClick }, ref) => {
+const Account = forwardRef(({ }, ref) => {
     const [tableHead] = useState(["Email", "Username", "Role", "Status"]);
     const [orderOptions] = useState([
         { text: "Role", value: "role" },
@@ -22,6 +24,8 @@ const Account = forwardRef(({ onRowClick }, ref) => {
     const [searchTerm, setSearchTerm] = useState('');
     const { setSelectedRowData } = useContext(DataIDContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [isCreateAccountFormVisible, setIsCreateAccountFormVisible] = useState(false);
+    const [isCreateAccountFormAnimating, setIsCreateAccountFormAnimating] = useState(false); // Status animasi
 
     const fetchTableData = async () => {
         setIsLoading(true);
@@ -79,12 +83,35 @@ const Account = forwardRef(({ onRowClick }, ref) => {
     };
 
     const handleRowClick = (item) => {
-        setSelectedRowData(item.id_verification);
-        onRowClick();
+        setSelectedRowData(item.uuid);
+    };
+
+    const handleOpenCreateAccountForm = () => {
+        setIsCreateAccountFormVisible(true);
+    };
+
+    const handleCreateAccountFormClose = () => {
+        setIsCreateAccountFormAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsCreateAccountFormVisible(false); // Hapus elemen setelah animasi selesai
+            setIsCreateAccountFormAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
     };
 
     return (
         <div className="account-container">
+            {isCreateAccountFormVisible && (
+                <div className={`account-form-container ${isCreateAccountFormAnimating ? "fade-out" : "fade-in"}`}>
+                    <UserDetails
+                        onClose={handleCreateAccountFormClose}
+                    />
+                </div>
+            )}
+
+            <div className="account-button-container">
+                <ActionButton title="Create Account" type="confirm" onClick={handleOpenCreateAccountForm }/>
+            </div>
+
             <CardTable
                 tableHead={tableHead}
                 tableItems={tableItems}
