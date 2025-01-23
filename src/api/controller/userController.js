@@ -1,13 +1,13 @@
-import { fetchAllUsers, fetchUserByID } from "../handlers/usersHandler";
+import { createAccount, fetchAllAccount } from "../handlers/usersHandler";
 
-export const getAllUsers = async (config) => {
-    const response = await fetchAllUsers(config);
+export const getAllAccount = async (config) => {
+    const response = await fetchAllAccount(config);
 
     // Destructuring the response to get data, totalPages, and currentPage
     const { data, totalPages, currentPage } = response;
 
     // Define the desired columns
-    const desiredColumns = ['email', 'username', 'role'];
+    const desiredColumns = ['uuid','email', 'username', 'role'];
 
     // Filter the data to only include the desired columns and add the status column
     const filteredData = data.map(item => {
@@ -33,8 +33,8 @@ export const getAllUsers = async (config) => {
     };
 };
 
-export const getSelectedRejectedPlants = async (uuid) => {
-    const response = await fetchUserByID(uuid);
+export const addNewAccount = async (data) => {
+    const response = await createAccount(data);
 
     return response;
 }

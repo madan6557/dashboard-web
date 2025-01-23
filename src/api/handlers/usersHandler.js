@@ -1,7 +1,7 @@
 import API from '../service';
 
 // Mendapatkan semua pengguna
-export const fetchAllUsers = async (config) => {
+export const fetchAllAccount = async (config) => {
   const {
     page,
     rows,
@@ -18,8 +18,19 @@ export const fetchAllUsers = async (config) => {
   }
 };
 
+// Menambahkan pengguna baru
+export const createAccount = async (data) => {
+  try {
+    const response = await API.post('/user/sign-up', data); // Endpoint: /users
+    return response.message;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+};
+
 // Mendapatkan semua pengguna
-export const fetchUserByID = async (uuid) => {
+export const fetchAccountByID = async (uuid) => {
   try {
     const response = await API.get(`/user/${uuid}`);
     return response.data; // Data hasil response dari server
@@ -30,7 +41,7 @@ export const fetchUserByID = async (uuid) => {
 };
 
 // Update data pengguna
-export const updateUser = async (userId, data) => {
+export const updateAccountDetails = async (userId, data) => {
   try {
     const response = await API.patch(`/users/${userId}`, data);
     return response.message;
@@ -40,19 +51,8 @@ export const updateUser = async (userId, data) => {
   }
 };
 
-// Menambahkan pengguna baru
-export const createUser = async (data) => {
-  try {
-    const response = await API.post('/users', data); // Endpoint: /users
-    return response.message;
-  } catch (error) {
-    console.error('Error creating user:', error);
-    throw error;
-  }
-};
-
 // Menghapus pengguna berdasarkan ID
-export const deleteUser = async (userId) => {
+export const updateAccountStatus = async (userId) => {
   try {
     const response = await API.delete(`/users/${userId}`); // Endpoint: /users/:id
     return response.message;

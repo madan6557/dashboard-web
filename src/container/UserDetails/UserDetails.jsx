@@ -1,33 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './UserDetails.css';
-import { UsernameField, PasswordField, EmailField, OptionField } from "../../components/FieldInput/FieldInput";
+import { TextField } from "../../components/FieldInput/FieldInput";
 import { Cross } from "../../components/Icons/Icon";
 import ActionButton from "../../components/ActionButton/ActionButton";
+// import { useConfirmation } from "../../context/ActionConfirmationContext";
 
-const UserDetails = ({ onClose }) => {
+const UserDetails = ({ onClose, onAction, data }) => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
     const [role, setRole] = useState("user");
-    const [roleOption] = useState([
-        { text: "User", value: "user" },
-        { text: "Admin", value: "admin" },
-        { text: "Viewer", value: "viewer" }
-    ]);
+    const [accountStatus, setAccountStatus] = useState("user");
 
-    const [isEmailValid, setIsEmailValid] = useState(false);
-    const [isPasswordValid, setIsPasswordValid] = useState(false);
-    const [isUsernameValid, setIsUsernameValid] = useState(false);
-    const [isRoleValid, setIsRoleValid] = useState(true);
+    useEffect(() => {
+        setEmail(data.email);
+        setUsername(data.username);
+        setRole(data.role);
+        setAccountStatus(data.status);
+    }, [data]);
 
-    const isFormValid = isEmailValid && isPasswordValid && isUsernameValid && isRoleValid;
-
-    const createAccount = async () => {
-        console.log(`Account created successfully:`);
-        console.log(`Email: ${email}`);
-        console.log(`Username: ${username}`);
-        console.log(`Password: ${password}`);
-        console.log(`Role: ${role}`);
+    const handleUnavailableAction = () => {
+       onAction("This feature not available yet!","info");
     };
 
     return (
@@ -41,48 +33,37 @@ const UserDetails = ({ onClose }) => {
                 </div>
             </div>
             <div className="userDetails-form-wrapper">
-                <EmailField
-                    id="email"
+                <TextField
                     title="Email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onValidationChange={setIsEmailValid}
-                    placeholder="Enter your email"
+                    readonly={true}
                 />
-                <UsernameField
-                    id="username"
+                <TextField
                     title="Username"
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    onValidationChange={setIsUsernameValid}
-                    placeholder="Enter your username"
+                    readonly={true}
                 />
-                <PasswordField
-                    id="password"
-                    title="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onValidationChange={setIsPasswordValid}
-                    placeholder="Enter your password"
-                />
-                <OptionField
-                    id="Role"
+                <TextField
                     title="Role"
                     value={role}
-                    optionItem={roleOption}
-                    onChange={(e) => {
-                        const selectedRole = e.target.value;
-                        setRole(selectedRole);
-                        setIsRoleValid(selectedRole.trim() !== "");
-                    }}
+                    readonly={true}
+                />
+                <TextField
+                    title="Status"
+                    value={accountStatus}
+                    readonly={true}
                 />
             </div>
-            <div className="userDetail-button-container">
+            <div className="userDetails-button-container">
                 <ActionButton
-                    title="Create"
-                    type="confirm"
-                    disabled={!isFormValid} // Disable button if form is invalid
-                    onClick={createAccount}
+                    title="Disable"
+                    type="ghost"
+                    onClick={handleUnavailableAction}
+                />
+                <ActionButton
+                    title="ResetPassword"
+                    type="primary"
+                    onClick={handleUnavailableAction}
                 />
             </div>
         </div>

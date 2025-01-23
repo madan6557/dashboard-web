@@ -1,13 +1,13 @@
-import React, { useState, useContext, useImperativeHandle, forwardRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import './Account.css';
 import CardTable from "../../../components/CardTable/CardTable"
-import { DataIDContext } from "../../../context/SelectedIDContext";
-import { getAllUsers } from "../../../api/controller/userController";
+import { addNewAccount, getAllAccount } from "../../../api/controller/userController";
+import CreateAccountForm from "../../../container/CreateAccountForm/CreateAccountForm";
 import UserDetails from "../../../container/UserDetails/UserDetails";
 import ActionButton from "../../../components/ActionButton/ActionButton";
 
-const Account = forwardRef(({ }, ref) => {
-    const [tableHead] = useState(["Email", "Username", "Role", "Status"]);
+const Account = ({ onAction }) => {
+    const [tableHead] = useState([".hidden", "Email", "Username", "Role", "Status"]);
     const [orderOptions] = useState([
         { text: "Role", value: "role" },
         { text: "ID", value: "uuid" },
@@ -22,10 +22,12 @@ const Account = forwardRef(({ }, ref) => {
     const [sortOrder, setSortOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState(orderOptions[0].value);
     const [searchTerm, setSearchTerm] = useState('');
-    const { setSelectedRowData } = useContext(DataIDContext);
+    const [userDetails, setUserDetails] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isCreateAccountFormVisible, setIsCreateAccountFormVisible] = useState(false);
     const [isCreateAccountFormAnimating, setIsCreateAccountFormAnimating] = useState(false); // Status animasi
+    const [isUserDetailsVisible, setIsUserDetailsVisible] = useState(false);
+    const [isUserDetailsAnimating, setIsUserDetailsAnimating] = useState(false); // Status animasi
 
     const fetchTableData = async () => {
         setIsLoading(true);
@@ -38,7 +40,7 @@ const Account = forwardRef(({ }, ref) => {
         };
 
         try {
-            const response = await getAllUsers(config);
+            const response = await getAllAccount(config);
             setTableItems(response.data);
             setTotalPages(response.totalPages);
 
@@ -49,13 +51,19 @@ const Account = forwardRef(({ }, ref) => {
         }
     };
 
-    // Expose fetchTableData to the parent component
-    useImperativeHandle(ref, () => ({
-        fetchTableData,
-        setIsLoading: () => {
-            setIsLoading({ value: true, timestamp: Date.now() });
-        },
-    }));
+    const createNewAccount = async (data) => {
+        setIsLoading(true);
+        try {
+            await addNewAccount(data);
+        } catch (error) {
+            onAction("Error creating new account", "failed");
+            console.error("Error creating new account:", error);
+        } finally {
+            handleCreateAccountFormClose();
+            onAction("New account created successfully", "success");
+            fetchTableData();
+        }
+    };
 
     useEffect(() => {
         fetchTableData();
@@ -83,11 +91,20 @@ const Account = forwardRef(({ }, ref) => {
     };
 
     const handleRowClick = (item) => {
-        setSelectedRowData(item.uuid);
+        setUserDetails(item);
+        setIsUserDetailsVisible(true);
     };
 
     const handleOpenCreateAccountForm = () => {
         setIsCreateAccountFormVisible(true);
+    };
+
+    const handleUserDetailsClose = () => {
+        setIsUserDetailsAnimating(true); // Mulai animasi keluar
+        setTimeout(() => {
+            setIsUserDetailsVisible(false); // Hapus elemen setelah animasi selesai
+            setIsUserDetailsAnimating(false);
+        }, 300); // Durasi animasi sesuai CSS
     };
 
     const handleCreateAccountFormClose = () => {
@@ -102,14 +119,25 @@ const Account = forwardRef(({ }, ref) => {
         <div className="account-container">
             {isCreateAccountFormVisible && (
                 <div className={`account-form-container ${isCreateAccountFormAnimating ? "fade-out" : "fade-in"}`}>
-                    <UserDetails
+                    <CreateAccountForm
                         onClose={handleCreateAccountFormClose}
+                        onCreate={createNewAccount}
+                    />
+                </div>
+            )}
+
+            {isUserDetailsVisible && (
+                <div className={`account-form-container ${isUserDetailsAnimating ? "fade-out" : "fade-in"}`}>
+                    <UserDetails
+                        onClose={handleUserDetailsClose}
+                        onAction={onAction}
+                        data={userDetails}
                     />
                 </div>
             )}
 
             <div className="account-button-container">
-                <ActionButton title="Create Account" type="confirm" onClick={handleOpenCreateAccountForm }/>
+                <ActionButton title="Create Account" type="confirm" onClick={handleOpenCreateAccountForm} />
             </div>
 
             <CardTable
@@ -128,6 +156,6 @@ const Account = forwardRef(({ }, ref) => {
             />
         </div>
     );
-});
+};
 
 export default Account;

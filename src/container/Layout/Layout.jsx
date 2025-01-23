@@ -386,7 +386,7 @@ const Layout = () => {
 
             <div className="content-container">
 
-                
+
 
 
                 <div className="header-container">
@@ -435,20 +435,20 @@ const Layout = () => {
                 </div>
 
                 <div className="content-wrapper">
-                {isDetailsVisible && (
-                    <div
-                        className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
-                    >
-                        <Details
-                            onClose={handleDetailsClose}
-                            onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
-                            readonly={isDetailsReadonly}
-                            onTab={selectedTab || null}
-                            getQR={handleOpenQRDownloadForm}
-                        />
-                    </div>
-                )}
-                
+                    {isDetailsVisible && (
+                        <div
+                            className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
+                        >
+                            <Details
+                                onClose={handleDetailsClose}
+                                onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
+                                readonly={isDetailsReadonly}
+                                onTab={selectedTab || null}
+                                getQR={handleOpenQRDownloadForm}
+                            />
+                        </div>
+                    )}
+
                     {isQRDownloadFormVisible && (
                         <div className={`qrDownloadForm-container ${isQRDownloadFormAnimating ? "fade-out" : "fade-in"}`}>
                             <QRDownloadForm plantID={plantID} onBlur={handleQRDownloadFormClose} />
@@ -504,7 +504,12 @@ const Layout = () => {
                                 ref={tableRef} /></ProtectedRoute>}
                         />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
-                        <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+                        <Route path="/account" element={<ProtectedRoute><Account
+                            onAction={(message, type) => {
+                                handleSendNotification(message, type);
+                                handleRefreshTable();  // Refresh data after save
+                            }}
+                        /></ProtectedRoute>} />
                         <Route path="/history" element={<ProtectedRoute><History onRowClick={handlePlantTableRowClick} /></ProtectedRoute>} />
                         <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
                     </Routes>
