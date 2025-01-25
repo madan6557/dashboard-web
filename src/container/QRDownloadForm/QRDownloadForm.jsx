@@ -15,7 +15,7 @@ const QRDownloadForm = ({ onBlur, plantID = "2400000" }) => {
             const response = await getQRCode(data);
 
             if (response) {
-                const blob = new Blob([response], { type: 'application/zip' });
+                const blob = new Blob([response], { type: 'image/jpg' });
                 const url = window.URL.createObjectURL(blob);
                 setDownloadUrl(url);
             }
@@ -54,7 +54,7 @@ const QRDownloadForm = ({ onBlur, plantID = "2400000" }) => {
         if (downloadUrl) {
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = `QRCode_${plantID}.zip`;
+            link.download = `QRCode_${plantID}.jpg`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

@@ -22,6 +22,7 @@ export const fetchRejectedPlants = async (config) => {
 export const fetchRejectedPlantByID = async (id_reject) => {
     try {
         const response = await API.get(`/reject/${id_reject}`);
+        console.log(response);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch data:', error);

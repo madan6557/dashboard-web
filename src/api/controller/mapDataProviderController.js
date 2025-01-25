@@ -1,6 +1,6 @@
 import { fetchAllApprovedPlants } from "../handlers/approvePlantsHandler";
 
-export const getAllApprovedPlants = async (keyword, id_site) => {
+export const getAllApprovedPlants = async (keyword, id_site) => { 
     const {data} = await fetchAllApprovedPlants(keyword, id_site);
 
     // Define the desired columns

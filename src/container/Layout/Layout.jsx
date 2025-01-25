@@ -386,8 +386,57 @@ const Layout = () => {
 
             <div className="content-container">
 
+                {isDetailsVisible && (
+                    <div
+                        className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
+                    >
+                        <Details
+                            onClose={handleDetailsClose}
+                            onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
+                            readonly={isDetailsReadonly}
+                            onTab={selectedTab || null}
+                            getQR={handleOpenQRDownloadForm}
+                        />
+                    </div>
+                )}
 
+                {isQRDownloadFormVisible && (
+                    <div className={`qrDownloadForm-container ${isQRDownloadFormAnimating ? "fade-out" : "fade-in"}`}>
+                        <QRDownloadForm plantID={plantID} onBlur={handleQRDownloadFormClose} />
+                    </div>
+                )}
 
+                {isEditDetailsVisible && (
+                    <div
+                        className={`editDetails-container ${isEditDetailsAnimating ? "fade-out" : "fade-in"}`}
+                    >
+                        <EditDetails
+                            onClose={handleEditDetailsClose}
+                            onDelete={handleEditDetailsDelete}
+                            onAction={(message, type) => {
+                                handleSendNotification(message, type);
+                                handleRefreshTable();  // Refresh data after save
+                            }}
+                            onUpdate={handleReloadTable}
+                            getQR={handleOpenQRDownloadForm}
+                        />
+                    </div>
+                )}
+
+                {isVerificationFormVisible && (
+                    <div
+                        className={`verificationForm-container ${isVerificationFormAnimating ? "fade-out" : "fade-in"}`}
+                    >
+                        <VerificationForm
+                            onClose={handleVerificationFormClose}
+                            onAction={(message, type) => {
+                                handleSendNotification(message, type);
+                                handleRefreshTable();  // Refresh data after save
+                            }}
+                            getQR={handleOpenQRDownloadForm}
+                        />
+                    </div>
+                )}
 
                 <div className="header-container">
                     <div
@@ -435,61 +484,13 @@ const Layout = () => {
                 </div>
 
                 <div className="content-wrapper">
-                    {isDetailsVisible && (
-                        <div
-                            className={`details-container ${isDetailsAnimating ? "fade-out" : "fade-in"}`}
-                        >
-                            <Details
-                                onClose={handleDetailsClose}
-                                onEdit={() => [setIsEditDetailsVisible(true), handleDetailsClose()]}
-                                readonly={isDetailsReadonly}
-                                onTab={selectedTab || null}
-                                getQR={handleOpenQRDownloadForm}
-                            />
-                        </div>
-                    )}
-
-                    {isQRDownloadFormVisible && (
-                        <div className={`qrDownloadForm-container ${isQRDownloadFormAnimating ? "fade-out" : "fade-in"}`}>
-                            <QRDownloadForm plantID={plantID} onBlur={handleQRDownloadFormClose} />
-                        </div>
-                    )}
-
-                    {isEditDetailsVisible && (
-                        <div
-                            className={`editDetails-container ${isEditDetailsAnimating ? "fade-out" : "fade-in"}`}
-                        >
-                            <EditDetails
-                                onClose={handleEditDetailsClose}
-                                onDelete={handleEditDetailsDelete}
-                                onAction={(message, type) => {
-                                    handleSendNotification(message, type);
-                                    handleRefreshTable();  // Refresh data after save
-                                }}
-                                onUpdate={handleReloadTable}
-                                getQR={handleOpenQRDownloadForm}
-                            />
-                        </div>
-                    )}
-
-                    {isVerificationFormVisible && (
-                        <div
-                            className={`verificationForm-container ${isVerificationFormAnimating ? "fade-out" : "fade-in"}`}
-                        >
-                            <VerificationForm
-                                onClose={handleVerificationFormClose}
-                                onAction={(message, type) => {
-                                    handleSendNotification(message, type);
-                                    handleRefreshTable();  // Refresh data after save
-                                }}
-                                getQR={handleOpenQRDownloadForm}
-                            />
-                        </div>
-                    )}
 
                     <Routes>
                         <Route path="/landing" element={null} />
-                        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                        <Route path="/dashboard" element={<ProtectedRoute>
+                            <Dashboard
+                                onRowClick={handlePlantTableRowClick}
+                            /></ProtectedRoute>} />
                         <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                         <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />

@@ -5,7 +5,7 @@ import QRSample from "../../../assets/images/QR_Sample.png";
 import { DataOptionContext } from "../../../context/dataOptionContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
 import { OptionField } from '../../../components/FieldInput/FieldInput';
-import { requestQRCode } from '../../../api/controller/qrCodeController';
+import { getCounter, requestQRCode } from '../../../api/controller/qrCodeController';
 
 const GenerateQRCode = () => {
     const { dataOption } = useContext(DataOptionContext);
@@ -18,6 +18,19 @@ const GenerateQRCode = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [showDownload, setShowDownload] = useState(false);
     const [downloadUrl, setDownloadUrl] = useState("");
+
+    const fetchCounter = async () => {
+        try {
+           
+            const response = await getCounter(site);
+            console.log(response);
+            setStartID(0);
+        } catch (error) {
+            console.error("Error fetching QR code:", error);
+        } finally {
+            setIsGenerating(false);
+        }
+    };
 
     const handleGenerateQRCode = async () => {
         try {
@@ -48,9 +61,15 @@ const GenerateQRCode = () => {
         if (selectedSite) {
             setSite(selectedSite);
             setSiteOption(dataOption.tb_site);
-            setStartID(0);
+            fetchCounter();
         }// eslint-disable-next-line
     }, [selectedSite]);
+
+    useEffect(() => {
+
+            fetchCounter();
+        // eslint-disable-next-line
+    }, [site]);
 
     const handleSiteChange = (value) => {
         setSite(value);

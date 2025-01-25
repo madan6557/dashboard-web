@@ -31,10 +31,14 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
 
                     if (onTab === "Rejected") {
                         setIsCommentVisible(true);
-                        data = await getSelectedRejectedPlants(selectedRowData);
+                        const response = await getSelectedRejectedPlants(selectedRowData);
+                        data = response.data;
+                        imageBlob = response.imageBlob;
                     } else if (onTab === "Draft") {
                         setIsCommentVisible(false);
-                        data = await getSelectedDraftPlants(selectedRowData);
+                        const response = await getSelectedDraftPlants(selectedRowData);
+                        data = response.data;
+                        imageBlob = response.imageBlob;
                     } else if (onTab === "History") {
                         setIsCommentVisible(false);
                         const response = await getSelectedPlantHistoryById(selectedRowData);
@@ -158,6 +162,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                             <NumericField id="height" title="Height" value={plantDetails.height || ""} suffix="cm" readonly={true} placeholder="Height" />
                             <NumericField id="diameter" title="Diameter" value={plantDetails.diameter || ""} suffix="cm" readonly={true} placeholder="Diameter" />
                             <TextField id="status" title="Status" value={plantDetails.status || ""} readonly={true} placeholder="Status" />
+                            <TextField id="location" title="Location" value={plantDetails.location || ""} readonly={true} placeholder="Location" />
                             <TextField id="plot" title="Plot" value={plantDetails.rehabilitationPlot || ""} readonly={true} placeholder="Plot" />
                             <NumericField id="easting" title="Easting" value={plantDetails.easting || ""} suffix="m" readonly={true} placeholder="Easting" />
                             <NumericField id="northing" title="Northing" value={plantDetails.northing || ""} suffix="m" readonly={true} placeholder="Northing" />

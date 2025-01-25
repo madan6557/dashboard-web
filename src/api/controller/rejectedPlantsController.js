@@ -1,5 +1,6 @@
 import { fetchRejectedPlants, fetchRejectedPlantByID } from "../handlers/rejectedPlantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
+import { base64ToBlobUrl } from "../../utils/base64ToBlobUrl";
 
 export const searchRejectedPlants = async (config) => {
     const response = await fetchRejectedPlants(config);
@@ -34,12 +35,14 @@ export const searchRejectedPlants = async (config) => {
 };
 
 export const getSelectedRejectedPlants = async (id_reject) => {
-    const { data } = await fetchRejectedPlantByID(id_reject);
+    const { data, imageBase64 } = await fetchRejectedPlantByID(id_reject);
 
     if (data && data.plantingDate) {
-        const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
+        const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss')
         data.plantingDate = formattedDate;
     }
 
-    return data;
+    const imageBlob = await base64ToBlobUrl(imageBase64);
+
+    return { data, imageBlob };
 }

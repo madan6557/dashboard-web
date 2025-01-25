@@ -226,7 +226,7 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
             <div className="verificationForm-shimmer-line"></div>
             <div className="verificationForm-shimmer-line"></div>
         </div>
-    );    
+    );
 
     return (
         <div className="verificationForm-wrapper">
@@ -252,34 +252,38 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                         {isLoading ? renderShimmer() : renderPlantDetails()}
                     </div>
                 </div>
-                <div className="verificationForm-footer-button-wrapper">
-                    {isCommentVisible && (
-                        <div className={`verification-comment-container ${isCommentAnimating ? "fade-out" : "fade-in"}`}>
-                            <AreaField
-                                id="comment"
-                                placeholder="Enter the reason for rejection..."
-                                title="Comment"
-                                rows={10}
-                                value={comment}
-                                onChange={handleCommentChange}
-                            />
-                            <div className="verificationForm-footer-button-wrapper">
-                                <div className="verificationForm-footer-button">
-                                    <ActionButton title="Cancel" type="ghost" onClick={handleCancel} />
-                                </div>
-                                <div className="verificationForm-footer-button">
-                                    <ActionButton title="Confirm" type="confirm" onClick={handleConfirm} disabled={!comment.trim()} />
+
+                {!isLoading && (
+                    <div className="verificationForm-footer-button-wrapper">
+                        {isCommentVisible && (
+                            <div className={`verification-comment-container ${isCommentAnimating ? "fade-out" : "fade-in"}`}>
+                                <AreaField
+                                    id="comment"
+                                    placeholder="Enter the reason for rejection..."
+                                    title="Comment"
+                                    rows={10}
+                                    value={comment}
+                                    onChange={handleCommentChange}
+                                />
+                                <div className="verificationForm-footer-button-wrapper">
+                                    <div className="verificationForm-footer-button">
+                                        <ActionButton title="Cancel" type="ghost" onClick={handleCancel} />
+                                    </div>
+                                    <div className="verificationForm-footer-button">
+                                        <ActionButton title="Confirm" type="confirm" onClick={handleConfirm} disabled={!comment.trim()} />
+                                    </div>
                                 </div>
                             </div>
+                        )}
+                        <div className="verificationForm-footer-button">
+                            <ActionButton title="Reject" type="danger" onClick={handleRejectClick} />
                         </div>
-                    )}
-                    <div className="verificationForm-footer-button">
-                        <ActionButton title="Reject" type="danger" onClick={handleRejectClick} />
+                        <div className="verificationForm-footer-button">
+                            <ActionButton title="Approve" type="confirm" onClick={handleApprove} />
+                        </div>
                     </div>
-                    <div className="verificationForm-footer-button">
-                        <ActionButton title="Approve" type="confirm" onClick={handleApprove} />
-                    </div>
-                </div>
+                )}
+
             </div>
 
         </div>

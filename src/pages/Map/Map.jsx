@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext} from 'react';
-import MapViewport from "../../components/Map/Map";
+import MapViewport from "../../components/MapViewport/MapViewport";
 import "./Map.css"
 import { SiteIDContext } from "../../context/SiteIDContext";
 import { getAllApprovedPlants } from '../../api/controller/mapDataProviderController';
@@ -24,9 +24,17 @@ const Map = () => {
         }
         // eslint-disable-next-line
     }, [selectedSite]);
+
+    const handleOnClick = (id_plant) => {
+        console.log(`${id_plant} is selected`);
+    };
+
     return (
         <div className="map-container">
-            <MapViewport />
+            <MapViewport 
+            dataset={plantsData}
+            onClick={handleOnClick}
+            />
         </div>
     );
 };

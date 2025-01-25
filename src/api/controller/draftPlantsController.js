@@ -1,5 +1,6 @@
 import { fetchDraftPlants, fetchDraftPlantByID } from "../handlers/draftPlantsHandler";
 import { dateFormat } from "../../utils/dateFormat";
+import { base64ToBlobUrl } from "../../utils/base64ToBlobUrl";
 
 export const searchDraftPlants = async (config) => {
     const response = await fetchDraftPlants(config);
@@ -54,12 +55,14 @@ export const searchDraftPlants = async (config) => {
 };
 
 export const getSelectedDraftPlants = async (id_draft) => {
-    const { data } = await fetchDraftPlantByID(id_draft);
+    const { data, imageBase64 } = await fetchDraftPlantByID(id_draft);
 
     if (data && data.plantingDate) {
-        const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss', '+8')
+        const formattedDate = dateFormat(data.plantingDate, 'yyyy-mm-dd hh-mm-ss')
         data.plantingDate = formattedDate;
     }
 
-    return data;
+     const imageBlob = await base64ToBlobUrl(imageBase64);
+
+     return { data, imageBlob };
 }
