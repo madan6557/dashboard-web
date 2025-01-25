@@ -445,7 +445,7 @@ const Layout = () => {
                     >
                         <List />
                     </div>
-                    <p className="menu-title">{selectedComponent}</p>
+                    <p className="menu-title">{selectedComponent||"Dashboard"}</p>
                     <div className="config-wrapper">
                         <div className="site-option">
                             <p>Site</p>
