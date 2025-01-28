@@ -21,10 +21,10 @@ const GenerateQRCode = () => {
 
     const fetchCounter = async () => {
         try {
-           
+
             const response = await getCounter(site);
-            console.log(response);
-            setStartID(0);
+            setStartID(parseInt(response.lastPrintedQR) + 1);
+            setEndId(parseInt(response.lastPrintedQR) + 1);
         } catch (error) {
             console.error("Error fetching QR code:", error);
         } finally {
@@ -38,7 +38,7 @@ const GenerateQRCode = () => {
             setShowDownload(false);
             setDownloadUrl(""); // Clear previous download URL
 
-            const data = { 
+            const data = {
                 id_site: site,
                 generate: parseInt(amount)
             };
@@ -61,13 +61,13 @@ const GenerateQRCode = () => {
         if (selectedSite) {
             setSite(selectedSite);
             setSiteOption(dataOption.tb_site);
-            fetchCounter();
         }// eslint-disable-next-line
     }, [selectedSite]);
 
     useEffect(() => {
-
+        if (selectedSite) {
             fetchCounter();
+        }
         // eslint-disable-next-line
     }, [site]);
 

@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MapViewport from "../../components/MapViewport/MapViewport";
 import "./Map.css"
+import { DataIDContext } from "../../context/SelectedIDContext";
 import { SiteIDContext } from "../../context/SiteIDContext";
 import { getAllApprovedPlants } from '../../api/controller/mapDataProviderController';
 
-const Map = () => {
+const Map = ({onRowClick}) => {
     const { selectedSite } = useContext(SiteIDContext);
     const [plantsData, setPlantsData] = useState([]);
+    const { setSelectedRowData } = useContext(DataIDContext);
 
     const fetchPlantsData = async () => {
         try {
@@ -26,14 +28,17 @@ const Map = () => {
     }, [selectedSite]);
 
     const handleOnClick = (id_plant) => {
-        console.log(`${id_plant} is selected`);
+        if (onRowClick) {
+            onRowClick();
+        }
+        setSelectedRowData(id_plant);
     };
 
     return (
         <div className="map-container">
-            <MapViewport 
-            dataset={plantsData}
-            onClick={handleOnClick}
+            <MapViewport
+                dataset={plantsData}
+                onClick={handleOnClick}
             />
         </div>
     );

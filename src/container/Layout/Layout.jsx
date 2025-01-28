@@ -285,6 +285,11 @@ const Layout = () => {
         }
     };
 
+    const handleOnTabChange = () => {
+        handleVerificationFormClose();
+        handleDetailsClose();
+    };
+
     return (
         <div className={`page-container ${sidebarToggle ? 'sidebar-visible' : 'sidebar-hidden'}`}>
 
@@ -445,7 +450,7 @@ const Layout = () => {
                     >
                         <List />
                     </div>
-                    <p className="menu-title">{selectedComponent||"Dashboard"}</p>
+                    <p className="menu-title">{selectedComponent || "Dashboard"}</p>
                     <div className="config-wrapper">
                         <div className="site-option">
                             <p>Site</p>
@@ -491,7 +496,11 @@ const Layout = () => {
                             <Dashboard
                                 onRowClick={handlePlantTableRowClick}
                             /></ProtectedRoute>} />
-                        <Route path="/map" element={<ProtectedRoute><Map /></ProtectedRoute>} />
+                        <Route path="/map" element={<ProtectedRoute>
+                            <Map
+                                onRowClick={handlePlantTableRowClick}
+                            />
+                            </ProtectedRoute>} />
                         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                         <Route path="/evaluation" element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
                         <Route path="/table" element={<ProtectedRoute>
@@ -502,7 +511,10 @@ const Layout = () => {
                         <Route path="/verification" element={<ProtectedRoute>
                             <Verification
                                 onRowClick={handleVerificationTableRowClick}
-                                ref={tableRef} /></ProtectedRoute>}
+                                ref={tableRef}
+                                onTabChange={handleOnTabChange}
+                            />
+                        </ProtectedRoute>}
                         />
                         <Route path="/generate" element={<ProtectedRoute><GenerateQRCode /></ProtectedRoute>} />
                         <Route path="/account" element={<ProtectedRoute><Account

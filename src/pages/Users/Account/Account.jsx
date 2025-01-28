@@ -153,6 +153,7 @@ const Account = ({ onAction }) => {
                 onSearchChange={handleSearchChange}
                 onRowClick={handleRowClick}
                 onLoading={isLoading}
+                onRefresh={fetchTableData}
             />
         </div>
     );

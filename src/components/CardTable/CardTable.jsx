@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Magnifier, Chevron, Ascending, Descending, Print } from '../Icons/Icon';
+import { Magnifier, Chevron, Ascending, Descending, Print, RefreshOutline } from '../Icons/Icon';
 import './CardTable.css';
 import ActionButton from "../ActionButton/ActionButton";
 
@@ -22,7 +22,8 @@ const CardTable = ({
     onSearchChange,
     onRowClick,
     onLoading,
-    onExport
+    onExport,
+    onRefresh
 }) => {
     const [pageNumber, setPageNumber] = useState(currentPage);
     const [order, setOrder] = useState(orderOptions[0].value);
@@ -117,7 +118,7 @@ const CardTable = ({
                 )}
                 <div className="cardTable-option-container">
                     {onExport && (
-                        <div className="export-button">
+                        <div className="cardTable-export-button">
                             <ActionButton
                                 title="Export"
                                 icon={<Print />}
@@ -125,6 +126,11 @@ const CardTable = ({
                                 disabled={false}
                                 onClick={onExport}
                             />
+                        </div>
+                    )}
+                    {onRefresh && (
+                        <div className="cardTable-button-icon" id="refresh" onClick={onRefresh}>
+                            <RefreshOutline />
                         </div>
                     )}
                     {onRowsChange && (
@@ -157,7 +163,7 @@ const CardTable = ({
                         </select>
                     )}
                     {onSortChange && (
-                        <div className="icon" id="sortBy" onClick={handleSortToggle}>
+                        <div className="cardTable-button-icon" id="sortBy" onClick={handleSortToggle}>
                             {sortOrder === 'asc' ? <Ascending /> : <Descending />}
                         </div>
                     )}
@@ -168,7 +174,9 @@ const CardTable = ({
                     <thead>
                         <tr>
                             {tableHead.map((heading, index) => (
-                                <th key={index}>{heading}</th>
+                                <th key={index} className={heading === '.hidden' ? 'hidden' : ''}>
+                                    {heading !== '.hidden' && heading}
+                                </th>
                             ))}
                         </tr>
                     </thead>
@@ -176,17 +184,23 @@ const CardTable = ({
                         {isLoading ? (
                             Array.from({ length: 5 }).map((_, index) => (
                                 <tr key={index} className="shimmering-row">
-                                    {tableHead.map((_, idx) => (
-                                        <td key={idx}><div className="shimmering-cell"></div></td>
-                                    ))}
+                                    {tableHead.map((heading, idx) =>
+                                        heading === '.hidden' ? null : (
+                                            <td key={idx}>
+                                                <div className="shimmering-cell"></div>
+                                            </td>
+                                        )
+                                    )}
                                 </tr>
                             ))
                         ) : (
                             tableItems.map((item, index) => (
                                 <tr key={index} onClick={() => handleRowClick(item)}>
-                                    {Object.values(item).map((value, idx) => (
-                                        <td key={idx}>{value}</td>
-                                    ))}
+                                    {Object.entries(item).map(([key, value], idx) =>
+                                        tableHead[idx] === '.hidden' ? null : (
+                                            <td key={idx}>{value}</td>
+                                        )
+                                    )}
                                 </tr>
                             ))
                         )}

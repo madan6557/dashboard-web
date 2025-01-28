@@ -2,7 +2,7 @@ import API from '../service';
 
 export const fetchApproveData = async (site, config, signal) => {
     try {
-        const response = await API.post(`/export/approve?id_site=${site}`, config, {
+        const response = await API.post(`/export/approve/${site}`, config, {
             responseType: 'blob',
             signal: signal // Tambahkan signal di sini
         });

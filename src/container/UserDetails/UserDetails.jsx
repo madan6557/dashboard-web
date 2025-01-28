@@ -25,7 +25,7 @@ const UserDetails = ({ onClose, onAction, data }) => {
     return (
         <div className="userDetails-wrapper">
             <div className="userDetails-header-wrapper">
-                <p className="form-title">Create Account</p>
+                <p className="form-title">Account</p>
                 <div className="userDetails-header-button">
                     <div className="close-button" onClick={onClose}>
                         <Cross />

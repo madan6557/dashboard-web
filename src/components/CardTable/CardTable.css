@@ -14,28 +14,22 @@
     width: 100%;
 }
 
-.cardTable-dropdown {
-    margin-right: 5px;
-}
-
 .cardTable-dropdown:hover {
     background-color: var(--blue-200);
     cursor: pointer;
 }
 
-#sortBy {
+.cardTable-button-icon{
+    display: flex;
+    align-items: center;
     color: var(--gray-900);
     border-radius: 6px;
     padding: 5px;
 }
 
-#sortBy:hover {
+.cardTable-button-icon:hover{
     background-color: var(--blue-200);
     cursor: pointer;
-}
-
-#numberOfRows {
-    margin-left: 5px;
 }
 
 .searchbar-container {
@@ -57,6 +51,7 @@
 .cardTable-option-container{
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 
 .cardTable-dropdown {
@@ -107,6 +102,10 @@
     /* Warna latar belakang untuk header tabel */
     font-weight: bold;
     /* Membuat teks header tebal */
+}
+
+.cardTable .hidden{
+    display: none;
 }
 
 .pagination {

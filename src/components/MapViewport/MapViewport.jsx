@@ -177,7 +177,7 @@ const ClusteredMarkers = ({ dataset, onClick, selectedMarker, setSelectedMarker 
                 marker.on("click", () => {
                     setSelectedMarker(id_plant); // Set selected marker
                     onClick(id_plant); // Trigger onClick callback
-                    map.setView([lat, lng], 20); // Zoom to selected marker
+                    map.setView([lat, lng], 22); // Zoom to selected marker
                     marker.openPopup(); // Open popup on marker click
                 });
 

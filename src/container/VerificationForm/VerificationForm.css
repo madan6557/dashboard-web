@@ -165,7 +165,7 @@
 .verificationForm-shimmer-wrapper{
     display: flex;
     flex-direction: column;
-    width: 100%; /* Sesuaikan dengan lebar detail */
+    width: 200px; /* Sesuaikan dengan lebar detail */
 }
 
 /* Perbaikan shimmer effect */

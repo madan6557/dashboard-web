@@ -9,14 +9,6 @@ import { getAllApprovedPlants } from '../../api/controller/mapDataProviderContro
 import { getPlantSummary } from '../../api/controller/analyticController';
 
 const Dashboard = ({ onRowClick }) => {
-    const liveRatio = 7;
-    const sickRatio = 1;
-    const deadRatio = 2;
-    const total = liveRatio + sickRatio + deadRatio;
-
-    const healthyWidth = ((liveRatio / total) * 100).toFixed(2);
-    const sickWidth = ((sickRatio / total) * 100).toFixed(2);
-    const deadWidth = ((deadRatio / total) * 100).toFixed(2);
 
     const [tableHead] = useState(["Plant ID", "Species", "Planting Date", "Activities", "Location", "Status"]);
     const [orderOptions] = useState([
@@ -126,7 +118,10 @@ const Dashboard = ({ onRowClick }) => {
     };
 
     const handleOnClick = (id_plant) => {
-        console.log(`${id_plant} is selected`);
+        if (onRowClick) {
+            onRowClick();
+        }
+        setSelectedRowData(id_plant);
     };
 
     return (
@@ -213,6 +208,7 @@ const Dashboard = ({ onRowClick }) => {
                         onSearchChange={handleSearchChange}
                         onRowClick={handleRowClick}
                         onLoading={isLoading}
+                        onRefresh={fetchTableData}
                     />
                 </div>
             </div>

@@ -123,6 +123,7 @@ const Table = forwardRef(({ onRowClick }, ref) => {
                 onRowClick={handleRowClick}
                 onLoading={isLoading}
                 onExport={handleExportForm}
+                onRefresh={fetchTableData}
             />
         </div>
     );

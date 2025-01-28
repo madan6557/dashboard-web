@@ -8,7 +8,7 @@ import { searchUnverifedPlants} from "../../../api/controller/verificationPlants
 import { searchDraftPlants } from "../../../api/controller/draftPlantsController";
 import { searchRejectedPlants } from "../../../api/controller/rejectedPlantsController";
 
-const Verification = forwardRef(({ onRowClick }, ref) => {
+const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
     const [tableHead, setTableHead] = useState(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
     const [orderOptions] = useState([
         { text: "Modified Date", value: "dateModified" },
@@ -35,6 +35,7 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
 
     const fetchTableData = async () => {
         setIsLoading(true);
+        onTabChange();
         const controller = new AbortController();
         const signal = controller.signal;
 
@@ -169,6 +170,7 @@ const Verification = forwardRef(({ onRowClick }, ref) => {
                 onSearchChange={handleSearchChange}
                 onRowClick={handleRowClick}
                 onLoading={isLoading}
+                onRefresh={fetchTableData}
             />
         </div>
     );
