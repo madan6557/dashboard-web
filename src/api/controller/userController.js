@@ -1,4 +1,4 @@
-import { createAccount, fetchAllAccount } from "../handlers/usersHandler";
+import { createAccount, fetchAllAccount, requestPasswordReset, resetPassword } from "../handlers/usersHandler";
 
 export const getAllAccount = async (config) => {
     const response = await fetchAllAccount(config);
@@ -36,5 +36,16 @@ export const getAllAccount = async (config) => {
 export const addNewAccount = async (data) => {
     const response = await createAccount(data);
 
+    return response;
+}
+
+export const sendResetPasswordRequest = async (data) => {
+    const response = await requestPasswordReset(data);
+
+    return response;
+}
+
+export const sendNewPassword = async (data) => {
+    const response = await resetPassword(data);
     return response;
 }

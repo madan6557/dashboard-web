@@ -1,6 +1,6 @@
 import API from '../service';
 
-// Mendapatkan semua pengguna
+
 export const fetchAllAccount = async (config) => {
   const {
     page,
@@ -18,7 +18,7 @@ export const fetchAllAccount = async (config) => {
   }
 };
 
-// Menambahkan pengguna baru
+
 export const createAccount = async (data) => {
   try {
     const response = await API.post('/user/sign-up', data); // Endpoint: /users
@@ -29,7 +29,26 @@ export const createAccount = async (data) => {
   }
 };
 
-// Mendapatkan semua pengguna
+export const requestPasswordReset = async (data) => {
+  try {
+    const response = await API.post(`/user/request-reset`, data);
+    return response;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error; 
+  }
+};
+
+export const resetPassword = async (data) => {
+  try {
+    const response = await API.post(`/user/reset-password`, data);
+    return response;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error; 
+  }
+};
+
 export const fetchAccountByID = async (uuid) => {
   try {
     const response = await API.get(`/user/${uuid}`);
@@ -40,7 +59,7 @@ export const fetchAccountByID = async (uuid) => {
   }
 };
 
-// Update data pengguna
+
 export const updateAccountDetails = async (userId, data) => {
   try {
     const response = await API.patch(`/users/${userId}`, data);
@@ -51,7 +70,6 @@ export const updateAccountDetails = async (userId, data) => {
   }
 };
 
-// Menghapus pengguna berdasarkan ID
 export const updateAccountStatus = async (userId) => {
   try {
     const response = await API.delete(`/users/${userId}`); // Endpoint: /users/:id

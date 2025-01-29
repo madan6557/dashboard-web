@@ -3,13 +3,30 @@ import './UserDetails.css';
 import { TextField } from "../../components/FieldInput/FieldInput";
 import { Cross } from "../../components/Icons/Icon";
 import ActionButton from "../../components/ActionButton/ActionButton";
-// import { useConfirmation } from "../../context/ActionConfirmationContext";
+import { useConfirmation } from "../../context/ActionConfirmationContext";
+import { sendResetPasswordRequest } from "../../api/controller/userController";
 
 const UserDetails = ({ onClose, onAction, data }) => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("user");
     const [accountStatus, setAccountStatus] = useState("user");
+    const requestConfirmation = useConfirmation();
+
+     const requestResetPassword = async () => {
+        const email = "2111016210015@mhs.ulm.ac.id";
+            const data = {
+                email: email
+            };
+    
+            try {
+                const response = await sendResetPasswordRequest(data);
+                onAction(`Reset password request sent to ${email} successfully`, 'success');
+                return response;
+            } catch (error) {
+                onAction(error.message || "Failed to send request", 'success');
+            }
+        };
 
     useEffect(() => {
         setEmail(data.email);
@@ -18,8 +35,22 @@ const UserDetails = ({ onClose, onAction, data }) => {
         setAccountStatus(data.status);
     }, [data]);
 
+    const handleResetPassword = () => {
+        requestConfirmation(
+            "Are you sure you want to reset the password?", "confirm",
+            async () => {
+                try {
+                    await requestResetPassword();
+                } catch (error) {
+                    console.error("Error saving data:", error);
+                    onAction(`Error sending request`, 'failed');
+                }
+            }
+        );
+    };
+
     const handleUnavailableAction = () => {
-       onAction("This feature not available yet!","info");
+        onAction("This feature not available yet!", "info");
     };
 
     return (
@@ -63,7 +94,7 @@ const UserDetails = ({ onClose, onAction, data }) => {
                 <ActionButton
                     title="Reset Password"
                     type="primary"
-                    onClick={handleUnavailableAction}
+                    onClick={handleResetPassword}
                 />
             </div>
         </div>
