@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './FieldInput.css';
+import { EyeOutline, EyeSolid } from '../Icons/Icon';
 
 const TextField = ({
     id = "",
@@ -220,31 +221,32 @@ const PasswordField = ({
     readonly = false,
     value = "",
     onChange = () => { },
-    onValidationChange = () => { } // New callback for validation status
+    onValidationChange = () => { } // Callback untuk validasi password
 }) => {
     const [password, setPassword] = useState(value);
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // 🔥 State untuk toggle password visibility
 
     useEffect(() => {
-        setPassword(value); // Update password value when prop changes
+        setPassword(value); // Update password value ketika prop berubah
     }, [value]);
 
     const handleChange = (e) => {
         if (e && e.target) {
             const newPassword = e.target.value;
-            setPassword(newPassword); // Update local state
+            setPassword(newPassword); // Update state lokal
 
-            // Validate password length
+            // Validasi panjang password
             if (newPassword.length >= 8) {
-                setError(""); // Clear error if valid
-                onValidationChange(true); // Notify parent that input is valid
+                setError(""); // Hilangkan error jika valid
+                onValidationChange(true); // Beritahu parent bahwa input valid
             } else {
-                setError("At least 8 characters."); // Set error message
-                onValidationChange(false); // Notify parent that input is invalid
+                setError("At least 8 characters."); // Tampilkan error jika tidak valid
+                onValidationChange(false); // Beritahu parent bahwa input tidak valid
             }
 
             if (onChange) {
-                onChange({ target: { value: newPassword } }); // Trigger onChange prop with formatted event
+                onChange({ target: { value: newPassword } }); // Trigger onChange dengan format event yang benar
             }
         }
     };
@@ -252,16 +254,27 @@ const PasswordField = ({
     return (
         <div className="input-wrapper">
             {title && <p className="title">{title}</p>}
-            <input
-                id={id}
-                className="input-value"
-                type="password"
-                placeholder={placeholder}
-                value={password}
-                readOnly={readonly}
-                onChange={readonly ? undefined : handleChange}
-            />
-            {error && <p className="error-message">{error}</p>} {/* Display error if any */}
+            <div className="password-field-container">
+                <input
+                    id={id}
+                    className="input-value"
+                    type={showPassword ? "text" : "password"} // 🔥 Toggle antara password & text
+                    placeholder={placeholder}
+                    value={password}
+                    readOnly={readonly}
+                    onChange={readonly ? undefined : handleChange}
+                />
+                {/* 🔥 Tombol untuk toggle password visibility */}
+                {!readonly && (
+                    <div
+                        className="password-toggle-btn"
+                        onClick={() => setShowPassword(!showPassword)}
+                    >
+                        {showPassword ? <EyeSolid /> : <EyeOutline />}
+                    </div>
+                )}
+            </div>
+            {error && <p className="error-message">{error}</p>} {/* 🔥 Tampilkan error jika ada */}
         </div>
     );
 };
