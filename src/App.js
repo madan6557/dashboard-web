@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';  // Import navigate hook
-import Layout from './container/Layout/Layout';
-import LandingPage from './pages/LandingPage/LandingPage';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+import Layout from "./container/Layout/Layout";
+import LandingPage from "./pages/LandingPage/LandingPage";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();  // Hook untuk navigasi programatik
+  const navigate = useNavigate(); // Gunakan useNavigate dari react-router-dom
 
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
+  const checkAuthStatus = () => {
+    const token = localStorage.getItem("authToken");
 
     if (token) {
       setIsAuthenticated(true);
-      if (window.location.pathname === '/landing' || window.location.pathname === '/') {
-        navigate('/dashboard'); // Redirect ke /dashboard jika token valid
-      }
     } else {
       setIsAuthenticated(false);
-        navigate('/landing'); // Redirect ke /landing jika token tidak ada
+      navigate("/landing"); // Redirect ke landing jika tidak ada token
     }
+  };
+
+  useEffect(() => {
+    checkAuthStatus(); // Cek status saat pertama kali aplikasi dimuat
   }, [navigate]);
 
-  // Render berdasarkan path
-  if (!isAuthenticated) {
-    return <LandingPage />;
-  } else {
-    return <Layout />;
-  }
+  return isAuthenticated ? <Layout /> : <LandingPage />;
 };
 
 export default App;

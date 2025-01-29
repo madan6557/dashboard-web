@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
-import brand from "../../assets/images/logia.svg";
+import BrandLogo from "../../assets/images/logia.svg";
 import MenuButton from "../../components/MenuButton/MenuButton";
 import {
     Chevron,
@@ -274,7 +274,7 @@ const Sidebar = ({ onMenuSelect, onMenuHover, onMenuLeave, onSendNotification, s
     return (
         <div className={`sidebar-container ${isMinimize ? "minimize" : ""}`}>
             <div className="brand-wrapper">
-                <img src={brand} alt="brand" />
+                <img src={BrandLogo} alt="Brand" />
                 <p>Logia</p>
                 <div className="minimize-toggle" onClick={handleMinimize}>
                     <div className="chevron-icon">

@@ -1,15 +1,17 @@
 import React, { useState, useContext, useImperativeHandle, forwardRef, useEffect } from "react";
 import './Verification.css';
-import CardTable from "../../../components/CardTable/CardTable"
-import FloorButton from "../../../components/FloorButton/FloorButton"
+import CardTable from "../../../components/CardTable/CardTable";
+import FloorButton from "../../../components/FloorButton/FloorButton";
 import { DataIDContext } from "../../../context/SelectedIDContext";
 import { SiteIDContext } from "../../../context/SiteIDContext";
-import { searchUnverifedPlants} from "../../../api/controller/verificationPlantsController";
+import { searchUnverifedPlants } from "../../../api/controller/verificationPlantsController";
 import { searchDraftPlants } from "../../../api/controller/draftPlantsController";
 import { searchRejectedPlants } from "../../../api/controller/rejectedPlantsController";
 
 const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
-    const [tableHead, setTableHead] = useState(["ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"]);
+    const [tableHead, setTableHead] = useState([
+        "ID", "Plant ID", "Species", "Activities", "Location", "Uploader", "Upload Date", "Verification"
+    ]);
     const [orderOptions] = useState([
         { text: "Modified Date", value: "dateModified" },
         { text: "Plant ID", value: "id_plant" },
@@ -30,8 +32,16 @@ const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
     const { selectedSite } = useContext(SiteIDContext);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Tambahkan state untuk menyimpan FloorButton yang sedang dipilih
-    const [selectedTab, setSelectedTab] = useState("Unverified");
+    // Set state for selected tab and persist it on refresh
+    const [selectedTab, setSelectedTab] = useState(() => {
+        // Check if there is a previously selected tab in sessionStorage
+        return sessionStorage.getItem("selectedTab") || "Unverified";
+    });
+
+    // Store the selected tab in sessionStorage when it changes
+    useEffect(() => {
+        sessionStorage.setItem("selectedTab", selectedTab);
+    }, [selectedTab]);
 
     const fetchTableData = async () => {
         setIsLoading(true);
@@ -46,7 +56,7 @@ const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
             sort: sortOrder,
             search: searchTerm,
             site: parseInt(selectedSite),
-            signal // Tambahkan signal ke konfigurasi
+            signal // Add signal to config
         };
 
         try {
@@ -80,7 +90,7 @@ const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
         return controller;
     };
 
-    // Expose fetchTableData to the parent component
+    // Expose fetchTableData to parent component
     useImperativeHandle(ref, () => ({
         fetchTableData,
         setIsLoading: () => {
@@ -99,12 +109,11 @@ const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
 
         return () => {
             if (controller) {
-                controller.abort(); // Batalkan permintaan sebelumnya jika ada
+                controller.abort(); // Abort previous request if any
             }
         };
         // eslint-disable-next-line
     }, [currentPage, rowsPerPage, orderBy, sortOrder, searchTerm, selectedSite, selectedTab]);
-
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -140,7 +149,7 @@ const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
     return (
         <div className="verification-container">
             <div className="floorButton-container">
-                {/* FloorButton dengan kondisi selected */}
+                {/* FloorButton with selected condition */}
                 <FloorButton
                     title="Unverified"
                     isSelected={selectedTab === "Unverified"}

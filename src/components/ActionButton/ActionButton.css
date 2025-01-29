@@ -62,19 +62,19 @@
 }
 
 .secondary {
-    background-color: var(--gray-500);
+    border: solid 2px var(--gray-600);
 }
 
 .secondary p{
-    color: var(--gray-50);
+    color: var(--gray-900);
 }
 
 .secondary .icon {
-    color: var(--gray-50);
+    color: var(--gray-900);
 }
 
 .secondary:hover {
-    background-color: var(--gray-600);
+    background-color: var(--gray-400);
 }
 
 .danger {

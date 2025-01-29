@@ -22,10 +22,10 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
     const fetchData = async () => {
         if (selectedRowData) {
             setIsLoading(true);
+            setIsHasMap(true);
             try {
                 if (onTab) {
                     console.log(onTab);
-                    setIsHasMap(false);
                     let data;
                     let imageBlob;
 
@@ -35,6 +35,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                         data = response.data;
                         imageBlob = response.imageBlob;
                     } else if (onTab === "Draft") {
+                        setIsHasMap(false);
                         setIsCommentVisible(false);
                         const response = await getSelectedDraftPlants(selectedRowData);
                         data = response.data;
@@ -51,12 +52,11 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                     console.log(data);
                     setPlantDetails(data);
                     setPlantID(data.id_plant);
-                    if(imageBlob){
+                    if (imageBlob) {
                         setPlantImage(imageBlob);
                     }
                     setPlantImage(imageBlob);
                 } else {
-                    setIsHasMap(true);
                     setIsCommentVisible(false);
                     const { data, imageBlob } = await getSelectedApprovedPlants(selectedRowData);
                     setPlantImage(imageBlob);
@@ -150,7 +150,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                     : (
                         <>
                             <div className="detail-image-wrapper">
-                                <Image alt="Plant Image" src={plantImage ? plantImage : NoImage} hasMap={isHasMap} />
+                                <Image alt="Plant Image" src={plantImage ? plantImage : NoImage} hasMap={isHasMap} onSelected={plantDetails} />
                             </div>
                             {isCommentVisible && (
                                 <AreaField id="comment" title="Comment" value={plantDetails.comment || ""} readonly={true} placeholder="Comment" />

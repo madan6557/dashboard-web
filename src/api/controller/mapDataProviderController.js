@@ -1,23 +1,35 @@
 import { fetchAllApprovedPlants } from "../handlers/approvePlantsHandler";
 
-export const getAllApprovedPlants = async (keyword, id_site) => { 
-    const {data} = await fetchAllApprovedPlants(keyword, id_site);
+export const getAllApprovedPlants = async (keyword, id_site, location) => { 
+    try {
+        const { data } = await fetchAllApprovedPlants(keyword, id_site);
 
-    // Define the desired columns
-    const desiredColumns = ['id_plant', 'easting', 'northing', 'status'];
+        if (!Array.isArray(data)) {
+            console.warn("Invalid data received:", data);
+            return { data: [] }; // Jika `data` bukan array, kembalikan array kosong
+        }
 
-    // Filter the data to only include the desired columns and format plantingDate
-    const filteredData = data.map(item => {
-        let filteredItem = {};
-        desiredColumns.forEach(column => {
-            if (item.hasOwnProperty(column)) {
-                filteredItem[column] = item[column];
-            }
-        });
-        return filteredItem;
-    });
+        // Define the desired columns
+        const desiredColumns = ['id_plant', 'easting', 'northing', 'status', 'location'];
 
-    return {
-        data: filteredData,
-    };
+        // Filter and map data
+        const filteredData = data
+            .filter(item => 
+                item && (!location || (item.location && item.location.toLowerCase() === location.toLowerCase()))
+            )
+            .map(item => {
+                let filteredItem = {};
+                desiredColumns.forEach(column => {
+                    if (item.hasOwnProperty(column)) {
+                        filteredItem[column] = item[column];
+                    }
+                });
+                return filteredItem;
+            });
+
+        return { data: filteredData };
+    } catch (error) {
+        console.error("Error fetching plants:", error);
+        return { data: [] }; // Jika ada error, kembalikan array kosong
+    }
 };

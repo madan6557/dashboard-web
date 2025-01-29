@@ -5,7 +5,6 @@ import { searchApprovedPlants } from "../../api/controller/approvedPlantsControl
 import { DataIDContext } from "../../context/SelectedIDContext";
 import { SiteIDContext } from "../../context/SiteIDContext";
 import MapViewport from '../../components/MapViewport/MapViewport';
-import { getAllApprovedPlants } from '../../api/controller/mapDataProviderController';
 import { getPlantSummary } from '../../api/controller/analyticController';
 
 const Dashboard = ({ onRowClick }) => {
@@ -28,22 +27,11 @@ const Dashboard = ({ onRowClick }) => {
     const { setSelectedRowData } = useContext(DataIDContext);
     const { selectedSite } = useContext(SiteIDContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [plantsData, setPlantsData] = useState([]);
 
     const [totalPlant, setTotalPlant] = useState(null);
     const [healthyPlant, setHealthyPlant] = useState({});
     const [sickPlant, setSickPlant] = useState({});
     const [witheredPlant, setWitheredPlant] = useState({});
-
-    const fetchPlantsLocationData = async () => {
-        try {
-            const response = await getAllApprovedPlants("", selectedSite);
-            setPlantsData(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.error("Error fetching plants:", error);
-        }
-    };
 
     const fetchTableData = async () => {
         setIsLoading(true);
@@ -84,9 +72,6 @@ const Dashboard = ({ onRowClick }) => {
     useEffect(() => {
         if (selectedSite) {
             fetchTableData();
-            if (plantsData.length === 0) {
-                fetchPlantsLocationData();
-            }
             if(!totalPlant){
                 fetchPlantsSummary();
             }
@@ -131,7 +116,6 @@ const Dashboard = ({ onRowClick }) => {
             </div>
             <div className="dashboard-map-container">
                 <MapViewport
-                    dataset={plantsData}
                     onClick={handleOnClick}
                 />
             </div>

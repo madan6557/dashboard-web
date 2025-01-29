@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -9,12 +9,24 @@ import proj4 from "proj4";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import "./MapViewport.css";
+import { getAllApprovedPlants } from "../../api/controller/mapDataProviderController";
+import { SiteIDContext } from "../../context/SiteIDContext";
 
-// Fix marker icon issue
+// Fix default marker icon
 let DefaultIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
 });
+
+let BlueIcon = L.icon({
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [14, 40],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+}); 
+
 L.Marker.prototype.options.icon = DefaultIcon;
 
 // Define CRS for UTM Zone 50N
@@ -28,7 +40,7 @@ function UTMtoLatLng(northing, easting) {
             return [longlatCoordinates[1], longlatCoordinates[0]]; // Return [lat, lng]
         } else {
             console.warn("Invalid coordinates from UTM conversion:", longlatCoordinates);
-            return null; // Return null if conversion is invalid
+            return null;
         }
     } catch (error) {
         console.error("UTM conversion error:", error);
@@ -43,7 +55,6 @@ const AddWMSLayer = () => {
     useEffect(() => {
         let geoServerLayer = null;
 
-        // Function to toggle WMS layer
         const toggleWMSLayer = () => {
             if (map.getZoom() >= 14) {
                 if (!geoServerLayer) {
@@ -68,13 +79,9 @@ const AddWMSLayer = () => {
             }
         };
 
-        // Attach zoomend event to toggle WMS layer
         map.on("zoomend", toggleWMSLayer);
-
-        // Initial check to toggle WMS layer
         toggleWMSLayer();
 
-        // Cleanup event listener when component unmounts
         return () => {
             map.off("zoomend", toggleWMSLayer);
             if (geoServerLayer) {
@@ -86,61 +93,70 @@ const AddWMSLayer = () => {
     return null;
 };
 
-
-const MapViewport = ({ dataset, onClick }) => {
+const MapViewport = ({ location, focus, onClick }) => {
     const [selectedMarker, setSelectedMarker] = useState(null);
+    const [plantsData, setPlantsData] = useState([]);
+    const { selectedSite } = useContext(SiteIDContext);
+
+    // Fetch plant data
+    const fetchPlantsLocationData = async () => {
+        try {
+            const response = await getAllApprovedPlants("", selectedSite, location);
+            setPlantsData(response.data);
+        } catch (error) {
+            console.error("Error fetching plants:", error);
+        }
+    };
 
     useEffect(() => {
-        console.log("Map initialized.");
-        // eslint-disable-next-line
-    }, []);
+        if (selectedSite) {
+            fetchPlantsLocationData();
+        }// eslint-disable-next-line
+    }, [selectedSite, location]);
 
     return (
         <div className="map-wrapper">
             <MapContainer
-                center={[-3.9041126496685287, 115.02151371533008]} // Initial center of the map
+                center={[-3.9041126496685287, 115.02151371533008]}
                 zoom={14}
                 scrollWheelZoom={true}
                 className="leaflet-map"
                 maxZoom={22}
             >
-                {/* Base map: ArcGIS */}
                 <TileLayer
                     url="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
                     attribution="&copy; ArcGIS"
                     zIndex={1}
                 />
 
-                {/* GeoServer layer */}
                 <AddWMSLayer />
 
-                {/* Add clustered markers */}
                 <ClusteredMarkers
-                    dataset={dataset}
-                    onClick={onClick}
+                    dataset={plantsData}
+                    onClick={onClick || (() => {})}
                     selectedMarker={selectedMarker}
                     setSelectedMarker={setSelectedMarker}
                 />
+
+                {focus && <FocusMarker focus={focus} />}
             </MapContainer>
         </div>
     );
 };
 
+// Component for clustered plant markers
 const ClusteredMarkers = ({ dataset, onClick, selectedMarker, setSelectedMarker }) => {
     const map = useMap();
 
     useEffect(() => {
-        const clusterGroup = L.markerClusterGroup({
-            maxClusterRadius: 5,
-        });
+        const clusterGroup = L.markerClusterGroup({ maxClusterRadius: 5 });
 
-        dataset.forEach(({ id_plant, easting, northing, status }) => {
-            const latLng = UTMtoLatLng(parseFloat(northing), parseFloat(easting)); // Convert UTM to [lat, lng]
+        dataset.forEach(({ id_plant, easting, northing, status, location }) => {
+            const latLng = UTMtoLatLng(parseFloat(northing), parseFloat(easting));
 
             if (latLng) {
                 const [lat, lng] = latLng;
 
-                // Determine marker color based on status
                 let markerColor;
                 if (status === "Hidup") {
                     markerColor = "--primary-green";
@@ -152,48 +168,67 @@ const ClusteredMarkers = ({ dataset, onClick, selectedMarker, setSelectedMarker 
 
                 const customIcon = L.divIcon({
                     className: `custom-marker`,
-                    html: `<div style="background-color: var(${markerColor}); width: 8px; height: 8px; border-radius: 50%; border: 2px solid ${selectedMarker === id_plant ? "blue" : "white"
-                        }"></div>`,
+                    html: `<div style="background-color: var(${markerColor}); width: 8px; height: 8px; border-radius: 50%; border: 2px solid ${selectedMarker === id_plant ? "blue" : "white"}"></div>`,
                 });
 
                 const marker = L.marker([lat, lng], { icon: customIcon });
 
-                // Bind popup to marker
                 const popupContent = `
-            <div>
-              <strong>ID Plant:</strong> ${id_plant}<br>
-              <strong>Status:</strong> ${status}<br>
-              <strong>UTM Coordinates:</strong><br>
-              Easting: ${easting}<br>
-              Northing: ${northing}<br>
-              <strong>Lat/Lon:</strong><br>
-              Lat: ${lat.toFixed(6)}<br>
-              Lon: ${lng.toFixed(6)}
-            </div>
-          `;
+                <div>
+                    <strong>ID Plant:</strong> ${id_plant}<br>
+                    <strong>Location:</strong> ${location}<br>
+                    <strong>Status:</strong> ${status}<br>
+                    <strong>UTM Coordinates:</strong><br>
+                    Easting: ${easting}<br>
+                    Northing: ${northing}<br>
+                    <strong>Lat/Lon:</strong><br>
+                    Lat: ${lat.toFixed(6)}<br>
+                    Lon: ${lng.toFixed(6)}
+                </div>
+                `;
+
                 marker.bindPopup(popupContent);
 
-                // Add click event to marker
                 marker.on("click", () => {
-                    setSelectedMarker(id_plant); // Set selected marker
-                    onClick(id_plant); // Trigger onClick callback
-                    map.setView([lat, lng], 22); // Zoom to selected marker
-                    marker.openPopup(); // Open popup on marker click
+                    setSelectedMarker(id_plant);
+                    if (onClick) onClick(id_plant);
+                    map.setView([lat, lng], 22);
+                    marker.openPopup();
                 });
 
                 clusterGroup.addLayer(marker);
-            } else {
-                console.warn(`Skipping invalid marker for ID Plant: ${id_plant}`);
             }
         });
 
         map.addLayer(clusterGroup);
 
-        // Cleanup when component unmounts
         return () => {
             map.removeLayer(clusterGroup);
-        };
+        };// eslint-disable-next-line
     }, [map, dataset, onClick, selectedMarker]);
+
+    return null;
+};
+
+// Component for focused plant marker
+const FocusMarker = ({ focus }) => {
+    const map = useMap();  
+
+    useEffect(() => {
+        if (focus) {
+            const { easting, northing } = focus;
+            const latLng = UTMtoLatLng(parseFloat(northing), parseFloat(easting));
+
+            if (latLng) {
+                const marker = L.marker(latLng, { icon: BlueIcon,  zIndexOffset: 1 }).addTo(map);
+                map.setView(latLng, 19);
+
+                return () => {
+                    map.removeLayer(marker);
+                };
+            }
+        }
+    }, [map, focus]);
 
     return null;
 };

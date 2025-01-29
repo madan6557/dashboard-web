@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './Image.css';
 import NoImage from "../../assets/images//No Image.jpg";
-import Map from "../../pages/Map/Map";
+import MapViewport from "../../components/MapViewport/MapViewport";
 import {
     MarkerOutline,
     MarkerSolid,
@@ -18,7 +18,8 @@ const Image = ({
     imageEditable = false,
     onImageUpload,
     onAction,
-    hasMap = false
+    hasMap = true,
+    onSelected
 }) => {
     const [selected, setSelected] = useState("photograph");
     const [showUploadForm, setShowUploadForm] = useState(false);
@@ -118,7 +119,14 @@ const Image = ({
                 </div>
             )}
 
-            {selected === "photograph" ? <img src={tempSrc} alt={alt} /> : <Map />}
+            {selected === "photograph" ? (
+                <img src={tempSrc} alt={alt} />
+            ) : (
+                <div className="map-viewport">
+                    <MapViewport location={onSelected?.location} focus={onSelected} />
+                </div>
+            )}
+
         </div>
     );
 };

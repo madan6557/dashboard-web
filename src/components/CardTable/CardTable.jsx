@@ -75,7 +75,7 @@ const CardTable = ({
             setIsLoading(true);
             if (onPageChange) onPageChange(value);
         }
-        setIsLoading(true);
+        // setIsLoading(true);
     };
 
     const handleOrderChange = (e) => {
@@ -220,12 +220,12 @@ const CardTable = ({
                         onChange={(e) => setPageNumber(e.target.value)}
                         onBlur={(e) => {
                             let value = parseInt(e.target.value, 10);
-                            if (!isNaN(value) && value !== pageNumber) handleChangePage(value);
+                            if (!isNaN(value) && value !== pageNumber && value >= 1 && value <= pageNumber);
                         }}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                                 let value = parseInt(e.target.value, 10);
-                                if (!isNaN(value) && value !== pageNumber) handleChangePage(value);
+                                if (!isNaN(value) && value !== pageNumber && value >= 1 && value <= pageNumber) handleChangePage(value);
                             }
                         }}
                     />

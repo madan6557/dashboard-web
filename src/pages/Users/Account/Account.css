@@ -8,10 +8,10 @@
 }
 
 .account-form-container {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-20%, -50%);
     border-radius: 8px;
     z-index: 5;
     overflow: hidden;

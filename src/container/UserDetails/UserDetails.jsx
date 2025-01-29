@@ -61,7 +61,7 @@ const UserDetails = ({ onClose, onAction, data }) => {
                     onClick={handleUnavailableAction}
                 />
                 <ActionButton
-                    title="ResetPassword"
+                    title="Reset Password"
                     type="primary"
                     onClick={handleUnavailableAction}
                 />

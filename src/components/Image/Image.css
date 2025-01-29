@@ -7,12 +7,18 @@
     position: relative;
     border-radius: 6px;
     overflow: hidden;
+    width: 100%;
     min-width: 200px;
     aspect-ratio: 3 / 4;
 }
 
 img {
     width: 100%;
+    aspect-ratio: 3 / 4;
+}
+
+.map-viewport{
+    width: 400px;
     aspect-ratio: 3 / 4;
 }
 

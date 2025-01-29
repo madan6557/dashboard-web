@@ -149,7 +149,7 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
             <p className="verificationForm-form-title">Current Data</p>
             <p className="verificationForm-form-date">{verificationPlantDetails.dateModified}</p>
             <div className="verificationForm-image-wrapper">
-                <Image alt="Plant Image" src={verificationPlantImage || NoImage} />
+                <Image alt="Plant Image" src={verificationPlantImage || NoImage} onSelected={verificationPlantDetails}/>
             </div>
             <TextField id="species" title="Species" value={verificationPlantDetails.plant} readonly={true} />
             <TextField id="plantingDate" title="Planting Date" value={verificationPlantDetails.plantingDate} readonly={true} />
@@ -193,7 +193,7 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                 <p className="verificationForm-form-title">Previous Data</p>
                 <p className="verificationForm-form-date">{approvePlantDetails.dateModified}</p>
                 <div className="verificationForm-image-wrapper">
-                    <Image alt="Plant Image" src={approvePlantImage || NoImage} />
+                    <Image alt="Plant Image" src={approvePlantImage || NoImage} onSelected={approvePlantDetails}/>
                 </div>
                 <TextField id="species" title="Species" value={approvePlantDetails.plant} readonly={true} />
                 <TextField id="plantingDate" title="Planting Date" value={approvePlantDetails.plantingDate} readonly={true} />

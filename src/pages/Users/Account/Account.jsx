@@ -91,11 +91,13 @@ const Account = ({ onAction }) => {
     };
 
     const handleRowClick = (item) => {
+        handleCreateAccountFormClose();
         setUserDetails(item);
         setIsUserDetailsVisible(true);
     };
 
     const handleOpenCreateAccountForm = () => {
+        handleUserDetailsClose();
         setIsCreateAccountFormVisible(true);
     };
 

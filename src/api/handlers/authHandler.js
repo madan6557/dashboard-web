@@ -37,6 +37,7 @@ export const logout = async () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userId');
         localStorage.removeItem('userRole');
+        localStorage.removeItem("isLoggedIn");
     } catch (error) {
         console.error('Failed to logout:', error);
         throw error;
