@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -96,6 +96,7 @@ const AddWMSLayer = () => {
 const MapViewport = ({ location, focus, onFind, onClick }) => {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [plantsData, setPlantsData] = useState([]);
+    const findMarkerRef = useRef(null); // Gunakan ref untuk menyimpan marker FindMarker
     const { selectedSite } = useContext(SiteIDContext);
 
     // Fetch plant data
@@ -113,6 +114,19 @@ const MapViewport = ({ location, focus, onFind, onClick }) => {
             fetchPlantsLocationData();
         } // eslint-disable-next-line
     }, [selectedSite, location]);
+
+    // Handle marker click
+    const handleMarkerClick = (id_plant) => {
+        setSelectedMarker(id_plant);
+
+        // Hapus FindMarker saat marker lain diklik
+        if (findMarkerRef.current) {
+            findMarkerRef.current.remove();
+            findMarkerRef.current = null;
+        }
+
+        if (onClick) onClick(id_plant);
+    };
 
     return (
         <div className="map-wrapper">
@@ -133,13 +147,13 @@ const MapViewport = ({ location, focus, onFind, onClick }) => {
 
                 <ClusteredMarkers
                     dataset={plantsData}
-                    onClick={onClick || (() => {})}
+                    onClick={handleMarkerClick}
                     selectedMarker={selectedMarker}
                     setSelectedMarker={setSelectedMarker}
                 />
 
                 {focus && <FocusMarker focus={focus} />}
-                {onFind && <FindMarker onFind={onFind} dataset={plantsData} />}
+                {onFind && <FindMarker onFind={onFind} dataset={plantsData} findMarkerRef={findMarkerRef} />}
             </MapContainer>
         </div>
     );
@@ -212,13 +226,11 @@ const ClusteredMarkers = ({ dataset, onClick, selectedMarker, setSelectedMarker 
 };
 
 // Component to find and highlight a specific plant
-const FindMarker = ({ onFind, dataset }) => {
+const FindMarker = ({ onFind, dataset, findMarkerRef }) => {
     const map = useMap();
-    const [marker, setMarker] = useState(null);
 
     useEffect(() => {
         if (onFind) {
-            // Cari tanaman berdasarkan ID
             const foundPlant = dataset.find(plant => plant.id_plant === onFind.id_plant);
 
             if (foundPlant) {
@@ -227,29 +239,32 @@ const FindMarker = ({ onFind, dataset }) => {
 
                 if (latLng) {
                     // Hapus marker lama jika ada
-                    if (marker) {
-                        map.removeLayer(marker);
+                    if (findMarkerRef.current) {
+                        findMarkerRef.current.remove();
                     }
 
                     // Tambahkan marker baru
                     const newMarker = L.marker(latLng, { icon: BlueIcon, zIndexOffset: 2 }).addTo(map);
                     map.setView(latLng, 19);
 
-                    // Simpan marker baru ke state
-                    setMarker(newMarker);
+                    // Simpan marker baru ke ref
+                    findMarkerRef.current = newMarker;
                 }
             }
         }
 
         return () => {
-            if (marker) {
-                map.removeLayer(marker);
+            // Hapus marker saat komponen unmount atau `onFind` berubah
+            if (findMarkerRef.current) {
+                findMarkerRef.current.remove();
+                findMarkerRef.current = null;
             }
         };
     }, [onFind, dataset]); // Memantau perubahan `onFind` dan `dataset`
 
     return null;
 };
+
 
 // Component for focused plant marker
 const FocusMarker = ({ focus }) => {
