@@ -93,7 +93,7 @@ const AddWMSLayer = () => {
     return null;
 };
 
-const MapViewport = ({ location, focus, onClick }) => {
+const MapViewport = ({ location, focus, onFind, onClick }) => {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [plantsData, setPlantsData] = useState([]);
     const { selectedSite } = useContext(SiteIDContext);
@@ -111,7 +111,7 @@ const MapViewport = ({ location, focus, onClick }) => {
     useEffect(() => {
         if (selectedSite) {
             fetchPlantsLocationData();
-        }// eslint-disable-next-line
+        } // eslint-disable-next-line
     }, [selectedSite, location]);
 
     return (
@@ -139,6 +139,7 @@ const MapViewport = ({ location, focus, onClick }) => {
                 />
 
                 {focus && <FocusMarker focus={focus} />}
+                {onFind && <FindMarker onFind={onFind} dataset={plantsData} />}
             </MapContainer>
         </div>
     );
@@ -210,6 +211,46 @@ const ClusteredMarkers = ({ dataset, onClick, selectedMarker, setSelectedMarker 
     return null;
 };
 
+// Component to find and highlight a specific plant
+const FindMarker = ({ onFind, dataset }) => {
+    const map = useMap();
+    const [marker, setMarker] = useState(null);
+
+    useEffect(() => {
+        if (onFind) {
+            // Cari tanaman berdasarkan ID
+            const foundPlant = dataset.find(plant => plant.id_plant === onFind.id_plant);
+
+            if (foundPlant) {
+                const { easting, northing } = foundPlant;
+                const latLng = UTMtoLatLng(parseFloat(northing), parseFloat(easting));
+
+                if (latLng) {
+                    // Hapus marker lama jika ada
+                    if (marker) {
+                        map.removeLayer(marker);
+                    }
+
+                    // Tambahkan marker baru
+                    const newMarker = L.marker(latLng, { icon: BlueIcon, zIndexOffset: 2 }).addTo(map);
+                    map.setView(latLng, 19);
+
+                    // Simpan marker baru ke state
+                    setMarker(newMarker);
+                }
+            }
+        }
+
+        return () => {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+        };
+    }, [onFind, dataset]); // Memantau perubahan `onFind` dan `dataset`
+
+    return null;
+};
+
 // Component for focused plant marker
 const FocusMarker = ({ focus }) => {
     const map = useMap();  
@@ -217,6 +258,7 @@ const FocusMarker = ({ focus }) => {
     useEffect(() => {
         if (focus) {
             const { easting, northing } = focus;
+            console.log(focus);
             const latLng = UTMtoLatLng(parseFloat(northing), parseFloat(easting));
 
             if (latLng) {

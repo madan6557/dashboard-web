@@ -27,6 +27,7 @@ const Dashboard = ({ onRowClick }) => {
     const { setSelectedRowData } = useContext(DataIDContext);
     const { selectedSite } = useContext(SiteIDContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [findData, setFindData] = useState(null);
 
     const [totalPlant, setTotalPlant] = useState(null);
     const [healthyPlant, setHealthyPlant] = useState({});
@@ -54,7 +55,7 @@ const Dashboard = ({ onRowClick }) => {
             setIsLoading(false);
         }
     };
-    
+
     const fetchPlantsSummary = async () => {
         try {
             const response = await getPlantSummary();
@@ -72,7 +73,7 @@ const Dashboard = ({ onRowClick }) => {
     useEffect(() => {
         if (selectedSite) {
             fetchTableData();
-            if(!totalPlant){
+            if (!totalPlant) {
                 fetchPlantsSummary();
             }
         }
@@ -99,6 +100,7 @@ const Dashboard = ({ onRowClick }) => {
         if (onRowClick) {
             onRowClick();
         }
+        setFindData(item);
         setSelectedRowData(item.id_plant);
     };
 
@@ -117,6 +119,7 @@ const Dashboard = ({ onRowClick }) => {
             <div className="dashboard-map-container">
                 <MapViewport
                     onClick={handleOnClick}
+                    onFind={findData}
                 />
             </div>
             <div className="dashboard-data-container">
@@ -126,54 +129,54 @@ const Dashboard = ({ onRowClick }) => {
                     <div className="chart-bar">
                         <div
                             className="plant-healthy"
-                            style={{ width: `${parseInt(healthyPlant.percentage)||0}%` }}
+                            style={{ width: `${parseInt(healthyPlant.percentage) || 0}%` }}
                         ></div>
                         <div
                             className="plant-sick"
-                            style={{ width: `${parseInt(sickPlant.percentage)||0}%` }}
+                            style={{ width: `${parseInt(sickPlant.percentage) || 0}%` }}
                         ></div>
                         <div
                             className="plant-dead"
-                            style={{ width: `${parseInt(witheredPlant.percentage)||0}%` }}
+                            style={{ width: `${parseInt(witheredPlant.percentage) || 0}%` }}
                         ></div>
                     </div>
                     <div className="legend-container">
                         <div className="chart-legend" id="plant-healthy">
                             <div className="value-container">
                                 <p className="value-title">Healthy <span>:</span></p>
-                                <p className="value-number">{healthyPlant.count||0}</p>
+                                <p className="value-number">{healthyPlant.count || 0}</p>
                                 <p className="value-percentage">{healthyPlant.percentage}%</p>
                             </div>
                             <div className="chart-bar value-chart-container">
                                 <div
                                     className="plant-healthy"
-                                    style={{ width: `${parseInt(healthyPlant.percentage)||0}%` }}
+                                    style={{ width: `${parseInt(healthyPlant.percentage) || 0}%` }}
                                 ></div>
                             </div>
                         </div>
                         <div className="chart-legend" id="plant-healthy">
                             <div className="value-container">
                                 <p className="value-title">Sick <span>:</span></p>
-                                <p className="value-number">{sickPlant.count||0}</p>
+                                <p className="value-number">{sickPlant.count || 0}</p>
                                 <p className="value-percentage">{sickPlant.percentage}%</p>
                             </div>
                             <div className="chart-bar value-chart-container">
                                 <div
                                     className="plant-sick"
-                                    style={{ width: `${parseInt(sickPlant.percentage)||0}%` }}
+                                    style={{ width: `${parseInt(sickPlant.percentage) || 0}%` }}
                                 ></div>
                             </div>
                         </div>
                         <div className="chart-legend" id="plant-healthy">
                             <div className="value-container">
                                 <p className="value-title">Withered <span>:</span></p>
-                                <p className="value-number">{witheredPlant.count||0}</p>
+                                <p className="value-number">{witheredPlant.count || 0}</p>
                                 <p className="value-percentage">{witheredPlant.percentage}%</p>
                             </div>
                             <div className="chart-bar value-chart-container">
                                 <div
                                     className="plant-dead"
-                                    style={{ width: `${parseInt(witheredPlant.percentage)||0}%` }}
+                                    style={{ width: `${parseInt(witheredPlant.percentage) || 0}%` }}
                                 ></div>
                             </div>
                         </div>

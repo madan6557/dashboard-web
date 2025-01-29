@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import './Details.css';
 import { TextField, NumericField, AreaField } from "../../components/FieldInput/FieldInput";
 import Image from "../../components/Image/Image";
@@ -18,11 +19,19 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false);
     const [plantID, setPlantID] = useState(null);
     const [isHasMap, setIsHasMap] = useState(false);
+    const location = useLocation();
 
     const fetchData = async () => {
         if (selectedRowData) {
+
             setIsLoading(true);
-            setIsHasMap(true);
+
+            if (location.pathname === "/dashboard" || location.pathname === "/map") {
+                setIsHasMap(false);
+            } else {
+                setIsHasMap(true);
+            }
+
             try {
                 if (onTab) {
                     console.log(onTab);
@@ -49,12 +58,13 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                         data = null;
                     }
 
-                    console.log(data);
                     setPlantDetails(data);
                     setPlantID(data.id_plant);
+
                     if (imageBlob) {
                         setPlantImage(imageBlob);
                     }
+                    
                     setPlantImage(imageBlob);
                 } else {
                     setIsCommentVisible(false);
