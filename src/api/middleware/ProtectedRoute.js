@@ -1,5 +1,4 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { logout } from '../handlers/authHandler';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('authToken');
@@ -9,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isTokenValid) {
     // Jika token tidak ada atau sudah kadaluwarsa, arahkan ke halaman landing
-    return <Navigate to="/landing" replace />;
+    logout();
   }
 
   return children; // Jika token valid, lanjutkan render children

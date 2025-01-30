@@ -241,7 +241,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
                 ) : (
                     <>
                         <div className="editDetail-image">
-                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} hasMap={true} />
+                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} hasMap={true} onSelected={plantDetails}/>
                         </div>
                         <div className="detail-input-wrapper">
                             <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />

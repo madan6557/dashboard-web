@@ -7,18 +7,22 @@ import API from '../service';
  */
 export const login = async (credentials) => {
     try {
-        const response = await API.post('/user/login/admin', credentials); // Endpoint: /auth/login
+        const response = await API.post('/user/login/admin', credentials);
         const { token, uuid, role, message } = response.data;
 
-        // Simpan token ke localStorage
         if (token) {
             localStorage.setItem('authToken', token);
-            console.log(token);
             localStorage.setItem('userId', uuid);
             localStorage.setItem('userRole', role);
+
+            // Simpan waktu expired ke 00:00 hari berikutnya
+            const now = new Date();
+            const midnight = new Date(now);
+            midnight.setHours(24, 0, 0, 0); // Set waktu ke 00:00 besok
+            localStorage.setItem('tokenExpiry', midnight.getTime()); // Simpan dalam timestamp
         }
 
-        return { message }; // Misalnya: { token, user }
+        return { message };
 
     } catch (error) {
         console.error('Failed to login:', error);

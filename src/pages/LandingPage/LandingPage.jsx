@@ -32,33 +32,42 @@ const LandingPage = () => {
 
     const handleLoginAuthentication = async () => {
         const credentials = { email, password };
-
+    
         // Validasi Email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             setErrorMessage("Please enter a valid email address.");
             return;
         }
-
+    
         // Validasi Password
         if (password.length < 8) {
             setErrorMessage("Password must be at least 8 characters long.");
             return;
         }
-
+    
         try {
             const response = await login(credentials); // Proses autentikasi
             console.log(response);
             setIsLoggedIn(true);
             localStorage.setItem("isLoggedIn", "true"); // Simpan status login
             setIsLoginVisible(false); // Sembunyikan form login setelah berhasil login
-
+    
             // Jika login dilakukan dari "Go to Dashboard", arahkan langsung ke dashboard
             if (redirectToDashboard) {
                 navigate("/dashboard");
             }
         } catch (error) {
-            setErrorMessage(error.message || "Login failed");
+            // Periksa apakah ada response dari server
+            if (error.response) {
+                if (error.response.status === 401) {
+                    setErrorMessage("Incorrect email or password.");
+                } else {
+                    setErrorMessage(error.response.data.message || "Login failed. Please try again.");
+                }
+            } else {
+                setErrorMessage("Login failed. Please try again.");
+            }
         }
     };
 

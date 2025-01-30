@@ -1,6 +1,7 @@
 @import '../../variable.css';
 
 .input-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -95,6 +96,8 @@
 }
 
 .error-message {
+    position: absolute;
+    bottom: -20px;
     color: var(--primary-red);
 }
 

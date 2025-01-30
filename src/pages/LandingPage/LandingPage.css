@@ -85,6 +85,7 @@
 }
 
 .login-input-form {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -97,6 +98,8 @@
 }
 
 .errorMessage {
+    bottom: -40px;
+    position: absolute;
     color: var(--primary-red);
 }
 
