@@ -31,6 +31,7 @@ const CardTable = ({
     const [sortOrder, setSortOrder] = useState('desc');
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
 
     useEffect(() => {
         setIsLoading(onLoading);
@@ -92,7 +93,8 @@ const CardTable = ({
         setIsLoading(true);
     };
 
-    const handleRowClick = (item) => {
+    const handleRowClick = (item, index) => {
+        setSelectedRow(index); // Simpan indeks baris yang diklik
         if (onRowClick) {
             onRowClick(item);
         }
@@ -195,7 +197,11 @@ const CardTable = ({
                             ))
                         ) : (
                             tableItems.map((item, index) => (
-                                <tr key={index} onClick={() => handleRowClick(item)}>
+                                <tr
+                                    key={index}
+                                    onClick={() => handleRowClick(item, index)}
+                                    className={selectedRow === index ? "selected-row" : ""}
+                                >
                                     {Object.entries(item).map(([key, value], idx) =>
                                         tableHead[idx] === '.hidden' ? null : (
                                             <td key={idx}>{value}</td>

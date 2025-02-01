@@ -56,7 +56,7 @@ const PlantSummary = () => {
                     <div className="value-container">
                         <p className="value-title">Healthy <span>:</span></p>
                         <p className="value-number">{healthyPlant.count || 0}</p>
-                        <p className="value-percentage">{healthyPlant.percentage}%</p>
+                        <p className="value-percentage">{healthyPlant.percentage}</p>
                     </div>
                     <div className="chart-bar value-chart-container">
                         <div
@@ -69,7 +69,7 @@ const PlantSummary = () => {
                     <div className="value-container">
                         <p className="value-title">Sick <span>:</span></p>
                         <p className="value-number">{sickPlant.count || 0}</p>
-                        <p className="value-percentage">{sickPlant.percentage}%</p>
+                        <p className="value-percentage">{sickPlant.percentage}</p>
                     </div>
                     <div className="chart-bar value-chart-container">
                         <div
@@ -82,7 +82,7 @@ const PlantSummary = () => {
                     <div className="value-container">
                         <p className="value-title">Withered <span>:</span></p>
                         <p className="value-number">{witheredPlant.count || 0}</p>
-                        <p className="value-percentage">{witheredPlant.percentage}%</p>
+                        <p className="value-percentage">{witheredPlant.percentage}</p>
                     </div>
                     <div className="chart-bar value-chart-container">
                         <div

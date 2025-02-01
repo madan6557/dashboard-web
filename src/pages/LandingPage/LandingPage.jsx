@@ -18,12 +18,14 @@ const LandingPage = () => {
     const [redirectToDashboard, setRedirectToDashboard] = useState(false); // Apakah harus langsung ke dashboard?
     const navigate = useNavigate();
 
+    // Cek token saat pertama kali halaman dimuat
+    const checkAuthStatus = () => {
+        const token = localStorage.getItem("authToken");
+        setIsLoggedIn(!!token); // Jika token ada, login; jika tidak, logout
+    };
+
     useEffect(() => {
-        // Cek apakah user sudah login dari localStorage
-        const storedLoginStatus = localStorage.getItem("isLoggedIn");
-        if (storedLoginStatus === "true") {
-            setIsLoggedIn(true);
-        }
+        checkAuthStatus();
     }, []);
 
     useEffect(() => {
@@ -32,33 +34,31 @@ const LandingPage = () => {
 
     const handleLoginAuthentication = async () => {
         const credentials = { email, password };
-    
+
         // Validasi Email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             setErrorMessage("Please enter a valid email address.");
             return;
         }
-    
+
         // Validasi Password
         if (password.length < 8) {
             setErrorMessage("Password must be at least 8 characters long.");
             return;
         }
-    
+
         try {
             const response = await login(credentials); // Proses autentikasi
             console.log(response);
-            setIsLoggedIn(true);
-            localStorage.setItem("isLoggedIn", "true"); // Simpan status login
+            checkAuthStatus(); // Update status login
             setIsLoginVisible(false); // Sembunyikan form login setelah berhasil login
-    
+
             // Jika login dilakukan dari "Go to Dashboard", arahkan langsung ke dashboard
             if (redirectToDashboard) {
                 navigate("/dashboard");
             }
         } catch (error) {
-            // Periksa apakah ada response dari server
             if (error.response) {
                 if (error.response.status === 401) {
                     setErrorMessage("Incorrect email or password.");
@@ -73,8 +73,8 @@ const LandingPage = () => {
 
     const handleLogout = () => {
         logout(); // Panggil fungsi logout
-        setIsLoggedIn(false);
-        localStorage.removeItem("isLoggedIn"); // Hapus status login
+        localStorage.removeItem("authToken"); // Hapus token
+        checkAuthStatus(); // Perbarui status login
     };
 
     const handleGoToDashboard = () => {
@@ -118,11 +118,7 @@ const LandingPage = () => {
                 {/* LOGIN / LOGOUT BUTTON */}
                 <div className="landingPage-log-button">
                     {isLoggedIn ? (
-                        <ActionButton
-                            title="Log Out"
-                            type="danger"
-                            onClick={handleLogout}
-                        />
+                        <ActionButton title="Log Out" type="danger" onClick={handleLogout} />
                     ) : (
                         <ActionButton
                             title="Log In"
@@ -159,11 +155,7 @@ const LandingPage = () => {
                                 {errorMessage && <p className="errorMessage">{errorMessage}</p>}
                             </div>
                             <div className="login-button-form">
-                                <ActionButton
-                                    title="Log In"
-                                    type="primary"
-                                    onClick={handleLoginAuthentication}
-                                />
+                                <ActionButton title="Log In" type="primary" onClick={handleLoginAuthentication} />
                             </div>
                         </div>
                     )}
@@ -176,16 +168,8 @@ const LandingPage = () => {
                     <div className="home-container">
                         <h1>Welcome to Logia</h1>
                         <div className="ini-test-saje">
-                            <ActionButton
-                                title="Download App"
-                                type="primary"
-                                disabled={true}
-                            />
-                            <ActionButton
-                                title="Go to Dashboard"
-                                type="primary"
-                                onClick={handleGoToDashboard}
-                            />
+                            <ActionButton title="Download App" type="primary" disabled={true} />
+                            <ActionButton title="Go to Dashboard" type="primary" onClick={handleGoToDashboard} />
                         </div>
                     </div>
                 )}

@@ -21,7 +21,6 @@ const GenerateQRCode = () => {
 
     const fetchCounter = async () => {
         try {
-
             const response = await getCounter(site);
             setStartID(parseInt(response.lastPrintedQR) + 1);
             setEndId(parseInt(response.lastPrintedQR) + 1);
@@ -65,8 +64,9 @@ const GenerateQRCode = () => {
     }, [selectedSite]);
 
     useEffect(() => {
-        if (selectedSite) {
+        if (site) {
             fetchCounter();
+            setShowDownload(false);
         }
         // eslint-disable-next-line
     }, [site]);
@@ -96,8 +96,15 @@ const GenerateQRCode = () => {
 
     const handleDownload = () => {
         if (downloadUrl) {
-            const selectedSiteText = siteOption.find(option => option.value === site)?.text || "QR_Code"; // Get the text from siteOption
-            const fileName = `${selectedSiteText}_QR_Code.zip`; // Dynamic file name based on siteOption
+            // Cari nama site berdasarkan value
+            const selectedSiteObj = siteOption.find(option => option.value.toString() === site.toString());
+    
+            // Jika ditemukan, gunakan teksnya; jika tidak, gunakan "QR_Code"
+            const selectedSiteText = selectedSiteObj ? selectedSiteObj.text : "QR_Code";
+    
+            console.log("Selected Site:", selectedSiteText); // Debugging
+    
+            const fileName = `${selectedSiteText}_QR_Code.zip`;
             const a = document.createElement('a');
             a.href = downloadUrl;
             a.download = fileName;
