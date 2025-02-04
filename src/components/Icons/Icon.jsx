@@ -323,7 +323,59 @@ export const EyeSolid = () => (
     <path d="M10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89544 8 8.00001 8.89543 8.00001 10C8.00001 11.1046 8.89544 12 10 12Z" fill="currentColor" />
     <path fillRule="evenodd" clipRule="evenodd" d="M0.457764 10C1.73202 5.94291 5.52232 3 9.99997 3C14.4776 3 18.2679 5.94288 19.5422 9.99996C18.2679 14.0571 14.4776 17 9.99995 17C5.52232 17 1.73204 14.0571 0.457764 10ZM14 10C14 12.2091 12.2091 14 10 14C7.79087 14 6.00001 12.2091 6.00001 10C6.00001 7.79086 7.79087 6 10 6C12.2091 6 14 7.79086 14 10Z" fill="currentColor" />
   </svg>
-
 );
+
+export const TubeSpinner = ({ className = "" }) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 200 200"
+  >
+    <radialGradient id="a12" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)">
+      <stop offset="0" stopColor="currentColor"></stop>
+      <stop offset=".3" stopColor="currentColor" stopOpacity=".9"></stop>
+      <stop offset=".6" stopColor="currentColor" stopOpacity=".6"></stop>
+      <stop offset=".8" stopColor="currentColor" stopOpacity=".3"></stop>
+      <stop offset="1" stopColor="currentColor" stopOpacity="0"></stop>
+    </radialGradient>
+    
+    {/* Cincin berputar */}
+    <circle
+      fill="none"
+      stroke="url(#a12)"
+      strokeWidth="15"
+      strokeLinecap="round"
+      strokeDasharray="200 1000"
+      strokeDashoffset="0"
+      cx="100"
+      cy="100"
+      r="70"
+    >
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="360 100 100"
+        to="0 100 100"
+        dur="2s"
+        repeatCount="indefinite"
+      />
+    </circle>
+
+    {/* Cincin latar belakang (statis) */}
+    <circle
+      fill="none"
+      opacity=".2"
+      stroke="currentColor"
+      strokeWidth="15"
+      strokeLinecap="round"
+      cx="100"
+      cy="100"
+      r="70"
+    />
+  </svg>
+);
+
 
 export default NoIcon;

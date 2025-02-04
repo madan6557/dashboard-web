@@ -6,7 +6,7 @@ import BrandLogo from "../../assets/images/logia.svg";
 import { login, logout } from "../../api/handlers/authHandler";
 import FloorButton from "../../components/FloorButton/FloorButton";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import { Cross } from "../../components/Icons/Icon";
+import { Cross, TubeSpinner } from "../../components/Icons/Icon";
 
 const LandingPage = () => {
     const [email, setEmail] = useState("");
@@ -16,6 +16,7 @@ const LandingPage = () => {
     const [isLoginVisible, setIsLoginVisible] = useState(false); // Menampilkan form login
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Status login
     const [redirectToDashboard, setRedirectToDashboard] = useState(false); // Apakah harus langsung ke dashboard?
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
     const navigate = useNavigate();
 
     // Cek token saat pertama kali halaman dimuat
@@ -33,28 +34,36 @@ const LandingPage = () => {
     }, [email, password]);
 
     const handleLoginAuthentication = async () => {
+        if (isLoggingIn) return; // Hindari login ganda saat sedang memproses
+    
+        setIsLoggingIn(true); // Mulai proses login
+        setErrorMessage(""); // Reset pesan error sebelum mencoba login
+    
         const credentials = { email, password };
-
+    
         // Validasi Email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             setErrorMessage("Please enter a valid email address.");
+            setIsLoggingIn(false);
             return;
         }
-
+    
         // Validasi Password
         if (password.length < 8) {
             setErrorMessage("Password must be at least 8 characters long.");
+            setIsLoggingIn(false);
             return;
         }
-
+    
         try {
             const response = await login(credentials); // Proses autentikasi
             console.log(response);
             checkAuthStatus(); // Update status login
-            setIsLoginVisible(false); // Sembunyikan form login setelah berhasil login
-
-            // Jika login dilakukan dari "Go to Dashboard", arahkan langsung ke dashboard
+            setIsLoginVisible(false); // Sembunyikan form login setelah berhasil
+            setRedirectToDashboard(false); // Reset redirect
+    
+            // Jika login dilakukan dari "Go to Dashboard", arahkan ke dashboard
             if (redirectToDashboard) {
                 navigate("/dashboard");
             }
@@ -68,6 +77,8 @@ const LandingPage = () => {
             } else {
                 setErrorMessage("Login failed. Please try again.");
             }
+        } finally {
+            setIsLoggingIn(false); // Set kembali agar tombol login bisa diklik setelah selesai
         }
     };
 
@@ -155,7 +166,13 @@ const LandingPage = () => {
                                 {errorMessage && <p className="errorMessage">{errorMessage}</p>}
                             </div>
                             <div className="login-button-form">
-                                <ActionButton title="Log In" type="primary" onClick={handleLoginAuthentication} />
+                                <ActionButton
+                                    icon={isLoggingIn ? <TubeSpinner className="loading-white" /> : null}
+                                    title={isLoggingIn ? "" : "Log In"}
+                                    type="primary"
+                                    onClick={handleLoginAuthentication}
+                                    disabled={isLoggingIn}
+                                />
                             </div>
                         </div>
                     )}

@@ -171,3 +171,21 @@
     width: 100%;
     margin-bottom: 10px;
 }
+
+.optional-field{
+    width: 100%;
+    margin-top: 15px;
+}
+
+.optional-field .field-title{
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.optional-field .border-line{
+    width: 100%;
+    height: 3px;
+    margin-top: 5px;
+    border-radius: 8px;
+    background-color: var(--gray-400);
+}

@@ -91,9 +91,9 @@ const Dashboard = ({ onRowClick }) => {
 
     return (
         <div className="dashboard-container">
-            <div className="dashboard-graphic-report-container">
+            {/* <div className="dashboard-graphic-report-container">
 
-            </div>
+            </div> */}
             <div className="dashboard-map-container">
                 <MapViewport
                     onClick={handleOnClick}

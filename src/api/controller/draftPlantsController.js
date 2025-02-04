@@ -37,11 +37,15 @@ export const searchDraftPlants = async (config) => {
             }
         });
 
-        // Calculate progress percentage and format it as 00.00%
-        const filledColumns = desiredProgressColumns.filter(column => item[column] !== null && item[column] !== '').length;
+        // Hitung progress berdasarkan jumlah kolom yang terisi valid
+        const filledColumns = desiredProgressColumns.filter(column => {
+            const value = item[column];
+            return value !== null && value !== undefined && value !== "" && value !== 0;
+        }).length;
+
         const progressPercentage = ((filledColumns / desiredProgressColumns.length) * 100).toFixed(2) + '%';
-        
-        // Add the progress property
+
+        // Tambahkan properti progress ke hasil akhir
         filteredItem.progress = progressPercentage;
 
         return filteredItem;

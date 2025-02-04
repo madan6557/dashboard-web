@@ -35,6 +35,8 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
     const [easting, setEasting] = useState('');
     const [northing, setNorthing] = useState('');
     const [elevation, setElevation] = useState('');
+    const [workDecree, setWorkDecree] = useState('');
+    const [areaStatus, setAreaStatus] = useState('');
 
     const fetchData = async () => {
         if (selectedRowData) {
@@ -60,9 +62,12 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
                 setEasting(data.easting);
                 setNorthing(data.northing);
                 setElevation(data.elevation);
+                setWorkDecree(data.id_workDecree);
+                setAreaStatus(data.id_areaStatus);
 
                 setPlantImage(imageBlob);
 
+                console.log(data.id_workDecree + ", " + data.id_areaStatus);
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {
@@ -80,8 +85,8 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
             id_rehabilitationPlot: parseInt(plot, 10),
             id_sk: parseInt(skppkh, 10),
             id_status: parseInt(status, 10),
-            id_workDecree: plantDetails.id_workDecree,
-            id_areaStatus: plantDetails.id_areaStatus,
+            id_workDecree: parseInt(workDecree, 10),
+            id_areaStatus: parseInt(areaStatus, 10),
             diameter: parseFloat(diameter),
             height: parseFloat(height),
             plantingDate: new Date(plantingDate).toISOString(),
@@ -97,11 +102,10 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
 
         setIsLoading(true);
         try {
-            await patchApprovedPlants(parseInt(selectedRowData, 10), updatedData)
-            if (renamedImageFile) { await uploadImage(renamedImageFile) };
+            await patchApprovedPlants(parseInt(selectedRowData, 10), updatedData);
+            if (renamedImageFile) await uploadImage(renamedImageFile);
 
             await fetchData();
-
             setUnsavedChanges(false);
             onAction(`Data ${selectedRowData} updated successfully`, 'success');
         } catch (error) {
@@ -110,7 +114,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         fetchData();// eslint-disable-next-line
@@ -193,7 +197,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
                     <div className="icon">
                         <QRCode />
                     </div>
-                    <p className="value">{plantID}</p>
+                    <p className="value">{plantID || "00000000"}</p>
                 </div>
                 <div
                     className="detail-delete-button"
@@ -241,7 +245,7 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
                 ) : (
                     <>
                         <div className="editDetail-image">
-                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} hasMap={true} onSelected={plantDetails}/>
+                            <Image imageEditable={true} onAction={onAction} onImageUpload={handleImageUpload} src={plantImage ? plantImage : NoImage} hasMap={true} onSelected={plantDetails} />
                         </div>
                         <div className="detail-input-wrapper">
                             <OptionField id="species" title="Species" value={species} optionItem={dataOption.tb_species} onChange={(e) => { setSpecies(e.target.value); handleInputChange(); }} />
@@ -255,6 +259,12 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
                             <NumericField id="easting" title="Easting" value={easting} suffix="m" onChange={(e) => { setEasting(e.target.value); handleInputChange(); }} />
                             <NumericField id="northing" title="Northing" value={northing} suffix="m" onChange={(e) => { setNorthing(e.target.value); handleInputChange(); }} />
                             <NumericField id="elevation" title="Elevation" value={elevation} suffix="m" onChange={(e) => { setElevation(e.target.value); handleInputChange(); }} />
+                            <div className="optional-field">
+                                <p className="field-title">Optional</p>
+                                <div className="border-line"></div>
+                                <OptionField id="workDecree" title="Work Decree" value={workDecree} optionItem={dataOption.tb_workDecree} onChange={(e) => { setWorkDecree(e.target.value); handleInputChange(); }} />
+                                <OptionField id="areaStatus" title="Area Status" value={areaStatus} optionItem={dataOption.tb_areaStatus} onChange={(e) => { setAreaStatus(e.target.value); handleInputChange(); }} />
+                            </div>
                         </div>
                     </>
                 )}

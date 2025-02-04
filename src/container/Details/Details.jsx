@@ -64,7 +64,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                     if (imageBlob) {
                         setPlantImage(imageBlob);
                     }
-                    
+
                     setPlantImage(imageBlob);
                 } else {
                     setIsCommentVisible(false);
@@ -140,7 +140,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                     <div className="icon">
                         <QRCode />
                     </div>
-                    <p className="value">{plantID}</p>
+                    <p className="value">{plantID || "00000000"}</p>
                 </div>
                 <div className="header-button">
                     {readonly ? '' :
@@ -177,6 +177,12 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                             <NumericField id="easting" title="Easting" value={plantDetails.easting || ""} suffix="m" readonly={true} placeholder="Easting" />
                             <NumericField id="northing" title="Northing" value={plantDetails.northing || ""} suffix="m" readonly={true} placeholder="Northing" />
                             <NumericField id="elevation" title="Elevation" value={plantDetails.elevation || ""} suffix="m" readonly={true} placeholder="Elevation" />
+                            <div className="optional-field">
+                                <p className="field-title">Optional</p>
+                                <div className="border-line"></div>
+                                <TextField id="workDecree" title="Work Decree" value={plantDetails.workDecree || ""} readonly={true} placeholder="Work Decree" />
+                                <TextField id="areaStatus" title="Area Status" value={plantDetails.areaStatus || ""} readonly={true} placeholder="Area Status" />
+                            </div>
                         </>
                     )}
             </div>

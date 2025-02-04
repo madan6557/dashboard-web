@@ -149,7 +149,7 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
             <p className="verificationForm-form-title">Current Data</p>
             <p className="verificationForm-form-date">{verificationPlantDetails.dateModified}</p>
             <div className="verificationForm-image-wrapper">
-                <Image alt="Plant Image" src={verificationPlantImage || NoImage} onSelected={verificationPlantDetails}/>
+                <Image alt="Plant Image" src={verificationPlantImage || NoImage} onSelected={verificationPlantDetails} />
             </div>
             <TextField id="species" title="Species" value={verificationPlantDetails.plant} readonly={true} />
             <TextField id="plantingDate" title="Planting Date" value={verificationPlantDetails.plantingDate} readonly={true} />
@@ -162,9 +162,15 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
             <NumericField id="easting" title="Easting" value={verificationPlantDetails.easting} suffix="m" readonly={true} />
             <NumericField id="northing" title="Northing" value={verificationPlantDetails.northing} suffix="m" readonly={true} />
             <NumericField id="elevation" title="Elevation" value={verificationPlantDetails.elevation} suffix="m" readonly={true} />
+            <div className="optional-field">
+                <p className="field-title">Optional</p>
+                <div className="border-line"></div>
+                <TextField id="workDecree" title="Work Decree" value={verificationPlantDetails.workDecree || "Not Available"} readonly={true} placeholder="Work Decree" />
+                <TextField id="areaStatus" title="Area Status" value={verificationPlantDetails.areaStatus || "Not Available"} readonly={true} placeholder="Area Status" />
+            </div>
         </>
     );
-
+    
     const renderPreviousPlantDetails = () => {
         if (!approvePlantDetails) {
             return (
@@ -179,12 +185,18 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                     <TextField id="activity" title="Activity" value="" placeholder="Activity" readonly={true} />
                     <TextField id="skppkh" title="SKPPKH" value="" placeholder="SKPPKH" readonly={true} />
                     <NumericField id="height" title="Height" value="" suffix="cm" placeholder="Height" readonly={true} />
-                    <NumericField id="diameter" title="Diameter" value="" suffix="cm" rplaceholder="Diameter" eadonly={true} />
+                    <NumericField id="diameter" title="Diameter" value="" suffix="cm" placeholder="Diameter" readonly={true} />
                     <TextField id="status" title="Status" value="" placeholder="Status" readonly={true} />
                     <TextField id="plot" title="Plot" value="" placeholder="Plot" readonly={true} />
                     <NumericField id="easting" title="Easting" value="" suffix="m" placeholder="Easting" readonly={true} />
                     <NumericField id="northing" title="Northing" value="" suffix="m" placeholder="Northing" readonly={true} />
                     <NumericField id="elevation" title="Elevation" value="" suffix="m" placeholder="Elevation" readonly={true} />
+                    <div className="optional-field">
+                        <p className="field-title">Optional</p>
+                        <div className="border-line"></div>
+                        <TextField id="workDecree" title="Work Decree" value="Not Available" readonly={true} placeholder="Work Decree" />
+                        <TextField id="areaStatus" title="Area Status" value="Not Available" readonly={true} placeholder="Area Status" />
+                    </div>
                 </>
             );
         }
@@ -193,7 +205,7 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                 <p className="verificationForm-form-title">Previous Data</p>
                 <p className="verificationForm-form-date">{approvePlantDetails.dateModified}</p>
                 <div className="verificationForm-image-wrapper">
-                    <Image alt="Plant Image" src={approvePlantImage || NoImage} onSelected={approvePlantDetails}/>
+                    <Image alt="Plant Image" src={approvePlantImage || NoImage} onSelected={approvePlantDetails} />
                 </div>
                 <TextField id="species" title="Species" value={approvePlantDetails.plant} readonly={true} />
                 <TextField id="plantingDate" title="Planting Date" value={approvePlantDetails.plantingDate} readonly={true} />
@@ -206,6 +218,12 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                 <NumericField id="easting" title="Easting" value={approvePlantDetails.easting} suffix="m" readonly={true} />
                 <NumericField id="northing" title="Northing" value={approvePlantDetails.northing} suffix="m" readonly={true} />
                 <NumericField id="elevation" title="Elevation" value={approvePlantDetails.elevation} suffix="m" readonly={true} />
+                <div className="optional-field">
+                    <p className="field-title">Optional</p>
+                    <div className="border-line"></div>
+                    <TextField id="workDecree" title="Work Decree" value={approvePlantDetails.workDecree || "Not Available"} readonly={true} placeholder="Work Decree" />
+                    <TextField id="areaStatus" title="Area Status" value={approvePlantDetails.areaStatus || "Not Available"} readonly={true} placeholder="Area Status" />
+                </div>
             </>
         );
     };

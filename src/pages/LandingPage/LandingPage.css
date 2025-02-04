@@ -114,3 +114,7 @@
     display: flex;
     gap: 20px;
 }
+
+.loading-white{
+    color: var(--gray-600);
+}

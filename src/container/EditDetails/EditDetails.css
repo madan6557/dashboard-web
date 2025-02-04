@@ -105,9 +105,8 @@
 
 .detail-input-wrapper {
     position: relative;
-    right: -5px;
     min-width: 200px;
-    height: max-content;
+    height: 100%;
     padding: 0px 10px;
     display: flex;
     /* Aktifkan flexbox */
