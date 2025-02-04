@@ -52,7 +52,7 @@ export const dateFormat = (date, type = "yyyy-mm-dd") => {
         case "dayname-dd-mm-yyyy hh-mm-ss":
             return `${dayName}-${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${timeZoneName}`;
         case "dd-mm-yyyy hh-mm-ss":
-            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${timeZoneName}`;
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
         case "yyyy-mm-dd hh-mm-ss":
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         case "hh:mm:ss":

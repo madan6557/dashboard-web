@@ -4,6 +4,7 @@ import "./ResetPassword.css";
 import { PasswordField } from "../../components/FieldInput/FieldInput";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import { sendNewPassword } from "../../api/controller/userController";
+import { TubeSpinner } from "../../components/Icons/Icon";
 
 const ResetPassword = () => {
     const [searchParams] = useSearchParams();
@@ -13,32 +14,35 @@ const ResetPassword = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-    const [isSuccess, setIsSuccess] = useState(false); // Status reset berhasil
-    const [isReadOnly, setIsReadOnly] = useState(false); // Untuk mengontrol readonly input
-    const token = searchParams.get("token"); // Ambil token dari URL
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isReadOnly, setIsReadOnly] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Tambahkan state loading
+    const token = searchParams.get("token");
 
-    // **🔍 CEK TOKEN SAAT PAGE LOAD**
     useEffect(() => {
         if (!token) {
-            navigate("/landing"); // Redirect ke landing jika token tidak ada
+            navigate("/landing");
         }
     }, [token, navigate]);
 
     const handleResetPassword = async () => {
         setErrorMessage("");
         setSuccessMessage("");
+        setIsLoading(true); // Mulai loading
 
-        // **VALIDASI PASSWORD**
         if (!password || password.length < 8) {
             setErrorMessage("Password must be at least 8 characters long.");
+            setIsLoading(false);
             return;
         }
         if (password !== confirmPassword) {
             setErrorMessage("Passwords do not match.");
+            setIsLoading(false);
             return;
         }
         if (!token) {
             setErrorMessage("Invalid or missing token.");
+            setIsLoading(false);
             return;
         }
 
@@ -54,12 +58,13 @@ const ResetPassword = () => {
                 throw new Error(response.message || "Password reset failed.");
             }
 
-            // Jika sukses
             setSuccessMessage("Password reset successful! You can now log in.");
             setIsSuccess(true);
-            setIsReadOnly(true); // Ubah input menjadi readonly
+            setIsReadOnly(true);
         } catch (error) {
             setErrorMessage(error.message || "An error occurred.");
+        } finally {
+            setIsLoading(false); // Selesai loading
         }
     };
 
@@ -74,33 +79,30 @@ const ResetPassword = () => {
                         id="newPassword"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        readonly={isReadOnly}
+                        readOnly={isReadOnly}
                     />
                     <PasswordField
                         title="Confirm Password"
                         id="confirmationPassword"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        readonly={isReadOnly}
+                        readOnly={isReadOnly}
                     />
                 </div>
 
-                {/* MENAMPILKAN PESAN ERROR ATAU SUKSES */}
                 {errorMessage && <p className="errorMessage">{errorMessage}</p>}
                 {successMessage && <p className="successMessage">{successMessage}</p>}
 
                 <div className="resetPassword-button">
-                    {/* Tombol Reset HANYA muncul jika reset BELUM sukses */}
-                    {!isSuccess && (
+                    {!isSuccess ? (
                         <ActionButton
-                            title="Reset"
+                            icon={isLoading ? <TubeSpinner className="loading-white" /> : null}
+                            title={isLoading ? "Processing..." : "Reset Password"}
                             type="primary"
                             onClick={handleResetPassword}
+                            disabled={isLoading} // Nonaktifkan tombol saat loading
                         />
-                    )}
-
-                    {/* Tombol Home hanya muncul jika reset berhasil */}
-                    {isSuccess && (
+                    ) : (
                         <ActionButton
                             title="Home"
                             type="primary"

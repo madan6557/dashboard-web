@@ -167,7 +167,7 @@ const LandingPage = () => {
                             <div className="login-button-form">
                                 <ActionButton
                                     icon={isLoggingIn ? <TubeSpinner className="loading-white" /> : null}
-                                    title={isLoggingIn ? "" : "Log In"}
+                                    title={isLoggingIn ? "Logging In" : "Log In"}
                                     type="primary"
                                     onClick={handleLoginAuthentication}
                                     disabled={isLoggingIn}
