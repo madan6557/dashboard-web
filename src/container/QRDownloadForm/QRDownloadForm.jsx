@@ -10,7 +10,6 @@ const QRDownloadForm = ({ onBlur, plantID = "2400000" }) => {
     const fetchQRCode = async () => {
         try {
             const data = { generate: [plantID] };
-            console.log(data);
 
             const response = await getQRCode(data);
 

@@ -15,10 +15,8 @@ const PlantSummary = () => {
     const fetchPlantsSummary = async () => {
         try {
             const response = await getPlantSummary();
-            console.log(response);
             setTotalPlant(response.totalPlants);
             setHealthyPlant(response.status.healthy)
-            console.log(healthyPlant);
             setSickPlant(response.status.sick)
             setWitheredPlant(response.status.withered)
         } catch (error) {

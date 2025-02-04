@@ -273,7 +273,6 @@ const FocusMarker = ({ focus }) => {
     useEffect(() => {
         if (focus) {
             const { easting, northing } = focus;
-            console.log(focus);
             const latLng = UTMtoLatLng(parseFloat(northing), parseFloat(easting));
 
             if (latLng) {

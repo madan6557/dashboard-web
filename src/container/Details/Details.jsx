@@ -34,7 +34,6 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
 
             try {
                 if (onTab) {
-                    console.log(onTab);
                     let data;
                     let imageBlob;
 

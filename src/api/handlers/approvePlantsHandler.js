@@ -3,7 +3,6 @@ import API from '../service';
 export const fetchAllApprovedPlants= async (keyword = "", id_site) => {
     try {
         const response = await API.get(`/approve/plant?keyword=${keyword}&orderBy=location&sortBy=ASC&id_site=${id_site}`);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch data:', error);

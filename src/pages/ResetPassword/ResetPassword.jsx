@@ -19,7 +19,6 @@ const ResetPassword = () => {
 
     // **🔍 CEK TOKEN SAAT PAGE LOAD**
     useEffect(() => {
-        console.log(token);
         if (!token) {
             navigate("/landing"); // Redirect ke landing jika token tidak ada
         }

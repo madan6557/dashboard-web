@@ -22,7 +22,6 @@ export const fetchPlantsHistory = async (config) => {
 export const fetchPlantHistoryById = async (id_verification) => {
     try {
         const response = await API.get(`/verification/${id_verification}`);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -51,7 +50,6 @@ export const fetchUnverifiedPlants = async (config) => {
 export const compareUnverifiedPlantByID = async (id_verification) => {
     try {
         const response = await API.get(`/verification/compare/${id_verification}`);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch data:', error);

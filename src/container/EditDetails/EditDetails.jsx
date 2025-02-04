@@ -67,7 +67,6 @@ const EditDetails = ({ onClose, onDelete, onAction, onUpdate, getQR }) => {
 
                 setPlantImage(imageBlob);
 
-                console.log(data.id_workDecree + ", " + data.id_areaStatus);
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {

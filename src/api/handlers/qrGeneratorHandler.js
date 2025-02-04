@@ -3,7 +3,6 @@ import API from '../service';
 export const fetchCounter = async (id_site) => {
     try {
         const response = await API.get(`/qr/${id_site}`);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to export data:', error);
@@ -40,7 +39,6 @@ export const checkQRCode = async (site, config) => {
         const response = await API.post(`/qr/check`, config, {
             responseType: 'blob'
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to export data:', error);

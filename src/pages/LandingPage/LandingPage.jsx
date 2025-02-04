@@ -58,7 +58,6 @@ const LandingPage = () => {
     
         try {
             const response = await login(credentials); // Proses autentikasi
-            console.log(response);
             checkAuthStatus(); // Update status login
             setIsLoginVisible(false); // Sembunyikan form login setelah berhasil
             setRedirectToDashboard(false); // Reset redirect

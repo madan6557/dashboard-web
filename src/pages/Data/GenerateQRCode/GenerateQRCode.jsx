@@ -102,8 +102,6 @@ const GenerateQRCode = () => {
             // Jika ditemukan, gunakan teksnya; jika tidak, gunakan "QR_Code"
             const selectedSiteText = selectedSiteObj ? selectedSiteObj.text : "QR_Code";
     
-            console.log("Selected Site:", selectedSiteText); // Debugging
-    
             const fileName = `${selectedSiteText}_QR_Code.zip`;
             const a = document.createElement('a');
             a.href = downloadUrl;

@@ -47,7 +47,6 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
         if (selectedRowData) {
             setIsLoading(true);
             const formatedDateModified = dateFormat(new Date(), 'yyyy-mm-dd hh-mm-ss', '+0');
-            console.log(formatedDateModified);
             const data = {
                 date_modified: new Date(formatedDateModified).toISOString(),
                 id_action: 3,
@@ -69,7 +68,6 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
         if (selectedRowData) {
             setIsLoading(true);
             const formatedDateModified = dateFormat(new Date(), 'yyyy-mm-dd hh-mm-ss', '+0');
-            console.log(formatedDateModified);
             const data = {
                 date_modified: new Date(formatedDateModified).toISOString(),
                 id_action: 2,
