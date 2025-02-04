@@ -44,8 +44,11 @@ const Verification = forwardRef(({ onRowClick, onTabChange }, ref) => {
     }, [selectedTab]);
 
     const fetchTableData = async () => {
+        
+        setTableItems([]);
         setIsLoading(true);
         onTabChange();
+
         const controller = new AbortController();
         const signal = controller.signal;
 

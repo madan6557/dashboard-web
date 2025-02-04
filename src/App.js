@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import Layout from "./container/Layout/Layout";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
@@ -45,7 +45,11 @@ const App = () => {
 
   return (
     <Routes>
+       {/* Jika path kosong, redirect ke /landing */}
+       <Route path="/" element={<Navigate to="/landing" replace />} />
+
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/*" element={isAuthenticated ? <Layout /> : <LandingPage />} />
     </Routes>
   );
