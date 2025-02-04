@@ -165,8 +165,8 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
             <div className="optional-field">
                 <p className="field-title">Optional</p>
                 <div className="border-line"></div>
-                <TextField id="workDecree" title="Work Decree" value={verificationPlantDetails.workDecree || "Not Available"} readonly={true} placeholder="Work Decree" />
-                <TextField id="areaStatus" title="Area Status" value={verificationPlantDetails.areaStatus || "Not Available"} readonly={true} placeholder="Area Status" />
+                <TextField id="workDecree" title="Work Decree" value={verificationPlantDetails.workDecree || ""} readonly={true} placeholder="Work Decree" />
+                <TextField id="areaStatus" title="Area Status" value={verificationPlantDetails.areaStatus || ""} readonly={true} placeholder="Area Status" />
             </div>
         </>
     );
@@ -194,8 +194,8 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                     <div className="optional-field">
                         <p className="field-title">Optional</p>
                         <div className="border-line"></div>
-                        <TextField id="workDecree" title="Work Decree" value="Not Available" readonly={true} placeholder="Work Decree" />
-                        <TextField id="areaStatus" title="Area Status" value="Not Available" readonly={true} placeholder="Area Status" />
+                        <TextField id="workDecree" title="Work Decree" value="" readonly={true} placeholder="Work Decree" />
+                        <TextField id="areaStatus" title="Area Status" value="" readonly={true} placeholder="Area Status" />
                     </div>
                 </>
             );
@@ -221,8 +221,8 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                 <div className="optional-field">
                     <p className="field-title">Optional</p>
                     <div className="border-line"></div>
-                    <TextField id="workDecree" title="Work Decree" value={approvePlantDetails.workDecree || "Not Available"} readonly={true} placeholder="Work Decree" />
-                    <TextField id="areaStatus" title="Area Status" value={approvePlantDetails.areaStatus || "Not Available"} readonly={true} placeholder="Area Status" />
+                    <TextField id="workDecree" title="Work Decree" value={approvePlantDetails.workDecree || ""} readonly={true} placeholder="Work Decree" />
+                    <TextField id="areaStatus" title="Area Status" value={approvePlantDetails.areaStatus || ""} readonly={true} placeholder="Area Status" />
                 </div>
             </>
         );

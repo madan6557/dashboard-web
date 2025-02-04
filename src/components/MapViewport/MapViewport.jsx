@@ -259,7 +259,7 @@ const FindMarker = ({ onFind, dataset, findMarkerRef }) => {
                 findMarkerRef.current.remove();
                 findMarkerRef.current = null;
             }
-        };
+        };// eslint-disable-next-line
     }, [onFind, dataset]); // Memantau perubahan `onFind` dan `dataset`
 
     return null;

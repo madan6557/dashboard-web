@@ -20,8 +20,6 @@ import {
     CogSolid,
     ClockOutline,
     ClockSolid,
-    MarkOutline,
-    MarkSolid,
     GarageSolid,
     GarageOutline,
 } from '../../components/Icons/Icon';
