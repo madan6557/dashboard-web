@@ -8,19 +8,39 @@ export const dateFormat = (date, type = "yyyy-mm-dd") => {
             throw new TypeError("Invalid date value");
         }
         date = new Date(parsedDate);
-    } else {
-        date = new Date(date.getTime()); // Pastikan tidak berubah karena zona waktu
     }
 
-    const year = date.getFullYear();
-    const month = pad(date.getMonth() + 1); // Months are zero-based
-    const day = pad(date.getDate());
-    const hours = pad(date.getHours());
-    const minutes = pad(date.getMinutes());
-    const seconds = pad(date.getSeconds());
+    // Dapatkan zona waktu pengguna
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Konversi waktu ke zona waktu lokal pengguna
+    const formatter = new Intl.DateTimeFormat("id-ID", {
+        timeZone: userTimeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZoneName: "short"
+    });
+
+    // Format hasil
+    const formattedDate = formatter.formatToParts(new Date(date)).reduce((acc, part) => {
+        if (part.type !== "literal") acc[part.type] = part.value;
+        return acc;
+    }, {});
+
+    const year = formattedDate.year;
+    const month = pad(formattedDate.month);
+    const day = pad(formattedDate.day);
+    const hours = pad(formattedDate.hour);
+    const minutes = pad(formattedDate.minute);
+    const seconds = pad(formattedDate.second);
+    const timeZoneName = formattedDate.timeZoneName;
 
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dayName = dayNames[date.getDay()];
+    const dayName = dayNames[new Date(date).getDay()];
 
     switch (type) {
         case "dd-mm-yyyy":
@@ -30,18 +50,18 @@ export const dateFormat = (date, type = "yyyy-mm-dd") => {
         case "dayname-dd-mm-yyyy":
             return `${dayName}-${day}-${month}-${year}`;
         case "dayname-dd-mm-yyyy hh-mm-ss":
-            return `${dayName}-${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+            return `${dayName}-${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${timeZoneName}`;
         case "dd-mm-yyyy hh-mm-ss":
-            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${timeZoneName}`;
         case "yyyy-mm-dd hh-mm-ss":
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         case "hh:mm:ss":
-            return `${hours}:${minutes}:${seconds}`;
+            return `${hours}:${minutes}:${seconds} ${timeZoneName}`;
         case "mm-dd-yyyy":
             return `${month}-${day}-${year}`;
         case "dd/mm/yyyy":
             return `${day}/${month}/${year}`;
         default:
-            return `${year}-${month}-${day}`; // Default to 'yyyy-mm-dd'
+            return `${year}-${month}-${day}`;
     }
 };
