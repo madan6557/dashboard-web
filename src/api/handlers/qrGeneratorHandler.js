@@ -34,11 +34,9 @@ export const fetchQRCode = async (data) => {
     }
 };
 
-export const checkQRCode = async (site, config) => {
+export const checkQRCode = async (site) => {
     try {
-        const response = await API.post(`/qr/check`, config, {
-            responseType: 'blob'
-        });
+        const response = await API.get(`/qr/check/${site}`);
         return response.data;
     } catch (error) {
         console.error('Failed to export data:', error);

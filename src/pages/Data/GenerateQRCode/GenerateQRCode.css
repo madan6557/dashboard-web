@@ -6,7 +6,7 @@
     padding: 5px;
 }
 
-.qrGenerator-container {
+.qrGenerator-form {
     background-color: var(--primary-white);
     padding: 10px;
     border-radius: 6px;
@@ -14,7 +14,7 @@
     width: fit-content;
 }
 
-.qrGenerator-container .container-title {
+.qrGenerator-form .container-title {
     font-size: larger;
     margin-bottom: 10px;
 }
@@ -70,8 +70,9 @@
 
 .qr-button-container {
     display: flex;
-    margin-top: auto;
-    justify-content: space-around;
+    margin: 10px 0px;
+    justify-content: right;
+    gap: 10px;
 }
 
 .qr-input-container {
@@ -83,4 +84,8 @@
     justify-content: center;
     align-items: center;
     margin: 10px 10px;
+}
+
+.check-qr-form {
+    margin-top: 10px;
 }
