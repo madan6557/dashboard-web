@@ -14,7 +14,6 @@ const UserDetails = ({ onClose, onAction, data }) => {
     const requestConfirmation = useConfirmation();
 
      const requestResetPassword = async () => {
-        const email = "2111016210015@mhs.ulm.ac.id";
             const data = {
                 email: email
             };
