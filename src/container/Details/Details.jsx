@@ -72,6 +72,7 @@ const Details = ({ onClose, onEdit, readonly = false, onTab, getQR }) => {
                     setPlantDetails(data);
                     setPlantID(data.id_plant);
                 }
+
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {

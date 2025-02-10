@@ -3,44 +3,35 @@ export const dateFormat = (date, type = "yyyy-mm-dd") => {
 
     // Jika date bukan instance Date, coba parsing dulu
     if (!(date instanceof Date)) {
-        const parsedDate = Date.parse(date);
-        if (isNaN(parsedDate)) {
+        if (typeof date === "string") {
+            const parts = date.split(/[-T:.\sZ]/).map(Number);
+            if (parts.length >= 3) {
+                date = new Date(Date.UTC(
+                    parts[0], // Year
+                    parts[1] - 1, // Month (0-based)
+                    parts[2], // Day
+                    parts[3] || 0, // Hours
+                    parts[4] || 0, // Minutes
+                    parts[5] || 0 // Seconds
+                ));
+            } else {
+                throw new TypeError("Invalid date format");
+            }
+        } else {
             throw new TypeError("Invalid date value");
         }
-        date = new Date(parsedDate);
     }
 
-    // Dapatkan zona waktu pengguna
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    // Konversi waktu ke zona waktu lokal pengguna
-    const formatter = new Intl.DateTimeFormat("id-ID", {
-        timeZone: userTimeZone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZoneName: "short"
-    });
-
-    // Format hasil
-    const formattedDate = formatter.formatToParts(new Date(date)).reduce((acc, part) => {
-        if (part.type !== "literal") acc[part.type] = part.value;
-        return acc;
-    }, {});
-
-    const year = formattedDate.year;
-    const month = pad(formattedDate.month);
-    const day = pad(formattedDate.day);
-    const hours = pad(formattedDate.hour);
-    const minutes = pad(formattedDate.minute);
-    const seconds = pad(formattedDate.second);
-    const timeZoneName = formattedDate.timeZoneName;
+    // Ambil nilai waktu langsung dari objek Date dalam UTC
+    const year = date.getUTCFullYear();
+    const month = pad(date.getUTCMonth() + 1);
+    const day = pad(date.getUTCDate());
+    const hours = pad(date.getUTCHours());
+    const minutes = pad(date.getUTCMinutes());
+    const seconds = pad(date.getUTCSeconds());
 
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dayName = dayNames[new Date(date).getDay()];
+    const dayName = dayNames[date.getUTCDay()];
 
     switch (type) {
         case "dd-mm-yyyy":
@@ -50,13 +41,13 @@ export const dateFormat = (date, type = "yyyy-mm-dd") => {
         case "dayname-dd-mm-yyyy":
             return `${dayName}-${day}-${month}-${year}`;
         case "dayname-dd-mm-yyyy hh-mm-ss":
-            return `${dayName}-${day}-${month}-${year} ${hours}:${minutes}:${seconds} ${timeZoneName}`;
+            return `${dayName}-${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
         case "dd-mm-yyyy hh-mm-ss":
             return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
         case "yyyy-mm-dd hh-mm-ss":
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         case "hh:mm:ss":
-            return `${hours}:${minutes}:${seconds} ${timeZoneName}`;
+            return `${hours}:${minutes}:${seconds}`;
         case "mm-dd-yyyy":
             return `${month}-${day}-${year}`;
         case "dd/mm/yyyy":

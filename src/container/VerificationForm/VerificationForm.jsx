@@ -35,6 +35,7 @@ const VerificationForm = ({ onClose, onAction, getQR }) => {
                     setApprovePlantDetails(approve);
                     setApprovePlantImage(await getPlantImage(approve.images));
                 }
+
             } catch (error) {
                 console.error("Error fetching plants:", error);
             } finally {
